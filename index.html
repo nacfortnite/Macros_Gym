@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NutriTracker">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.json">
+  <title>NutriTracker Pro - Apple Fitness PWA</title>
+
+  <style>
+    :root {
+      --bg-black: #000000;
+      --card-bg: #1C1C1E;
+      --card-sub-bg: #2C2C2E;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --ring-track-bg: rgba(255, 255, 255, 0.15);
+      --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --backdrop-bg: rgba(0, 0, 0, 0.85);
+      
+      /* APPLE FITNESS NEON PALETTE */
+      --kcal-color: #FF2D55;
+      --kcal-glow: rgba(255, 45, 85, 0.35);
+      --prote-color: #30B0C7;
+      --prote-glow: rgba(48, 176, 199, 0.35);
+      --carbos-color: #FFCC00;
+      --carbos-glow: rgba(255, 204, 0, 0.35);
+      --grasas-color: #34C759;
+      --grasas-glow: rgba(52, 199, 89, 0.35);
+      --error-red: #FF3B30;
+      --ai-purple: #AF52DE;
+      --ai-glow: rgba(175, 82, 222, 0.35);
+      
+      --text-primary: #FFFFFF;
+      --text-secondary: #8E8E93;
+      --text-tertiary: #636366;
+    }
+
+    [data-theme="light"] {
+      --bg-black: #F2F2F7;
+      --card-bg: #FFFFFF;
+      --card-sub-bg: #F2F2F7;
+      --card-border: rgba(0, 0, 0, 0.06);
+      --ring-track-bg: #E5E5EA;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      --backdrop-bg: rgba(0, 0, 0, 0.4);
+      
+      /* iOS HEALTH HIGH CONTRAST LIGHT PALETTE */
+      --kcal-color: #FF2D55;
+      --kcal-glow: rgba(255, 45, 85, 0.18);
+      --prote-color: #007AFF; /* iOS System Blue */
+      --prote-glow: rgba(0, 122, 255, 0.18);
+      --carbos-color: #FF9500; /* iOS Dynamic Orange */
+      --carbos-glow: rgba(255, 149, 0, 0.18);
+      --grasas-color: #34C759; /* Emerald Green */
+      --grasas-glow: rgba(52, 199, 89, 0.18);
+      --error-red: #FF3B30;
+      --ai-purple: #AF52DE;
+      --ai-glow: rgba(175, 82, 222, 0.18);
+      
+      --text-primary: #1C1C1E;
+      --text-secondary: #8E8E93;
+      --text-tertiary: #AEAEB2;
+    }
+
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-black);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding-bottom: 100px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .app-header, .macro-tile, .hero-rings-card, .date-nav-bar, .modal-sheet, .day-card, .log-item-card, .search-box-input, .native-input, .seg-btn, .icon-btn, .streak-hero-card, .ai-banner-card {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* HEADER */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border-radius: 24px;
+      border: 1px solid var(--card-border);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #FF2D55, #FF9500);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px var(--kcal-glow);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* VIEW MODE SEGMENTED CONTROL */
+    .view-segmented-control {
+      display: flex;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .seg-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .seg-btn.active {
+      background: var(--card-sub-bg);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    /* DATE NAVIGATION */
+    .date-nav-bar {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .date-center {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .date-center span {
+      color: var(--prote-color);
+    }
+
+    .nav-arrow {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+    }
+
+    .nav-arrow:active {
+      background: var(--card-sub-bg);
+      color: var(--text-primary);
+    }
+
+    /* APPLE FITNESS RINGS HERO SECTION */
+    .hero-rings-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-rings-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255, 45, 85, 0.05), transparent 70%);
+      pointer-events: none;
+    }
+
+    .rings-svg-wrapper {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rings-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke-width: 12;
+      opacity: 0.15;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .rings-center-info {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .rings-center-val {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--text-primary);
+    }
+
+    .rings-center-sub {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* MACRO METRICS GRID (4 CARDS) */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .macro-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.2s ease;
+    }
+
+    .macro-tile.exceeded {
+      border-color: var(--kcal-color);
+    }
+
+    .tile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tile-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .tile-pct {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .tile-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .tile-main-val {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .tile-target-val {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .tile-progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--card-sub-bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .tile-progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .tile-differential {
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    /* FOOD ENTRIES LOG LIST */
+    .section-header {
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .log-item-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .log-item-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .log-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .log-item-name {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .log-qty-badge {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .log-macro-tags {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tag-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .log-item-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .log-item-kcal {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--kcal-color);
+    }
+
+    .btn-trash {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-trash:active {
+      color: var(--kcal-color);
+      background: rgba(255, 45, 85, 0.15);
+    }
+
+    .empty-state-box {
+      background: var(--card-bg);
+      border: 1px dashed var(--card-border);
+      border-radius: 24px;
+      padding: 36px 20px;
+      text-align: center;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* WEEKLY MODULE STYLES */
+    .streak-hero-card {
+      background: linear-gradient(135deg, rgba(52, 199, 89, 0.18), rgba(48, 176, 199, 0.15));
+      border: 1px solid rgba(52, 199, 89, 0.35);
+      border-radius: 24px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(52, 199, 89, 0.15);
+    }
+
+    .streak-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .streak-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .streak-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .streak-badge-pct {
+      background: var(--grasas-color);
+      color: #000;
+      font-size: 20px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px var(--grasas-glow);
+    }
+
+    .weekly-days-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .day-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .day-card.completed-day {
+      border-color: rgba(52, 199, 89, 0.4);
+    }
+
+    .day-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .day-name-tag {
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .day-status-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-ok {
+      background: rgba(52, 199, 89, 0.2);
+      color: var(--grasas-color);
+    }
+
+    .status-fail {
+      background: rgba(255, 59, 48, 0.2);
+      color: var(--error-red);
+    }
+
+    .day-macro-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .mini-macro-item {
+      background: var(--card-sub-bg);
+      border-radius: 12px;
+      padding: 8px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .mini-macro-val {
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mini-macro-lbl {
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    .mini-icon-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    /* GEMINI AI ASSISTANT CARD */
+    .ai-banner-card {
+      background: linear-gradient(135deg, rgba(175, 82, 222, 0.2), rgba(48, 176, 199, 0.15));
+      border: 1px solid rgba(175, 82, 222, 0.4);
+      border-radius: 24px;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 8px 24px var(--ai-glow);
+    }
+
+    .ai-banner-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ai-banner-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ai-banner-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .btn-ai-sparkle {
+      background: var(--ai-purple);
+      color: #FFF;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--ai-glow);
+    }
+
+    .btn-ai-sparkle:active {
+      transform: scale(0.95);
+    }
+
+    /* FLOATING ACTION BUTTON (FAB) */
+    .fab-neon {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 448px;
+      height: 58px;
+      background: linear-gradient(135deg, #FF2D55, #E02447);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 22px;
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px var(--kcal-glow);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      z-index: 90;
+    }
+
+    .fab-neon:active {
+      transform: translateX(-50%) scale(0.96);
+      box-shadow: 0 4px 16px var(--kcal-glow);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--backdrop-bg);
+      backdrop-filter: blur(12px);
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border-radius: 32px 32px 0 0;
+      width: 100%;
+      max-width: 480px;
+      max-height: 88vh;
+
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      border-top: 1px solid var(--card-border);
+      animation: sheetUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes sheetUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      align-self: center;
+      margin-bottom: 4px;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sheet-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .sheet-close-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: var(--card-sub-bg);
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-box-input {
+      width: 100%;
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      color: var(--text-primary);
+      font-size: 15px;
+      outline: none;
+    }
+
+    .search-box-input:focus {
+      border-color: var(--prote-color);
+    }
+
+    .results-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .result-row {
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .result-row:active {
+      border-color: var(--prote-color);
+      transform: scale(0.99);
+    }
+
+    /* LIVE PREVIEW BANNER */
+    .neon-preview-card {
+      background: linear-gradient(135deg, rgba(255, 45, 85, 0.12), rgba(48, 176, 199, 0.12));
+      border: 1px solid rgba(255, 45, 85, 0.3);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .preview-header-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--prote-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preview-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .preview-num {
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .preview-lbl {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .input-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-field-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .native-input {
+      width: 100%;
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .chips-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .preset-chip {
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .preset-chip:active {
+      border-color: var(--prote-color);
+      color: var(--prote-color);
+    }
+
+    .btn-action-cta {
+      width: 100%;
+      height: 54px;
+      background: var(--kcal-color);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 18px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 24px var(--kcal-glow);
+      margin-top: 8px;
+    }
+
+    .btn-action-cta:active {
+      transform: scale(0.98);
+    }
+
+    /* NEON SPINNER */
+    .spinner-neon {
+      width: 32px;
+      height: 32px;
+      border: 4px solid rgba(175, 82, 222, 0.2);
+      border-top: 4px solid var(--ai-purple);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-viewport">
+    <!-- APPLE FITNESS APP BAR -->
+    <header class="app-header">
+      <div class="brand-group">
+        <div class="brand-badge">
+          <!-- INLINE SVG LIGHTNING -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <h1 class="brand-title">NutriTracker Pro</h1>
+      </div>
+      <div class="header-btns">
+        <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Alternar Modo Claro / Oscuro">
+          ☀️
+        </button>
+        <button class="icon-btn" onclick="openModal('modal-gemini-ai')" title="Asistente IA Gemini" style="color: var(--ai-purple); border-color: rgba(175, 82, 222, 0.4);">
+          ✨
+        </button>
+
+        <button class="icon-btn" onclick="openModal('modal-custom-food')" title="Crear Alimento">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <button class="icon-btn" onclick="openModal('modal-targets')" title="Configurar Objetivos">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- GEMINI AI BANNER HERO -->
+    <div class="ai-banner-card">
+      <div class="ai-banner-info">
+        <div class="ai-banner-title">✨ Asistente IA Gemini Pro</div>
+        <div class="ai-banner-sub">Calcula tus macros según estrés, cardio y metabolismo</div>
+      </div>
+      <button class="btn-ai-sparkle" onclick="openModal('modal-gemini-ai')">Calcular 🤖</button>
+    </div>
+
+    <!-- VIEW MODE SEGMENTED CONTROL -->
+    <div class="view-segmented-control">
+      <button class="seg-btn active" id="seg-btn-daily" onclick="switchView('daily')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        Diario del Día
+      </button>
+      <button class="seg-btn" id="seg-btn-weekly" onclick="switchView('weekly')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        Resumen Semanal
+      </button>
+    </div>
+
+    <!-- VIEW CONTAINER 1: DAILY DASHBOARD -->
+    <div id="view-daily-container" style="display: flex; flex-direction: column; gap: 20px;">
+      <!-- DATE NAVIGATION BAR -->
+      <div class="date-nav-bar">
+        <button class="nav-arrow" onclick="changeDate(-1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="date-center" onclick="resetToToday()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--prote-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span id="label-date">Hoy</span>
+        </div>
+        <button class="nav-arrow" onclick="changeDate(1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- APPLE FITNESS CONCENTRIC RINGS HERO SECTION -->
+      <div class="hero-rings-card">
+        <div class="rings-svg-wrapper">
+          <svg class="rings-svg" viewBox="0 0 200 200">
+            <!-- RING 1: KCAL (OUTER - RED/PINK #FF2D55) -->
+            <circle class="ring-bg" cx="100" cy="100" r="82" stroke="#FF2D55"></circle>
+            <circle class="ring-fill" id="ring-fill-kcal" cx="100" cy="100" r="82" stroke="#FF2D55" stroke-dasharray="515.2" stroke-dashoffset="515.2" filter="drop-shadow(0px 0px 4px rgba(255, 45, 85, 0.8))"></circle>
+
+            <!-- RING 2: PROTEINAS (CYAN #30B0C7) -->
+            <circle class="ring-bg" cx="100" cy="100" r="66" stroke="#30B0C7"></circle>
+            <circle class="ring-fill" id="ring-fill-prote" cx="100" cy="100" r="66" stroke="#30B0C7" stroke-dasharray="414.7" stroke-dashoffset="414.7" filter="drop-shadow(0px 0px 4px rgba(48, 176, 199, 0.8))"></circle>
+
+            <!-- RING 3: CARBOS (YELLOW #FFCC00) -->
+            <circle class="ring-bg" cx="100" cy="100" r="50" stroke="#FFCC00"></circle>
+            <circle class="ring-fill" id="ring-fill-carbos" cx="100" cy="100" r="50" stroke="#FFCC00" stroke-dasharray="314.15" stroke-dashoffset="314.15" filter="drop-shadow(0px 0px 4px rgba(255, 204, 0, 0.8))"></circle>
+
+            <!-- RING 4: GRASAS (GREEN #34C759) -->
+            <circle class="ring-bg" cx="100" cy="100" r="34" stroke="#34C759"></circle>
+            <circle class="ring-fill" id="ring-fill-grasas" cx="100" cy="100" r="34" stroke="#34C759" stroke-dasharray="213.6" stroke-dashoffset="213.6" filter="drop-shadow(0px 0px 4px rgba(52, 199, 89, 0.8))"></circle>
+          </svg>
+
+          <div class="rings-center-info">
+            <div class="rings-center-val" id="center-kcal-val">0</div>
+            <div class="rings-center-sub" id="center-kcal-sub">/ 3200 KCAL</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 MACRO METRICS GRID -->
+      <div class="metrics-grid">
+        <!-- KCAL -->
+        <div class="macro-tile" id="tile-kcal">
+          <div class="tile-header">
+            <div class="tile-label">
+              <div class="dot-indicator" style="background: var(--kcal-color);"></div> Calorías
+            </div>
+            <div class="tile-pct" style="color: var(--kcal-color);" id="pct-kcal">0%</div>
+          </div>
+          <div class="tile-value-row">
+            <span class="tile-main-val" id="val-kcal">0</span>
+            <span class="tile-target-val" id="meta-kcal">/ 3200 kcal</span>
+          </div>
+          <div class="tile-progress-track">
+            <div class="tile-progress-bar" id="bar-kcal" style="width: 0%; background: var(--kcal-color);"></div>
+          </div>
+          <div class="tile-differential" id="status-kcal">Faltan 3200.0 kcal</div>
+        </div>
+
+        <!-- PROTEINAS -->
+        <div class="macro-tile" id="tile-prote">
+          <div class="tile-header">
+            <div class="tile-label">
+              <div class="dot-indicator" style="background: var(--prote-color);"></div> Proteínas
+            </div>
+            <div class="tile-pct" style="color: var(--prote-color);" id="pct-prote">0%</div>
+          </div>
+          <div class="tile-value-row">
+            <span class="tile-main-val" id="val-prote">0</span>
+            <span class="tile-target-val" id="meta-prote">/ 160 g</span>
+          </div>
+          <div class="tile-progress-track">
+            <div class="tile-progress-bar" id="bar-prote" style="width: 0%; background: var(--prote-color);"></div>
+          </div>
+          <div class="tile-differential" id="status-prote">Faltan 160.0 g</div>
+        </div>
+
+        <!-- CARBOS -->
+        <div class="macro-tile" id="tile-carbos">
+          <div class="tile-header">
+            <div class="tile-label">
+              <div class="dot-indicator" style="background: var(--carbos-color);"></div> Carbos
+            </div>
+            <div class="tile-pct" style="color: var(--carbos-color);" id="pct-carbos">0%</div>
+          </div>
+          <div class="tile-value-row">
+            <span class="tile-main-val" id="val-carbos">0</span>
+            <span class="tile-target-val" id="meta-carbos">/ 500 g</span>
+          </div>
+          <div class="tile-progress-track">
+            <div class="tile-progress-bar" id="bar-carbos" style="width: 0%; background: var(--carbos-color);"></div>
+          </div>
+          <div class="tile-differential" id="status-carbos">Faltan 500.0 g</div>
+        </div>
+
+        <!-- GRASAS -->
+        <div class="macro-tile" id="tile-grasas">
+          <div class="tile-header">
+            <div class="tile-label">
+              <div class="dot-indicator" style="background: var(--grasas-color);"></div> Grasas
+            </div>
+            <div class="tile-pct" style="color: var(--grasas-color);" id="pct-grasas">0%</div>
+          </div>
+          <div class="tile-value-row">
+            <span class="tile-main-val" id="val-grasas">0</span>
+            <span class="tile-target-val" id="meta-grasas">/ 70 g</span>
+          </div>
+          <div class="tile-progress-track">
+            <div class="tile-progress-bar" id="bar-grasas" style="width: 0%; background: var(--grasas-color);"></div>
+          </div>
+          <div class="tile-differential" id="status-grasas">Faltan 70.0 g</div>
+        </div>
+      </div>
+
+      <!-- LOGGED FOODS LIST -->
+      <div>
+        <div class="section-header">
+          <span>Comidas Agregadas</span>
+          <span id="count-tag" style="font-size: 13px; color: var(--prote-color);">0 ítems</span>
+        </div>
+        <div class="log-list" id="logs-container" style="margin-top: 12px;">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW CONTAINER 2: WEEKLY NUTRITION TRACKER -->
+    <div id="view-weekly-container" style="display: none; flex-direction: column; gap: 20px;">
+      <!-- WEEK SELECTOR NAV -->
+      <div class="date-nav-bar">
+        <button class="nav-arrow" onclick="changeWeek(-1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="date-center" onclick="resetToCurrentWeek()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--grasas-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span id="label-week-range">Semana Actual</span>
+        </div>
+        <button class="nav-arrow" onclick="changeWeek(1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- STREAK HERO CARD -->
+      <div class="streak-hero-card">
+        <div class="streak-left">
+          <div class="streak-title">
+            <span id="streak-days-text">5/7 Días</span>
+            <span>🔥</span>
+          </div>
+          <div class="streak-sub">Suma 1 pt por macro (Éxito con ≥ 3/4 pts)</div>
+        </div>
+        <div class="streak-badge-pct" id="streak-pct-tag">71%</div>
+      </div>
+
+      <!-- 7 DAYS GRAPHIC STACK (L, M, X, J, V, S, D) -->
+      <div>
+        <div class="section-header">
+          <span>Rendimiento por Día (L - D)</span>
+          <span style="font-size: 11px; color: var(--text-secondary);">≥95% Kcal/P/C | 50-108% Grasas</span>
+        </div>
+        <div class="weekly-days-stack" id="weekly-days-container" style="margin-top: 12px;">
+          <!-- Dynamically Rendered -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING ACTION BUTTON (FAB) -->
+  <button class="fab-neon" id="fab-button" onclick="openSearchModal()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    <span>Añadir Alimento</span>
+  </button>
+
+  <!-- MODAL 1: SEARCH & PORTION CONFIG -->
+  <div class="modal-backdrop" id="modal-search">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title" id="modal-search-title">Añadir Alimento</div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-search')">✕</button>
+      </div>
+
+      <!-- STEP 1: SEARCH -->
+      <div id="step-search">
+        <input type="text" class="search-box-input" id="search-query" placeholder="Buscar en Mercadona o alimentos..." oninput="filterFoods()">
+        <div class="results-scroll" id="search-results-list" style="margin-top: 12px;"></div>
+        <button class="preset-chip" style="width: 100%; margin-top: 12px; text-align: center; color: var(--prote-color);" onclick="closeModal('modal-search'); openModal('modal-custom-food');">
+          ¿No encuentras tu alimento? Créalo aquí
+        </button>
+      </div>
+
+      <!-- STEP 2: PORTION CONFIG & LIVE PREVIEW -->
+      <div id="step-config" style="display: none; flex-direction: column; gap: 16px;">
+        <div style="background: var(--card-sub-bg); padding: 14px; border-radius: 18px; border: 1px solid var(--kcal-color);">
+          <div style="font-weight: 800; font-size: 17px;" id="selected-food-name">Pan Bimbo</div>
+          <div style="font-size: 13px; color: var(--text-secondary);" id="selected-food-base">Valores base (100g): 250 kcal</div>
+        </div>
+
+        <div class="input-field-group">
+          <div class="input-field-label" id="label-qty-type">Cantidad en gramos (g) o ml:</div>
+          <input type="number" class="native-input" id="input-qty" value="100" oninput="updateLivePreview()">
+        </div>
+
+        <div class="chips-row" id="presets-row-container">
+          <button class="preset-chip" onclick="setPreset(50)">50g</button>
+          <button class="preset-chip" onclick="setPreset(100)">100g</button>
+          <button class="preset-chip" onclick="setPreset(150)">150g</button>
+          <button class="preset-chip" onclick="setPreset(200)">200g</button>
+        </div>
+
+        <!-- LIVE PREVIEW BOX -->
+        <div class="neon-preview-card">
+          <div class="preview-header-title">📊 Vista Previa en Vivo</div>
+          <div class="preview-stats-grid">
+            <div>
+              <div class="preview-num" style="color: var(--kcal-color);" id="prev-kcal">0</div>
+              <div class="preview-lbl">Kcal</div>
+            </div>
+            <div>
+              <div class="preview-num" style="color: var(--prote-color);" id="prev-prote">0g</div>
+              <div class="preview-lbl">Proteínas</div>
+            </div>
+            <div>
+              <div class="preview-num" style="color: var(--carbos-color);" id="prev-carbos">0g</div>
+              <div class="preview-lbl">Carbos</div>
+            </div>
+            <div>
+              <div class="preview-num" style="color: var(--grasas-color);" id="prev-grasas">0g</div>
+              <div class="preview-lbl">Grasas</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-action-cta" onclick="confirmAddLog()">Añadir al día</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: GOALS SETTINGS & GEMINI API KEY -->
+  <div class="modal-backdrop" id="modal-targets">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title">Configurar Objetivos</div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-targets')">✕</button>
+      </div>
+
+      <div class="input-field-group" style="background: rgba(175, 82, 222, 0.1); padding: 12px; border-radius: 16px; border: 1px solid rgba(175, 82, 222, 0.3);">
+        <div class="input-field-label" style="color: var(--ai-purple);">🔑 Clave API de Google Gemini (Opcional):</div>
+        <input type="password" class="native-input" id="input-api-key" placeholder="AIzaSy..." style="font-size: 14px;" oninput="saveApiKey()">
+        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Obtén tu clave gratis en <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: var(--ai-purple); text-decoration: underline;">Google AI Studio</a></div>
+      </div>
+
+      <div class="chips-row">
+        <button class="preset-chip" style="color: var(--kcal-color);" onclick="applyTargetPreset(3600, 180, 550, 80)">Volumen 💪</button>
+        <button class="preset-chip" style="color: var(--prote-color);" onclick="applyTargetPreset(2300, 190, 220, 60)">Definición ✂️</button>
+        <button class="preset-chip" style="color: var(--carbos-color);" onclick="applyTargetPreset(2800, 160, 380, 70)">Mantenimiento ⚖️</button>
+      </div>
+
+      <div class="input-field-group">
+        <div class="input-field-label">Calorías Diarias (kcal):</div>
+        <input type="number" class="native-input" id="target-input-kcal" value="3200">
+      </div>
+      <div class="input-field-group">
+        <div class="input-field-label">Proteínas (g):</div>
+        <input type="number" class="native-input" id="target-input-prote" value="160">
+      </div>
+      <div class="input-field-group">
+        <div class="input-field-label">Carbohidratos (g):</div>
+        <input type="number" class="native-input" id="target-input-carbos" value="500">
+      </div>
+      <div class="input-field-group">
+        <div class="input-field-label">Grasas (g):</div>
+        <input type="number" class="native-input" id="target-input-grasas" value="70">
+      </div>
+
+      <button class="btn-action-cta" onclick="saveTargets()">Guardar Objetivos</button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CREATE CUSTOM FOOD -->
+  <div class="modal-backdrop" id="modal-custom-food">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title">Crear Nuevo Alimento</div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-custom-food')">✕</button>
+      </div>
+
+      <div class="input-field-group">
+        <div class="input-field-label">Nombre del producto:</div>
+        <input type="text" class="native-input" id="custom-name" placeholder="Ej. Whey Vainilla ISO" style="font-size: 15px;">
+      </div>
+
+      <div class="input-field-group">
+        <div class="input-field-label">Tipo de Medición:</div>
+        <select class="native-input" id="custom-unit" style="font-size: 15px;">
+          <option value="false">Por cada 100g / 100ml</option>
+          <option value="true">Por pieza / unidad</option>
+        </select>
+      </div>
+
+      <div class="input-field-group">
+        <div class="input-field-label">Calorías (kcal):</div>
+        <input type="number" class="native-input" id="custom-kcal" placeholder="380">
+      </div>
+      <div class="input-field-group">
+        <div class="input-field-label">Proteínas (g):</div>
+        <input type="number" class="native-input" id="custom-prote" placeholder="80">
+      </div>
+      <div class="input-field-group">
+        <div class="input-field-label">Carbohidratos (g):</div>
+        <input type="number" class="native-input" id="custom-carbos" placeholder="4">
+      </div>
+      <div class="input-field-group">
+        <div class="input-field-label">Grasas (g):</div>
+        <input type="number" class="native-input" id="custom-grasas" placeholder="2">
+      </div>
+
+      <button class="btn-action-cta" onclick="saveCustomFood()">Guardar Alimento</button>
+    </div>
+  </div>
+
+  <!-- MODAL 4: GEMINI AI ASSISTANT QUESTIONNAIRE & RESULTS -->
+  <div class="modal-backdrop" id="modal-gemini-ai">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title" style="color: var(--ai-purple);">✨ Asistente IA Gemini Pro</div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-gemini-ai')">✕</button>
+      </div>
+
+      <!-- FORM QUESTIONNAIRE -->
+      <div id="ai-form-step">
+        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+          Responde estas preguntas para que Gemini Pro o el algoritmo científico calculen tus macros exactos.
+        </div>
+
+        <div class="input-field-group" style="margin-bottom: 10px; background: rgba(175, 82, 222, 0.1); padding: 10px; border-radius: 14px; border: 1px solid rgba(175, 82, 222, 0.3);">
+          <div class="input-field-label" style="color: var(--ai-purple);">Clave API Gemini (Opcional):</div>
+          <input type="password" class="native-input" id="ai-key-input" placeholder="AIzaSy... (o déjala vacía para cálculo offline)" style="font-size: 14px;" oninput="syncApiKeyInputs(this.value)">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+          <div class="input-field-group">
+            <div class="input-field-label">Peso (kg):</div>
+            <input type="number" class="native-input" id="ai-peso" value="78">
+          </div>
+          <div class="input-field-group">
+            <div class="input-field-label">Altura (cm):</div>
+            <input type="number" class="native-input" id="ai-altura" value="178">
+          </div>
+          <div class="input-field-group">
+            <div class="input-field-label">Edad:</div>
+            <input type="number" class="native-input" id="ai-edad" value="25">
+          </div>
+        </div>
+
+        <div class="input-field-group" style="margin-bottom: 10px;">
+          <div class="input-field-label">Tipo de Metabolismo:</div>
+          <select class="native-input" id="ai-metabolismo" style="font-size: 15px;">
+            <option value="Muy Rápido (Ectomorfo / Cuesta ganar peso)">Muy Rápido (Ectomorfo / Cuesta ganar peso) ⚡ (+20% kcal)</option>
+            <option value="Normal / Rápido">Normal / Rápido 🏃</option>
+            <option value="Lento (Endomorfo / Facilidad para acumular grasa)">Lento (Endomorfo / Facilidad para acumular grasa) 🐢 (-8% kcal)</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+          <div class="input-field-group">
+            <div class="input-field-label">Días Fuerza / sem:</div>
+            <input type="number" class="native-input" id="ai-fuerza" value="5">
+          </div>
+          <div class="input-field-group">
+            <div class="input-field-label">Min Cardio / día:</div>
+            <input type="number" class="native-input" id="ai-cardio" value="20">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+          <div class="input-field-group">
+            <div class="input-field-label">Nivel Estrés (1-10):</div>
+            <input type="number" class="native-input" id="ai-estres" value="6" min="1" max="10">
+          </div>
+          <div class="input-field-group">
+            <div class="input-field-label">Horas Sueño / noche:</div>
+            <input type="number" class="native-input" id="ai-sueno" value="7.5" step="0.5">
+          </div>
+        </div>
+
+        <div class="input-field-group" style="margin-bottom: 10px;">
+          <div class="input-field-label">Pasos Diarios Estimados:</div>
+          <input type="number" class="native-input" id="ai-pasos" value="10000">
+        </div>
+
+        <div class="input-field-group" style="margin-bottom: 14px;">
+          <div class="input-field-label">Objetivo Nutricional:</div>
+          <select class="native-input" id="ai-objetivo" style="font-size: 15px;">
+            <option value="Volumen Limpio">Volumen Limpio (+250 kcal)</option>
+            <option value="Volumen Agresivo">Volumen Agresivo (+500 kcal)</option>
+            <option value="Mantenimiento">Mantenimiento Recomposición</option>
+            <option value="Definición">Definición (-400 kcal)</option>
+          </select>
+        </div>
+
+        <button class="btn-action-cta" style="background: var(--ai-purple); box-shadow: 0 8px 24px var(--ai-glow);" onclick="callGeminiAPI()">
+          🤖 Calcular Objetivos con IA / Algoritmo
+        </button>
+      </div>
+
+      <!-- LOADING SPINNER STEP -->
+      <div id="ai-loading-step" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; gap: 16px;">
+        <div class="spinner-neon"></div>
+        <div style="font-weight: 800; font-size: 17px; color: var(--ai-purple);">Calculando tu distribución nutricional...</div>
+        <div style="font-size: 13px; color: var(--text-secondary); text-align: center;">Ajustando metabolismo rápido, cortisol, cardio y descanso.</div>
+      </div>
+
+      <!-- AI RESULTS STEP -->
+      <div id="ai-results-step" style="display: none; flex-direction: column; gap: 16px;">
+        <div style="background: linear-gradient(135deg, rgba(175, 82, 222, 0.2), rgba(48, 176, 199, 0.2)); border: 1px solid var(--ai-purple); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 900; font-size: 18px; color: var(--ai-purple);" id="ai-result-tag">✨ Propuesta Personalizada</div>
+            <span style="font-size: 11px; font-weight: 800; background: rgba(52, 199, 89, 0.2); color: var(--grasas-color); padding: 3px 8px; border-radius: 6px;" id="ai-badge-source">Gemini Pro API</span>
+          </div>
+
+          <div class="preview-stats-grid">
+            <div>
+              <div class="preview-num" style="color: var(--kcal-color);" id="ai-res-kcal">0</div>
+              <div class="preview-lbl">Kcal</div>
+            </div>
+            <div>
+              <div class="preview-num" style="color: var(--prote-color);" id="ai-res-prote">0g</div>
+              <div class="preview-lbl">Proteínas</div>
+            </div>
+            <div>
+              <div class="preview-num" style="color: var(--carbos-color);" id="ai-res-carbos">0g</div>
+              <div class="preview-lbl">Carbos</div>
+            </div>
+            <div>
+              <div class="preview-num" style="color: var(--grasas-color);" id="ai-res-grasas">0g</div>
+              <div class="preview-lbl">Grasas</div>
+            </div>
+          </div>
+
+          <div style="font-size: 13px; color: var(--text-primary); background: rgba(0, 0, 0, 0.4); padding: 12px; border-radius: 12px; font-style: italic;" id="ai-res-razonamiento">
+            Justificación...
+          </div>
+        </div>
+
+        <button class="btn-action-cta" style="background: var(--grasas-color); color: #000; box-shadow: 0 8px 24px var(--grasas-glow);" onclick="applyAiTargets()">
+          ✓ Aplicar Objetivos Recomendados
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PRELOADED MERCADONA SEED FOOD DATABASE
+    const initialSeedFoods = [
+      { id: "seed-pan-bimbo", nombre: "Pan Bimbo", kcal_100g: 250.0, prote_100g: 9.0, carbos_100g: 46.0, grasas_100g: 2.7, es_unidad: false },
+      { id: "seed-claras-huevo", nombre: "Claras de Huevo", kcal_100g: 42.0, prote_100g: 11.0, carbos_100g: 0.0, grasas_100g: 0.0, es_unidad: false },
+      { id: "seed-macarrones", nombre: "Macarrones", kcal_100g: 354.0, prote_100g: 13.0, carbos_100g: 71.0, grasas_100g: 1.5, es_unidad: false },
+      { id: "seed-leche", nombre: "Leche", kcal_100g: 113.0, prote_100g: 15.0, carbos_100g: 12.0, grasas_100g: 0.5, es_unidad: false },
+      { id: "seed-jamon-york", nombre: "Jamón York", kcal_100g: 102.0, prote_100g: 11.3, carbos_100g: 7.1, grasas_100g: 3.2, es_unidad: false },
+      { id: "seed-tomate-mercadona", nombre: "Tomate Mercadona", kcal_100g: 201.0, prote_100g: 1.6, carbos_100g: 14.3, grasas_100g: 15.0, es_unidad: false },
+      { id: "seed-lomo-familiar-mercadona", nombre: "Lomo Familiar Mercadona", kcal_100g: 152.0, prote_100g: 18.0, carbos_100g: 0.0, grasas_100g: 8.9, es_unidad: false },
+      { id: "seed-patatas-fritas", nombre: "Patatas Fritas", kcal_100g: 170.0, prote_100g: 2.4, carbos_100g: 21.0, grasas_100g: 6.0, es_unidad: false },
+      { id: "seed-pan-mercadona", nombre: "Pan Mercadona", kcal_100g: 268.0, prote_100g: 8.9, carbos_100g: 54.0, grasas_100g: 1.3, es_unidad: false },
+      { id: "seed-galletas-maria-integrales", nombre: "Galletas María Integrales", kcal_100g: 25.0, prote_100g: 0.5, carbos_100g: 3.9, grasas_100g: 0.6, es_unidad: true },
+      { id: "seed-avena", nombre: "Avena", kcal_100g: 375.0, prote_100g: 14.0, carbos_100g: 59.0, grasas_100g: 7.0, es_unidad: false },
+      { id: "seed-banana", nombre: "Banana", kcal_100g: 97.6, prote_100g: 1.07, carbos_100g: 22.7, grasas_100g: 0.3, es_unidad: true },
+      { id: "seed-arroz", nombre: "Arroz", kcal_100g: 345.0, prote_100g: 7.9, carbos_100g: 76.0, grasas_100g: 0.7, es_unidad: false },
+      { id: "seed-pechuga-pollo-mercadona", nombre: "Pechuga Pollo Mercadona", kcal_100g: 108.0, prote_100g: 22.0, carbos_100g: 0.5, grasas_100g: 1.8, es_unidad: false },
+      { id: "seed-tortilla-patatas-mercadona", nombre: "Tortilla Patatas Mercadona", kcal_100g: 193.0, prote_100g: 5.7, carbos_100g: 17.0, grasas_100g: 11.0, es_unidad: false },
+      { id: "seed-lomo-adobado", nombre: "Lomo Adobado", kcal_100g: 130.0, prote_100g: 20.0, carbos_100g: 0.0, grasas_100g: 3.6, es_unidad: false },
+      { id: "seed-lentejas-cocidas", nombre: "Lentejas Cocidas", kcal_100g: 116.0, prote_100g: 9.0, carbos_100g: 24.0, grasas_100g: 0.4, es_unidad: false },
+      { id: "seed-pez-limon", nombre: "Pez Limón", kcal_100g: 120.0, prote_100g: 21.0, carbos_100g: 0.0, grasas_100g: 4.5, es_unidad: false },
+      { id: "seed-anacardos-mercadona", nombre: "Anacardos Mercadona", kcal_100g: 604.0, prote_100g: 20.0, carbos_100g: 21.0, grasas_100g: 48.0, es_unidad: false }
+    ];
+
+    // STATE
+    let foods = JSON.parse(localStorage.getItem('nutri_foods')) || initialSeedFoods;
+    let targets = JSON.parse(localStorage.getItem('nutri_targets')) || { kcal: 3200, prote: 160, carbos: 500, grasas: 70 };
+    let logs = JSON.parse(localStorage.getItem('nutri_logs')) || [];
+    let apiKey = localStorage.getItem('gemini_api_key') || '';
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+
+    function applyTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      const btn = document.getElementById('theme-toggle-btn');
+      if (btn) {
+        btn.innerHTML = theme === 'light' ? '🌙' : '☀️';
+      }
+    }
+
+    function toggleTheme() {
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme);
+    }
+    
+    let activeView = 'daily'; // 'daily' or 'weekly'
+    let currentDate = new Date().toISOString().split('T')[0];
+    let selectedWeekOffset = 0;
+    let selectedFoodForLog = null;
+    let tempAiResult = null;
+
+    // INIT
+    window.addEventListener('DOMContentLoaded', () => {
+      applyTheme(currentTheme);
+      if (apiKey) {
+        document.getElementById('input-api-key').value = apiKey;
+        document.getElementById('ai-key-input').value = apiKey;
+      }
+      renderDashboard();
+      saveState();
+    });
+
+
+    function saveState() {
+      localStorage.setItem('nutri_foods', JSON.stringify(foods));
+      localStorage.setItem('nutri_targets', JSON.stringify(targets));
+      localStorage.setItem('nutri_logs', JSON.stringify(logs));
+      if (apiKey) localStorage.setItem('gemini_api_key', apiKey);
+    }
+
+    function saveApiKey() {
+      apiKey = document.getElementById('input-api-key').value.trim();
+      localStorage.setItem('gemini_api_key', apiKey);
+      document.getElementById('ai-key-input').value = apiKey;
+    }
+
+    function syncApiKeyInputs(val) {
+      apiKey = val.trim();
+      localStorage.setItem('gemini_api_key', apiKey);
+      document.getElementById('input-api-key').value = apiKey;
+    }
+
+    function switchView(viewName) {
+      activeView = viewName;
+      document.getElementById('seg-btn-daily').classList.toggle('active', viewName === 'daily');
+      document.getElementById('seg-btn-weekly').classList.toggle('active', viewName === 'weekly');
+
+      document.getElementById('view-daily-container').style.display = viewName === 'daily' ? 'flex' : 'none';
+      document.getElementById('view-weekly-container').style.display = viewName === 'weekly' ? 'flex' : 'none';
+      document.getElementById('fab-button').style.display = viewName === 'daily' ? 'flex' : 'none';
+
+      if (viewName === 'weekly') {
+        renderWeeklyView();
+      } else {
+        renderDashboard();
+      }
+    }
+
+    // DATE NAV
+    function changeDate(offsetDays) {
+      const d = new Date(currentDate);
+      d.setDate(d.getDate() + offsetDays);
+      currentDate = d.toISOString().split('T')[0];
+      renderDashboard();
+    }
+
+    function resetToToday() {
+      currentDate = new Date().toISOString().split('T')[0];
+      renderDashboard();
+    }
+
+    function formatDateLabel(dateStr) {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const yesterdayObj = new Date();
+      yesterdayObj.setDate(yesterdayObj.getDate() - 1);
+      const yesterdayStr = yesterdayObj.toISOString().split('T')[0];
+
+      if (dateStr === todayStr) return 'Hoy';
+      if (dateStr === yesterdayStr) return 'Ayer';
+      
+      const parts = dateStr.split('-');
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    // RENDER DASHBOARD & RINGS
+    function renderDashboard() {
+      document.getElementById('label-date').innerText = formatDateLabel(currentDate);
+
+      const dayLogs = logs.filter(l => l.fecha.startsWith(currentDate));
+
+      let totalKcal = 0, totalProte = 0, totalCarbos = 0, totalGrasas = 0;
+
+      dayLogs.forEach(log => {
+        const food = foods.find(f => f.id === log.alimentoId);
+        if (food) {
+          const factor = log.cantidad / 100.0;
+          totalKcal += food.kcal_100g * factor;
+          totalProte += food.prote_100g * factor;
+          totalCarbos += food.carbos_100g * factor;
+          totalGrasas += food.grasas_100g * factor;
+        }
+      });
+
+      // Update Center Ring Text
+      document.getElementById('center-kcal-val').innerText = totalKcal.toFixed(0);
+      document.getElementById('center-kcal-sub').innerText = `/ ${targets.kcal} KCAL`;
+
+      // Update Concentric Rings SVG Stroke Offsets
+      updateRingSVG('kcal', totalKcal, targets.kcal, 515.2);
+      updateRingSVG('prote', totalProte, targets.prote, 414.7);
+      updateRingSVG('carbos', totalCarbos, targets.carbos, 314.15);
+      updateRingSVG('grasas', totalGrasas, targets.grasas, 213.6);
+
+      // Update Macro Tiles
+      updateMacroTile('kcal', totalKcal, targets.kcal, 'kcal');
+      updateMacroTile('prote', totalProte, targets.prote, 'g');
+      updateMacroTile('carbos', totalCarbos, targets.carbos, 'g');
+      updateMacroTile('grasas', totalGrasas, targets.grasas, 'g');
+
+      // Update Food List
+      const container = document.getElementById('logs-container');
+      document.getElementById('count-tag').innerText = `${dayLogs.length} ítems`;
+
+      if (dayLogs.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state-box">
+            <div style="font-size: 32px;">🍽️</div>
+            <div style="font-weight: 800;">No hay comidas registradas</div>
+            <div style="font-size: 13px;">Toca "Añadir Alimento" para buscar alimentos.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = dayLogs.map(log => {
+        const food = foods.find(f => f.id === log.alimentoId);
+        if (!food) return '';
+
+        const factor = log.cantidad / 100.0;
+        const itemKcal = (food.kcal_100g * factor).toFixed(0);
+        const itemProte = (food.prote_100g * factor).toFixed(1);
+        const itemCarbos = (food.carbos_100g * factor).toFixed(1);
+        const itemGrasas = (food.grasas_100g * factor).toFixed(1);
+
+        const qtyLabel = food.es_unidad ? `${log.cantidad} ud.` : `${log.cantidad} g`;
+
+        return `
+          <div class="log-item-card">
+            <div class="log-item-left">
+              <div class="log-title-row">
+                <span class="log-item-name">${food.nombre}</span>
+                <span class="log-qty-badge">${qtyLabel}</span>
+              </div>
+              <div class="log-macro-tags">
+                <span class="tag-pill" style="background: rgba(48, 176, 199, 0.15); color: var(--prote-color);">P: ${itemProte}g</span>
+                <span class="tag-pill" style="background: rgba(255, 204, 0, 0.15); color: var(--carbos-color);">C: ${itemCarbos}g</span>
+                <span class="tag-pill" style="background: rgba(52, 199, 89, 0.15); color: var(--grasas-color);">G: ${itemGrasas}g</span>
+              </div>
+            </div>
+            <div class="log-item-right">
+              <span class="log-item-kcal">${itemKcal} kcal</span>
+              <button class="btn-trash" onclick="deleteLog('${log.id}')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateRingSVG(key, consumed, target, maxCircumference) {
+      const pct = Math.min(1.0, consumed / target);
+      const strokeOffset = maxCircumference * (1.0 - pct);
+      document.getElementById(`ring-fill-${key}`).style.strokeDashoffset = strokeOffset;
+    }
+
+    function updateMacroTile(key, consumed, target, unit) {
+      const diff = target - consumed;
+      const pct = Math.min(100, Math.max(0, Math.round((consumed / target) * 100)));
+
+      document.getElementById(`val-${key}`).innerText = consumed.toFixed(key === 'kcal' ? 0 : 1);
+      document.getElementById(`meta-${key}`).innerText = `/ ${target} ${unit}`;
+      document.getElementById(`pct-${key}`).innerText = `${pct}%`;
+      document.getElementById(`bar-${key}`).style.width = `${pct}%`;
+
+      const tile = document.getElementById(`tile-${key}`);
+      const statusText = document.getElementById(`status-${key}`);
+
+      if (diff < -0.05) {
+        tile.classList.add('exceeded');
+        statusText.style.color = 'var(--kcal-color)';
+        statusText.innerText = `Excedido por ${Math.abs(diff).toFixed(1)} ${unit}`;
+      } else if (Math.abs(diff) <= 0.05) {
+        tile.classList.remove('exceeded');
+        statusText.style.color = 'var(--prote-color)';
+        statusText.innerText = `¡Objetivo exacto!`;
+      } else {
+        tile.classList.remove('exceeded');
+        statusText.style.color = 'var(--text-secondary)';
+        statusText.innerText = `Faltan ${diff.toFixed(1)} ${unit}`;
+      }
+    }
+
+    function deleteLog(logId) {
+      logs = logs.filter(l => l.id !== logId);
+      saveState();
+      renderDashboard();
+    }
+
+    // WEEKLY TRACKER
+    function changeWeek(offset) {
+      selectedWeekOffset += offset;
+      renderWeeklyView();
+    }
+
+    function resetToCurrentWeek() {
+      selectedWeekOffset = 0;
+      renderWeeklyView();
+    }
+
+    function getMondayOfWeek(weekOffset = 0) {
+      const now = new Date();
+      now.setDate(now.getDate() + (weekOffset * 7));
+      const day = now.getDay();
+      const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+      const monday = new Date(now.setDate(diff));
+      return monday;
+    }
+
+    function renderWeeklyView() {
+      const monday = getMondayOfWeek(selectedWeekOffset);
+      const weekDates = [];
+      const dayNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+      const dayShorts = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        weekDates.push(d.toISOString().split('T')[0]);
+      }
+
+      const startDateStr = `${weekDates[0].split('-')[2]}/${weekDates[0].split('-')[1]}`;
+      const endDateStr = `${weekDates[6].split('-')[2]}/${weekDates[6].split('-')[1]}`;
+      document.getElementById('label-week-range').innerText = selectedWeekOffset === 0 ? `Semana Actual (${startDateStr} - ${endDateStr})` : `Semana (${startDateStr} - ${endDateStr})`;
+
+      let successfulDaysCount = 0;
+      const daysHTML = weekDates.map((dateStr, index) => {
+        const dayLogs = logs.filter(l => l.fecha.startsWith(dateStr));
+        
+        let dayKcal = 0, dayProte = 0, dayCarbos = 0, dayGrasas = 0;
+        dayLogs.forEach(log => {
+          const food = foods.find(f => f.id === log.alimentoId);
+          if (food) {
+            const factor = log.cantidad / 100.0;
+            dayKcal += food.kcal_100g * factor;
+            dayProte += food.prote_100g * factor;
+            dayCarbos += food.carbos_100g * factor;
+            dayGrasas += food.grasas_100g * factor;
+          }
+        });
+
+        const isKcalOk = dayKcal >= (targets.kcal * 0.95);
+        const isProteOk = dayProte >= (targets.prote * 0.95);
+        const isCarbosOk = dayCarbos >= (targets.carbos * 0.95);
+        const isGrasasOk = dayGrasas >= (targets.grasas * 0.50) && dayGrasas <= (targets.grasas * 1.08);
+
+        const points = (isKcalOk ? 1 : 0) + (isProteOk ? 1 : 0) + (isCarbosOk ? 1 : 0) + (isGrasasOk ? 1 : 0);
+        const isDaySuccess = points >= 3;
+        if (isDaySuccess) successfulDaysCount++;
+
+        const dateParts = dateStr.split('-');
+        const formattedShortDate = `${dateParts[2]}/${dateParts[1]}`;
+
+        return `
+          <div class="day-card ${isDaySuccess ? 'completed-day' : ''}">
+            <div class="day-card-header">
+              <div class="day-name-tag">
+                <span style="color: var(--prote-color); font-weight: 900;">${dayShorts[index]}</span>
+                <span>${dayNames[index]} (${formattedShortDate})</span>
+              </div>
+              <span class="day-status-pill ${isDaySuccess ? 'status-ok' : 'status-fail'}">
+                ${isDaySuccess ? `✓ ${points}/4 Cumplidos` : `✕ ${points}/4 Fuera`}
+              </span>
+            </div>
+
+            <div class="day-macro-mini-grid">
+              <div class="mini-macro-item" style="border-bottom: 2px solid var(--kcal-color);">
+                <div class="mini-macro-val" style="color: var(--kcal-color);">${dayKcal.toFixed(0)}</div>
+                <div class="mini-macro-lbl">Kcal (≥95%)</div>
+                <div class="mini-icon-status">${isKcalOk ? '✓' : '✕'}</div>
+              </div>
+              <div class="mini-macro-item" style="border-bottom: 2px solid var(--prote-color);">
+                <div class="mini-macro-val" style="color: var(--prote-color);">${dayProte.toFixed(1)}g</div>
+                <div class="mini-macro-lbl">Prote (≥95%)</div>
+                <div class="mini-icon-status">${isProteOk ? '✓' : '✕'}</div>
+              </div>
+              <div class="mini-macro-item" style="border-bottom: 2px solid var(--carbos-color);">
+                <div class="mini-macro-val" style="color: var(--carbos-color);">${dayCarbos.toFixed(1)}g</div>
+                <div class="mini-macro-lbl">Carbos (≥95%)</div>
+                <div class="mini-icon-status">${isCarbosOk ? '✓' : '✕'}</div>
+              </div>
+              <div class="mini-macro-item" style="border-bottom: 2px solid var(--grasas-color);">
+                <div class="mini-macro-val" style="color: var(--grasas-color);">${dayGrasas.toFixed(1)}g</div>
+                <div class="mini-macro-lbl">Grasas (50-108%)</div>
+                <div class="mini-icon-status">${isGrasasOk ? '✓' : '✕'}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('weekly-days-container').innerHTML = daysHTML;
+      document.getElementById('streak-days-text').innerText = `${successfulDaysCount}/7 Días Cumplidos`;
+      const pctSuccess = Math.round((successfulDaysCount / 7.0) * 100);
+      document.getElementById('streak-pct-tag').innerText = `${pctSuccess}%`;
+    }
+
+    // ==========================================
+    // SCIENTIFIC LOCAL NUTRITION CALCULATOR (FALLBACK)
+    // ==========================================
+    function calculateScientificMacrosLocal(peso, altura, edad, fuerza, cardio, estres, sueno, pasos, objetivo, metabolismo) {
+      // Harris-Benedict BMR
+      let bmr = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+      
+      // Activity Factor
+      let actFactor = 1.2 + (fuerza * 0.05) + (cardio * 0.003) + ((pasos / 20000) * 0.1);
+
+      // Metabolism Factor
+      let metabFactor = 1.0;
+      if (metabolismo.includes('Muy Rápido') || metabolismo.includes('Ectomorfo')) {
+        metabFactor = 1.20; // +20% for fast metabolism
+      } else if (metabolismo.includes('Lento') || metabolismo.includes('Endomorfo')) {
+        metabFactor = 0.92; // -8% for slow metabolism
+      }
+
+      // Maintenance TDEE
+      let tdee = bmr * actFactor * metabFactor;
+
+      // Cortisol / Stress Adjustment
+      if (estres >= 7) {
+        tdee *= 1.05; // +5% for high cortisol recovery demand
+      }
+
+      // Goal Factor
+      if (objetivo.includes('Volumen Agresivo')) {
+        tdee += 500;
+      } else if (objetivo.includes('Volumen Limpio')) {
+        tdee += 250;
+      } else if (objetivo.includes('Definición')) {
+        tdee -= 400;
+      }
+
+      const totalKcal = Math.round(tdee);
+      const totalProte = Math.round(peso * 2.1); // 2.1g/kg
+      const totalGrasas = Math.round(peso * 0.9); // 0.9g/kg
+      const kcalFromCarbos = totalKcal - (totalProte * 4) - (totalGrasas * 9);
+      const totalCarbos = Math.max(100, Math.round(kcalFromCarbos / 4));
+
+      return {
+        kcal: totalKcal,
+        prote: totalProte,
+        carbos: totalCarbos,
+        grasas: totalGrasas,
+        razonamiento: `Cálculo científico deportivo: BMR ${(bmr).toFixed(0)} kcal + superávit por metabolismo (${metabolismo.split(' ')[0]}) y ${fuerza}d fuerza.`
+      };
+    }
+
+    // ==========================================
+    // GEMINI PRO AI API INTEGRATION WITH ROBUST FALLBACK
+    // ==========================================
+    async function callGeminiAPI() {
+      apiKey = document.getElementById('ai-key-input').value.trim();
+      localStorage.setItem('gemini_api_key', apiKey);
+
+      const peso = parseFloat(document.getElementById('ai-peso').value) || 75;
+      const altura = parseFloat(document.getElementById('ai-altura').value) || 175;
+      const edad = parseInt(document.getElementById('ai-edad').value) || 25;
+      const fuerza = parseInt(document.getElementById('ai-fuerza').value) || 4;
+      const cardio = parseInt(document.getElementById('ai-cardio').value) || 20;
+      const estres = parseInt(document.getElementById('ai-estres').value) || 5;
+      const sueno = parseFloat(document.getElementById('ai-sueno').value) || 7;
+      const pasos = parseInt(document.getElementById('ai-pasos').value) || 10000;
+      const objetivo = document.getElementById('ai-objetivo').value;
+      const metabolismo = document.getElementById('ai-metabolismo').value;
+
+      document.getElementById('ai-form-step').style.display = 'none';
+      document.getElementById('ai-loading-step').style.display = 'flex';
+      document.getElementById('ai-results-step').style.display = 'none';
+
+      const prompt = `Actúa como un Nutricionista Deportivo de Alto Rendimiento. Analiza el siguiente perfil del atleta:
+- Peso: ${peso} kg, Altura: ${altura} cm, Edad: ${edad} años.
+- Tipo de Metabolismo: ${metabolismo}. (NOTA CRÍTICA DE METABOLISMO: Si el metabolismo es 'Muy Rápido / Ectomorfo', añade un superávit o margen calórico adicional del +15% al +25% en calorías y carbohidratos porque el usuario quema energía aceleradamente incluso en reposo).
+- Entrenamiento de fuerza: ${fuerza} días/semana. Cardio: ${cardio} min/día.
+- Pasos diarios estimados: ${pasos}.
+- Nivel de estrés percibido (1 a 10): ${estres} (Nota: El cortisol elevado requiere un ajuste sutil en la relación carbos/grasas).
+- Horas de sueño promedio: ${sueno}h.
+- Objetivo principal: ${objetivo}.
+
+Calcula el gasto calórico total diario (TDEE) ajustado por su tipo de metabolismo y la distribución óptima de macronutrientes (Kcal, Proteínas en gramos, Carbohidratos en gramos y Grasas en gramos).
+
+RESPONDE ÚNICAMENTE Y EXCLUSIVAMENTE CON UN OBJETO JSON VÁLIDO EN ESTE FORMATO EXACTO (sin marcas markdown de código ni texto adicional):
+{
+  "kcal": 3200,
+  "proteinas": 160,
+  "carbohidratos": 500,
+  "grasas": 70,
+  "razonamiento": "Explicación de 2 frases justificando los macronutrientes según el metabolismo, estrés y entrenamiento."
+}`;
+
+      // VALID OFFICIAL GOOGLE API ENDPOINTS TO TRY IN SEQUENCE
+      const endpoints = [
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+      ];
+
+      let apiSuccess = false;
+      let lastErrorMessage = '';
+
+      if (apiKey.length > 5) {
+        for (const url of endpoints) {
+          try {
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+              })
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              if (data && data.candidates && data.candidates[0] && data.candidates[0].content) {
+                const rawText = data.candidates[0].content.parts[0].text;
+                const cleanedJSONText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+                const jsonRes = JSON.parse(cleanedJSONText);
+
+                tempAiResult = {
+                  kcal: parseFloat(jsonRes.kcal) || 3200,
+                  prote: parseFloat(jsonRes.proteinas) || 160,
+                  carbos: parseFloat(jsonRes.carbohidratos) || 500,
+                  grasas: parseFloat(jsonRes.grasas) || 70,
+                  razonamiento: jsonRes.razonamiento || 'Propuesta personalizada de Gemini Pro.',
+                  source: 'Gemini Pro API ✨'
+                };
+                apiSuccess = true;
+                break;
+              }
+            } else {
+              const errData = await response.json().catch(() => ({}));
+              lastErrorMessage = errData.error?.message || `HTTP ${response.status}`;
+            }
+          } catch (e) {
+            lastErrorMessage = e.message;
+          }
+        }
+      }
+
+      // IF API FAILED OR KEY WAS MISSING -> SCIENTIFIC LOCAL ALGORITHM FALLBACK (100% GUARANTEED TO WORK)
+      if (!apiSuccess) {
+        console.warn('API Key no disponible o error en Gemini API. Usando algoritmo científico deportivo local.', lastErrorMessage);
+        
+        const scRes = calculateScientificMacrosLocal(peso, altura, edad, fuerza, cardio, estres, sueno, pasos, objetivo, metabolismo);
+        tempAiResult = {
+          kcal: scRes.kcal,
+          prote: scRes.prote,
+          carbos: scRes.carbos,
+          grasas: scRes.grasas,
+          razonamiento: scRes.razonamiento + (lastErrorMessage ? ` (Nota: ${lastErrorMessage})` : ''),
+          source: apiKey ? 'Algoritmo Científico (API Key Inválida)' : 'Algoritmo Científico Offline 🧮'
+        };
+      }
+
+      // Render Result Card
+      document.getElementById('ai-res-kcal').innerText = tempAiResult.kcal;
+      document.getElementById('ai-res-prote').innerText = `${tempAiResult.prote}g`;
+      document.getElementById('ai-res-carbos').innerText = `${tempAiResult.carbos}g`;
+      document.getElementById('ai-res-grasas').innerText = `${tempAiResult.grasas}g`;
+      document.getElementById('ai-res-razonamiento').innerText = `🤖 "${tempAiResult.razonamiento}"`;
+      document.getElementById('ai-badge-source').innerText = tempAiResult.source;
+
+      document.getElementById('ai-loading-step').style.display = 'none';
+      document.getElementById('ai-results-step').style.display = 'flex';
+    }
+
+    function applyAiTargets() {
+      if (!tempAiResult) return;
+      targets = {
+        kcal: tempAiResult.kcal,
+        prote: tempAiResult.prote,
+        carbos: tempAiResult.carbos,
+        grasas: tempAiResult.grasas
+      };
+      saveState();
+      renderDashboard();
+      if (activeView === 'weekly') renderWeeklyView();
+      closeModal('modal-gemini-ai');
+      alert('¡Objetivos calculados e integrados exitosamente!');
+    }
+
+    // SEARCH MODAL
+    function openSearchModal() {
+      document.getElementById('step-search').style.display = 'block';
+      document.getElementById('step-config').style.display = 'none';
+      document.getElementById('modal-search-title').innerText = 'Añadir Alimento';
+      document.getElementById('search-query').value = '';
+      filterFoods();
+      openModal('modal-search');
+    }
+
+    function filterFoods() {
+      const q = document.getElementById('search-query').value.toLowerCase().trim();
+      const results = foods.filter(f => f.nombre.toLowerCase().includes(q));
+      const container = document.getElementById('search-results-list');
+
+      container.innerHTML = results.map(food => `
+        <div class="result-row" onclick="selectFoodForConfig('${food.id}')">
+          <div>
+            <div style="font-weight: 800; font-size: 15px;">${food.nombre}</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">P: ${food.prote_100g}g | C: ${food.carbos_100g}g | G: ${food.grasas_100g}g</div>
+          </div>
+          <div style="text-align: right; color: var(--kcal-color); font-weight: 900; font-size: 14px;">
+            ${food.kcal_100g} kcal<br><span style="font-size: 10px; color: var(--text-secondary);">${food.es_unidad ? 'por ud.' : 'por 100g'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectFoodForConfig(foodId) {
+      selectedFoodForLog = foods.find(f => f.id === foodId);
+      if (!selectedFoodForLog) return;
+
+      document.getElementById('step-search').style.display = 'none';
+      document.getElementById('step-config').style.display = 'flex';
+      document.getElementById('modal-search-title').innerText = 'Configurar Ración';
+
+      document.getElementById('selected-food-name').innerText = selectedFoodForLog.nombre;
+      document.getElementById('selected-food-base').innerText = `Valores base (${selectedFoodForLog.es_unidad ? '1 unidad' : '100g'}): ${selectedFoodForLog.kcal_100g} kcal`;
+
+      const qtyInput = document.getElementById('input-qty');
+      qtyInput.value = selectedFoodForLog.es_unidad ? 1 : 100;
+      document.getElementById('label-qty-type').innerText = selectedFoodForLog.es_unidad ? 'Cantidad de piezas / unidades:' : 'Cantidad en gramos (g) o ml:';
+
+      const presetsContainer = document.getElementById('presets-row-container');
+      if (selectedFoodForLog.es_unidad) {
+        presetsContainer.innerHTML = [1, 2, 3, 5].map(v => `<button class="preset-chip" onclick="setPreset(${v})">${v} ud.</button>`).join('');
+      } else {
+        presetsContainer.innerHTML = [50, 100, 150, 200, 250, 300].map(v => `<button class="preset-chip" onclick="setPreset(${v})">${v}g</button>`).join('');
+      }
+
+      updateLivePreview();
+    }
+
+    function setPreset(val) {
+      document.getElementById('input-qty').value = val;
+      updateLivePreview();
+    }
+
+    function updateLivePreview() {
+      if (!selectedFoodForLog) return;
+      const qty = parseFloat(document.getElementById('input-qty').value) || 0;
+      const factor = qty / 100.0;
+
+      document.getElementById('prev-kcal').innerText = (selectedFoodForLog.kcal_100g * factor).toFixed(0);
+      document.getElementById('prev-prote').innerText = `${(selectedFoodForLog.prote_100g * factor).toFixed(1)}g`;
+      document.getElementById('prev-carbos').innerText = `${(selectedFoodForLog.carbos_100g * factor).toFixed(1)}g`;
+      document.getElementById('prev-grasas').innerText = `${(selectedFoodForLog.grasas_100g * factor).toFixed(1)}g`;
+    }
+
+    function confirmAddLog() {
+      if (!selectedFoodForLog) return;
+      const qty = parseFloat(document.getElementById('input-qty').value) || 0;
+      if (qty <= 0) return;
+
+      logs.push({
+        id: 'log-' + Date.now(),
+        alimentoId: selectedFoodForLog.id,
+        cantidad: qty,
+        fecha: currentDate
+      });
+
+      saveState();
+      renderDashboard();
+      closeModal('modal-search');
+    }
+
+    // TARGETS
+    function applyTargetPreset(kcal, prote, carbos, grasas) {
+      document.getElementById('target-input-kcal').value = kcal;
+      document.getElementById('target-input-prote').value = prote;
+      document.getElementById('target-input-carbos').value = carbos;
+      document.getElementById('target-input-grasas').value = grasas;
+    }
+
+    function saveTargets() {
+      targets = {
+        kcal: parseFloat(document.getElementById('target-input-kcal').value) || 3200,
+        prote: parseFloat(document.getElementById('target-input-prote').value) || 160,
+        carbos: parseFloat(document.getElementById('target-input-carbos').value) || 500,
+        grasas: parseFloat(document.getElementById('target-input-grasas').value) || 70
+      };
+      saveState();
+      renderDashboard();
+      if (activeView === 'weekly') renderWeeklyView();
+      closeModal('modal-targets');
+    }
+
+    // CUSTOM FOOD
+    function saveCustomFood() {
+      const name = document.getElementById('custom-name').value.trim();
+      const kcal = parseFloat(document.getElementById('custom-kcal').value) || 0;
+      const prote = parseFloat(document.getElementById('custom-prote').value) || 0;
+      const carbos = parseFloat(document.getElementById('custom-carbos').value) || 0;
+      const grasas = parseFloat(document.getElementById('custom-grasas').value) || 0;
+      const esUnidad = document.getElementById('custom-unit').value === 'true';
+
+      if (!name) {
+        alert('Por favor, ingresa el nombre del producto.');
+        return;
+      }
+
+      const newFood = {
+        id: 'custom-' + Date.now(),
+        nombre: name,
+        kcal_100g: kcal,
+        prote_100g: prote,
+        carbos_100g: carbos,
+        grasas_100g: grasas,
+        es_unidad: esUnidad
+      };
+
+      foods.push(newFood);
+      saveState();
+      closeModal('modal-custom-food');
+      alert(`¡"${name}" guardado exitosamente!`);
+    }
+
+    // MODAL UTILS
+    function openModal(id) {
+      if (id === 'modal-gemini-ai') {
+        document.getElementById('ai-form-step').style.display = 'block';
+        document.getElementById('ai-loading-step').style.display = 'none';
+        document.getElementById('ai-results-step').style.display = 'none';
+      }
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('[PWA] Service Worker registrado exitosamente:', reg.scope);
+          
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('[PWA] Nueva versión detectada. Actualizando interfaz...');
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                }
+              });
+            }
+          });
+        }).catch((err) => {
+          console.warn('[PWA] Error al registrar Service Worker:', err);
+        });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+
