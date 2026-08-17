@@ -626,14 +626,474 @@
     }
 
     .mini-icon-status {
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    /* MONTHLY CALENDAR GRID STYLES */
+    .calendar-weekdays-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .calendar-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .calendar-day-cell {
+      min-height: 48px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      user-select: none;
+      padding: 4px 2px;
+    }
+
+    .calendar-day-cell:hover {
+      transform: scale(1.05);
+    }
+
+    .calendar-day-cell.today-marker {
+      border: 2px solid var(--prote-color) !important;
+      box-shadow: 0 0 10px rgba(0, 122, 255, 0.4);
+    }
+
+    .calendar-day-cell.cell-success {
+      background: rgba(52, 199, 89, 0.15) !important;
+      border: 1px solid #34C759 !important;
+      color: #34C759 !important;
+      box-shadow: 0 4px 12px rgba(52, 199, 89, 0.22);
+    }
+
+    .calendar-day-cell.cell-fail {
+      background: rgba(255, 45, 85, 0.15) !important;
+      border: 1px solid #FF2D55 !important;
+      color: #FF2D55 !important;
+      box-shadow: 0 4px 12px rgba(255, 45, 85, 0.22);
+    }
+
+    .calendar-day-cell.cell-empty-past {
+      opacity: 0.5;
+      color: var(--text-secondary);
+    }
+
+    .calendar-day-cell.cell-future {
+      opacity: 0.25;
+      cursor: default;
+    }
+
+    .calendar-badge-mini {
+      font-size: 9px;
+      font-weight: 900;
+      margin-top: 2px;
+      padding: 1px 4px;
+      border-radius: 6px;
+      line-height: 1.1;
+    }
+
+    .cell-success .calendar-badge-mini {
+      background: rgba(52, 199, 89, 0.25);
+      color: #34C759;
+    }
+
+    .cell-fail .calendar-badge-mini {
+      background: rgba(255, 45, 85, 0.25);
+      color: #FF2D55;
+    }
+
+    /* HABIT TRACKER STYLES */
+    .habits-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .habits-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .habits-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .habits-pct-tag {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: rgba(0, 122, 255, 0.15);
+      color: var(--prote-color);
+    }
+
+    .btn-add-habit-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    /* GEMINI AI ASSISTANT CARD */
+    .btn-add-habit-circle:hover {
+      transform: scale(1.1);
+      border-color: var(--prote-color);
+      color: var(--prote-color);
+    }
+
+    .habits-progress-track {
+      height: 6px;
+      background: var(--card-sub-bg);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .habits-progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--prote-color), var(--grasas-color));
+      transition: width 0.3s ease;
+    }
+
+    .habits-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .habit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .habit-row:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .habit-row.completed {
+      background: rgba(52, 199, 89, 0.1) !important;
+      border-color: rgba(52, 199, 89, 0.3) !important;
+    }
+
+    .habit-row.completed .habit-name {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+
+    .habit-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .habit-emoji {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .habit-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .habit-checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      flex-shrink: 0;
+      color: transparent;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .habit-row.completed .habit-checkbox {
+      background: var(--grasas-color);
+      border-color: var(--grasas-color);
+      color: #000;
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(52, 199, 89, 0.4);
+    }
+
+    .btn-trash-habit {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .btn-trash-habit:hover {
+      opacity: 1;
+      color: var(--error-red);
+    }
+
+    /* SWITCH TOGGLE & TIMER STYLES */
+    .switch-toggle {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-round {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--card-border);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider-round:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider-round {
+      background-color: var(--prote-color);
+    }
+
+    input:checked + .slider-round:before {
+      transform: translateX(20px);
+    }
+
+    .habit-timer-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      font-size: 12px;
+      font-weight: 800;
+      margin-left: 8px;
+    }
+
+    .habit-timer-pill.active {
+      background: rgba(0, 122, 255, 0.18);
+      border-color: var(--prote-color);
+      color: var(--prote-color);
+      box-shadow: 0 0 10px rgba(0, 122, 255, 0.35);
+    }
+
+    .btn-timer-ctrl, .btn-timer-reset {
+      background: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    .btn-timer-ctrl:hover, .btn-timer-reset:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+
+
+    /* GEMINI AI ASSISTANT CARD & CHAT */
+    .chat-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    @keyframes pulseNeon {
+      0% { box-shadow: 0 0 10px rgba(48, 176, 199, 0.25); }
+      50% { box-shadow: 0 0 22px rgba(48, 176, 199, 0.65); }
+      100% { box-shadow: 0 0 10px rgba(48, 176, 199, 0.25); }
+    }
+
+    .mentor-banner-card {
+      border-radius: 22px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* LOCKED STATE */
+    .mentor-banner-card.locked {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+      animation: none;
+      opacity: 0.85;
+    }
+
+    .mentor-banner-card.locked:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.35);
+      opacity: 1;
+    }
+
+    /* UNLOCKED / ACTIVE STATE */
+    .mentor-banner-card.unlocked {
+      background: linear-gradient(135deg, rgba(48, 176, 199, 0.22), rgba(175, 82, 222, 0.18));
+      border: 1px solid rgba(48, 176, 199, 0.5);
+      animation: pulseNeon 2.5s infinite;
+      opacity: 1;
+    }
+
+    .mentor-banner-card.unlocked:active {
+      transform: scale(0.98);
+    }
+
+
+    .mentor-banner-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mentor-pulse-tag {
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(52, 199, 89, 0.25);
+      color: var(--grasas-color);
+      padding: 2px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(52, 199, 89, 0.4);
+    }
+
+    .mentor-banner-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    .btn-mentor-sparkle {
+      background: var(--prote-color);
+      color: #000;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--prote-glow);
+      flex-shrink: 0;
+    }
+
+
+
+    .chat-bubble {
+      max-width: 86%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: break-word;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: #2C2C2E;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 45, 85, 0.4);
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-bubble.model {
+      align-self: flex-start;
+      background: #1C1C1E;
+      color: var(--text-primary);
+      border: 1px solid rgba(48, 176, 199, 0.35);
+      border-bottom-left-radius: 4px;
+    }
+
+    .spinner-neon-mini {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(175, 82, 222, 0.2);
+      border-top-color: var(--ai-purple);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
     .ai-banner-card {
+
       background: linear-gradient(135deg, rgba(175, 82, 222, 0.2), rgba(48, 176, 199, 0.15));
       border: 1px solid rgba(175, 82, 222, 0.4);
       border-radius: 24px;
@@ -735,8 +1195,8 @@
       width: 100%;
       max-width: 480px;
       max-height: 88vh;
-
       padding: 24px;
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -744,6 +1204,7 @@
       border-top: 1px solid var(--card-border);
       animation: sheetUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
 
     @keyframes sheetUp {
       from { transform: translateY(100%); }
@@ -951,6 +1412,8 @@
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
           </svg>
         </div>
+
+
         <h1 class="brand-title">NutriTracker Pro</h1>
       </div>
       <div class="header-btns">
@@ -974,22 +1437,42 @@
     <div class="ai-banner-card">
       <div class="ai-banner-info">
         <div class="ai-banner-title">✨ Asistente IA Gemini Pro</div>
-        <div class="ai-banner-sub">Calcula tus macros según estrés, cardio y metabolismo</div>
+        <div class="ai-banner-sub" id="ai-banner-sub">Calcula tus macros según estrés, cardio y metabolismo</div>
       </div>
-      <button class="btn-ai-sparkle" onclick="openModal('modal-gemini-ai')">Calcular 🤖</button>
+      <button class="btn-ai-sparkle" id="ai-banner-btn" onclick="openAiModal()">Calcular 🤖</button>
     </div>
+
+    <!-- 1 ON 1 AI MENTOR CARD ON MAIN DASHBOARD (HIDDEN BY DEFAULT UNTIL AI ANALYSIS IS SAVED) -->
+    <div class="mentor-banner-card unlocked" id="btn-mentor-banner" onclick="openMentorModal()" style="display: none;">
+      <div class="mentor-banner-left">
+        <div class="mentor-banner-title">
+          <span>🥋</span> Mi Mentor Deportivo IA <span class="mentor-pulse-tag" id="mentor-status-tag">● En vivo</span>
+        </div>
+        <div class="mentor-banner-sub" id="mentor-summary-sub">Resuelve dudas sobre tus comidas, recetas y tiempos</div>
+      </div>
+      <button class="btn-mentor-sparkle" id="mentor-btn-action" type="button" onclick="event.stopPropagation(); openMentorModal();">Chat 1 a 1 💬</button>
+    </div>
+
+
+
+
 
     <!-- VIEW MODE SEGMENTED CONTROL -->
     <div class="view-segmented-control">
       <button class="seg-btn active" id="seg-btn-daily" onclick="switchView('daily')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-        Diario del Día
+        Diario
       </button>
       <button class="seg-btn" id="seg-btn-weekly" onclick="switchView('weekly')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-        Resumen Semanal
+        Semana
+      </button>
+      <button class="seg-btn" id="seg-btn-monthly" onclick="switchView('monthly')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path></svg>
+        Calendario
       </button>
     </div>
+
 
     <!-- VIEW CONTAINER 1: DAILY DASHBOARD -->
     <div id="view-daily-container" style="display: flex; flex-direction: column; gap: 20px;">
@@ -1111,7 +1594,7 @@
       </div>
 
       <!-- LOGGED FOODS LIST -->
-      <div>
+      <div style="width: 100%;">
         <div class="section-header">
           <span>Comidas Agregadas</span>
           <span id="count-tag" style="font-size: 13px; color: var(--prote-color);">0 ítems</span>
@@ -1120,7 +1603,33 @@
           <!-- Rendered dynamically -->
         </div>
       </div>
+
+      <!-- DAILY HABIT TRACKER CARD (STRICTLY BELOW LOGGED FOODS LIST) -->
+      <div class="habits-card" style="width: 100%;">
+        <div class="habits-header">
+          <div class="habits-title-group">
+            <span style="font-size: 17px; font-weight: 800;">Hábitos Diarios</span>
+            <span class="habits-pct-tag" id="habits-pct-tag">0/4 • 0%</span>
+          </div>
+          <button class="btn-add-habit-circle" id="btn-add-habit" onclick="openHabitModal()" title="Añadir Hábito">
+
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="habits-progress-track">
+          <div class="habits-progress-bar" id="habits-progress-bar" style="width: 0%;"></div>
+        </div>
+
+        <!-- HABITS LIST -->
+        <div class="habits-list-container" id="habits-list-container">
+          <!-- Dynamically rendered -->
+        </div>
+      </div>
+
     </div>
+
 
     <!-- VIEW CONTAINER 2: WEEKLY NUTRITION TRACKER -->
     <div id="view-weekly-container" style="display: none; flex-direction: column; gap: 20px;">
@@ -1161,6 +1670,49 @@
         </div>
       </div>
     </div>
+
+    <!-- VIEW CONTAINER 3: MONTHLY CALENDAR -->
+    <div id="view-monthly-container" style="display: none; flex-direction: column; gap: 20px;">
+      <!-- MONTH SELECTOR NAV -->
+      <div class="date-nav-bar">
+        <button class="nav-arrow" onclick="changeMonth(-1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="date-center" onclick="resetToCurrentMonth()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--carbos-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path></svg>
+          <span id="label-month-range">Mes Actual</span>
+        </div>
+        <button class="nav-arrow" onclick="changeMonth(1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- MONTHLY SUMMARY STATS CARD -->
+      <div class="streak-hero-card" style="background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(52, 199, 89, 0.15)); border-color: rgba(255, 149, 0, 0.35);">
+        <div class="streak-left">
+          <div class="streak-title">
+            <span id="monthly-summary-days">0/0 Días Cumplidos</span>
+            <span>📅</span>
+          </div>
+          <div class="streak-sub">Toca cualquier día con registros para abrir su diario</div>
+        </div>
+        <div class="streak-badge-pct" id="monthly-pct-tag" style="background: rgba(255, 149, 0, 0.2); color: var(--carbos-color);">0%</div>
+      </div>
+
+      <!-- CALENDAR GRID CARD -->
+      <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 18px; box-shadow: var(--card-shadow);">
+        <!-- WEEKDAY HEADERS (L, M, X, J, V, S, D) -->
+        <div class="calendar-weekdays-row">
+          <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
+        </div>
+
+        <!-- 7-COLUMN MONTHLY DAYS GRID -->
+        <div class="calendar-days-grid" id="monthly-days-container">
+          <!-- Dynamically Rendered -->
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- FLOATING ACTION BUTTON (FAB) -->
@@ -1324,14 +1876,16 @@
     <div class="modal-sheet">
       <div class="sheet-handle"></div>
       <div class="sheet-header">
-        <div class="sheet-title" style="color: var(--ai-purple);">✨ Asistente IA Gemini Pro</div>
+        <div class="sheet-title" style="color: var(--ai-purple); display: flex; align-items: center; gap: 8px;">
+          <span>🤖</span> Coach IA de Alto Rendimiento
+        </div>
         <button class="sheet-close-btn" onclick="closeModal('modal-gemini-ai')">✕</button>
       </div>
 
       <!-- FORM QUESTIONNAIRE -->
       <div id="ai-form-step">
         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
-          Responde estas preguntas para que Gemini Pro o el algoritmo científico calculen tus macros exactos.
+          Evaluación Fisiológica & Nutricional Deportiva Avanzada (Estándares ISSN / ACSM).
         </div>
 
         <div class="input-field-group" style="margin-bottom: 10px; background: rgba(175, 82, 222, 0.1); padding: 10px; border-radius: 14px; border: 1px solid rgba(175, 82, 222, 0.3);">
@@ -1400,30 +1954,31 @@
           </select>
         </div>
 
-        <button class="btn-action-cta" style="background: var(--ai-purple); box-shadow: 0 8px 24px var(--ai-glow);" onclick="callGeminiAPI()">
-          🤖 Calcular Objetivos con IA / Algoritmo
+        <button class="btn-action-cta" id="btn-calc-gemini" style="background: var(--ai-purple); box-shadow: 0 8px 24px var(--ai-glow);" onclick="callGeminiAPI()">
+          🤖 Consultar al Coach IA de Alto Rendimiento
         </button>
+
       </div>
 
       <!-- LOADING SPINNER STEP -->
       <div id="ai-loading-step" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; gap: 16px;">
         <div class="spinner-neon"></div>
-        <div style="font-weight: 800; font-size: 17px; color: var(--ai-purple);">Calculando tu distribución nutricional...</div>
-        <div style="font-size: 13px; color: var(--text-secondary); text-align: center;">Ajustando metabolismo rápido, cortisol, cardio y descanso.</div>
+        <div style="font-weight: 800; font-size: 17px; color: var(--ai-purple);">Analizando fisiología y metabolismo...</div>
+        <div style="font-size: 13px; color: var(--text-secondary); text-align: center;">Evaluando fatiga del SNC, cortisol, superávit magro y nutrient timing.</div>
       </div>
 
       <!-- AI RESULTS STEP -->
       <div id="ai-results-step" style="display: none; flex-direction: column; gap: 16px;">
-        <div style="background: linear-gradient(135deg, rgba(175, 82, 222, 0.2), rgba(48, 176, 199, 0.2)); border: 1px solid var(--ai-purple); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: linear-gradient(135deg, rgba(175, 82, 222, 0.2), rgba(48, 176, 199, 0.2)); border: 1px solid var(--ai-purple); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 0 20px rgba(175, 82, 222, 0.25);">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-weight: 900; font-size: 18px; color: var(--ai-purple);" id="ai-result-tag">✨ Propuesta Personalizada</div>
-            <span style="font-size: 11px; font-weight: 800; background: rgba(52, 199, 89, 0.2); color: var(--grasas-color); padding: 3px 8px; border-radius: 6px;" id="ai-badge-source">Gemini Pro API</span>
+            <div style="font-weight: 900; font-size: 18px; color: var(--ai-purple);" id="ai-result-tag">🏆 Coach IA de Alto Rendimiento</div>
+            <span style="font-size: 11px; font-weight: 800; background: rgba(52, 199, 89, 0.2); color: var(--grasas-color); padding: 3px 8px; border-radius: 6px;" id="ai-badge-source">Gemini 2.5 Flash</span>
           </div>
 
           <div class="preview-stats-grid">
             <div>
               <div class="preview-num" style="color: var(--kcal-color);" id="ai-res-kcal">0</div>
-              <div class="preview-lbl">Kcal</div>
+              <div class="preview-lbl">Calorías</div>
             </div>
             <div>
               <div class="preview-num" style="color: var(--prote-color);" id="ai-res-prote">0g</div>
@@ -1439,19 +1994,250 @@
             </div>
           </div>
 
-          <div style="font-size: 13px; color: var(--text-primary); background: rgba(0, 0, 0, 0.4); padding: 12px; border-radius: 12px; font-style: italic;" id="ai-res-razonamiento">
-            Justificación...
+          <!-- NUTRIENT TIMING STRATEGY -->
+          <div style="font-size: 13px; color: var(--prote-color); background: rgba(48, 176, 199, 0.15); border: 1px solid rgba(48, 176, 199, 0.3); padding: 12px; border-radius: 14px; font-weight: 600;" id="ai-res-timing">
+            ⏱️ <strong>Estrategia Timing:</strong> Priorizar carbohidratos peri-entreno.
+          </div>
+
+          <!-- PHYSIOLOGICAL JUSTIFICATION -->
+          <div style="font-size: 13px; color: var(--text-primary); background: rgba(0, 0, 0, 0.4); padding: 12px; border-radius: 14px; font-style: italic; border: 1px solid var(--card-border);" id="ai-res-razonamiento">
+            🔬 <strong>Justificación Fisiológica:</strong> Explicación técnica del cálculo...
           </div>
         </div>
 
         <button class="btn-action-cta" style="background: var(--grasas-color); color: #000; box-shadow: 0 8px 24px var(--grasas-glow);" onclick="applyAiTargets()">
-          ✓ Aplicar Objetivos Recomendados
+          ✓ Aplicar a mis Objetivos
         </button>
+
+        <!-- BUTTON TO TOGGLE CHAT INTERFACE -->
+        <button class="btn-toggle-chat" onclick="toggleCoachChat()" style="background: rgba(175, 82, 222, 0.15); border: 1px solid var(--ai-purple); color: var(--text-primary); padding: 12px 16px; border-radius: 16px; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 14px var(--ai-glow); transition: all 0.2s ease;">
+          💬 Preguntar al Asistente / Desglosar Estrategia
+        </button>
+
+        <!-- INTERACTIVE CHAT CONTAINER -->
+        <div id="coach-chat-container" style="display: none; flex-direction: column; gap: 12px; background: var(--card-sub-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-top: 4px;">
+          <div style="font-weight: 800; font-size: 15px; color: var(--ai-purple); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span>💬</span> Chat Traductor & Mentor Deportivo
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary);">Gemini 3.6 Flash</span>
+              <button type="button" onclick="clearCoachChat()" title="Limpiar conversación" style="background: rgba(255, 69, 58, 0.15); border: 1px solid rgba(255, 69, 58, 0.3); color: #FF453A; border-radius: 8px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;">
+                🗑️
+              </button>
+            </div>
+          </div>
+
+
+          <!-- CHAT MESSAGES SCROLL AREA -->
+          <div id="chat-messages-area" style="display: flex; flex-direction: column; gap: 10px; max-height: 280px; overflow-y: auto; padding-right: 4px;">
+            <!-- Messages rendered dynamically -->
+          </div>
+
+          <!-- TYPING INDICATOR -->
+          <div id="chat-typing-indicator" style="display: none; font-size: 12px; color: var(--ai-purple); font-weight: 700; align-items: center; gap: 6px; padding: 4px 8px;">
+            <div class="spinner-neon-mini"></div> Coach IA está redactando tu respuesta...
+          </div>
+
+          <!-- QUICK PROMPT CHIPS -->
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
+            <button type="button" class="chat-chip" onclick="sendQuickPrompt('¿Cómo reparto tantos carbohidratos sin empacharme?')">🍚 Reparto Carbos</button>
+            <button type="button" class="chat-chip" onclick="sendQuickPrompt('¿Qué fuentes de comida me recomiendas para cada macro?')">⚡ Fuentes de Comida</button>
+            <button type="button" class="chat-chip" onclick="sendQuickPrompt('¿Qué debo comer exactamente antes y después de entrenar?')">🏋️ Antes/Después Entreno</button>
+          </div>
+
+          <!-- CHAT INPUT & SEND BUTTON -->
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" class="native-input" id="chat-user-input" placeholder="Pregunta sobre tus macros o comidas..." style="flex: 1; font-size: 14px;" onkeypress="if(event.key==='Enter') sendChatMessage()">
+            <button type="button" id="btn-send-chat" onclick="sendChatMessage()" style="width: 44px; height: 44px; border-radius: 14px; background: var(--ai-purple); color: #FFF; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px var(--ai-glow); transition: all 0.2s ease;">
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- MODAL: DEDICATED 1 A 1 AI MENTOR CHAT -->
+  <div class="modal-backdrop" id="modal-mentor-chat">
+
+    <div class="modal-sheet" style="max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="sheet-handle"></div>
+      
+      <!-- HEADER WITH MACRO RESUMEN & CONTROLS -->
+      <div class="sheet-header" style="padding-bottom: 12px; border-bottom: 1px solid var(--card-border);">
+        <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-right: 4px;">
+            <div class="sheet-title" style="color: var(--prote-color); font-size: 18px; font-weight: 900; display: flex; align-items: center; gap: 8px;">
+              <span>🥋</span> Mentor Deportivo IA 1 a 1
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button type="button" onclick="clearMentorChat()" title="Limpiar conversación" style="background: rgba(255, 69, 58, 0.15); border: 1px solid rgba(255, 69, 58, 0.3); color: #FF453A; border-radius: 8px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                🗑️
+              </button>
+              <button type="button" class="btn-close-sheet" onclick="closeModal('modal-mentor-chat')">✕</button>
+            </div>
+          </div>
+          
+          <!-- MACRO SUMMARY PILL -->
+          <div id="mentor-macros-pill" style="font-size: 12px; font-weight: 800; color: var(--text-primary); background: rgba(48, 176, 199, 0.15); border: 1px solid rgba(48, 176, 199, 0.3); padding: 6px 12px; border-radius: 12px; margin-top: 4px;">
+            🔥 3200 kcal  |  🥩 160g P  |  🍚 500g C  |  🥑 70g G
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT BODY -->
+      <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 14px; flex: 1; overflow: hidden;">
+        <!-- CHAT MESSAGES SCROLL AREA -->
+        <div id="mentor-chat-messages-area" style="display: flex; flex-direction: column; gap: 10px; flex: 1; max-height: 380px; overflow-y: auto; padding-right: 4px;">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- TYPING INDICATOR -->
+        <div id="mentor-chat-typing-indicator" style="display: none; font-size: 12px; color: var(--prote-color); font-weight: 700; align-items: center; gap: 6px; padding: 4px 8px;">
+          <div class="spinner-neon-mini" style="border-top-color: var(--prote-color);"></div> Mentor IA está redactando tu respuesta...
+        </div>
+
+        <!-- QUICK PROMPT CHIPS -->
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <button type="button" class="chat-chip" onclick="sendMentorQuickPrompt('¿Cómo reparto mis macros en 4 comidas diarias?')">🍱 Menú 4 Comidas</button>
+          <button type="button" class="chat-chip" onclick="sendMentorQuickPrompt('¿Qué fuentes de carbohidratos me aconsejas post-entreno?')">⚡ Carbos Post-Entreno</button>
+          <button type="button" class="chat-chip" onclick="sendMentorQuickPrompt('Dame una lista de la compra económica con estos macros')">🛒 Lista de la Compra</button>
+        </div>
+
+        <!-- CHAT INPUT & SEND BUTTON -->
+        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+          <input type="text" class="native-input" id="mentor-user-input" placeholder="Hazle una consulta a tu Mentor..." style="flex: 1; font-size: 14px;" onkeypress="if(event.key==='Enter') sendMentorChatMessage()">
+          <button type="button" id="btn-send-mentor" onclick="sendMentorChatMessage()" style="width: 44px; height: 44px; border-radius: 14px; background: var(--prote-color); color: #000; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px var(--prote-glow); transition: all 0.2s ease;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- MODAL 5: ADD CUSTOM HABIT -->
+  <div class="modal-backdrop" id="modal-add-habit">
+
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title">Nuevo Hábito Diario</div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-add-habit')">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 14px;">
+        <!-- HABIT NAME & EMOJI SELECTOR -->
+        <div class="input-field-group">
+          <div class="input-field-label">Icono / Emoji del Hábito:</div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" class="native-input" id="input-habit-emoji" value="⚡" maxlength="4" style="width: 70px; font-size: 22px; text-align: center; font-weight: 800;">
+            
+            <select class="native-input" id="select-emoji-category" onchange="onEmojiCategoryChange(this.value)" style="flex: 1; font-size: 14px; font-weight: 700;">
+              <option value="">-- Elige Emojis Populares --</option>
+              <optgroup label="🏋️ Deportes y Fitness">
+                <option value="🏋️">🏋️ Entrenamiento de Fuerza</option>
+                <option value="🏃">🏃 Running / Atletismo</option>
+                <option value="🚴">🚴 Ciclismo / Spinning</option>
+                <option value="🧘">🧘 Yoga / Estiramientos</option>
+                <option value="🏊">🏊 Natación</option>
+                <option value="🥊">🥊 Boxeo / Marciales</option>
+                <option value="⚽">⚽ Fútbol / Deporte Equipo</option>
+                <option value="⚡">⚡ Cardio HIIT</option>
+              </optgroup>
+              <optgroup label="🥗 Salud y Nutrición">
+                <option value="💧">💧 Beber Agua (Hydration)</option>
+                <option value="💊">💊 Creatina / Suplementación</option>
+                <option value="🥗">🥗 Dieta Saludable</option>
+                <option value="🍏">🍏 Comer Fruta</option>
+                <option value="🥛">🥛 Batido de Proteínas</option>
+                <option value="🍵">🍵 Té / Infusiones</option>
+              </optgroup>
+              <optgroup label="😴 Sueño y Bienestar">
+                <option value="😴">😴 Dormir 7-8 horas</option>
+                <option value="🧠">🧠 Meditación / Mentalidad</option>
+                <option value="📖">📖 Leer Libro / Estudio</option>
+                <option value="☀️">☀️ Tomar Sol / Vitamina D</option>
+                <option value="🌙">🌙 Desconexión Pantallas</option>
+                <option value="🛀">🛀 Cuidado Personal / Relax</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- QUICK EMOJI CHIPS PRESETS -->
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+            <button type="button" class="preset-chip" onclick="selectEmoji('💧')">💧</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('🏋️')">🏋️</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('🏃')">🏃</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('💊')">💊</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('😴')">😴</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('🧘')">🧘</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('🧠')">🧠</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('📖')">📖</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('⚡')">⚡</button>
+            <button type="button" class="preset-chip" onclick="selectEmoji('🥗')">🥗</button>
+          </div>
+        </div>
+
+        <div class="input-field-group">
+          <div class="input-field-label">Nombre del Hábito:</div>
+          <input type="text" class="native-input" id="input-habit-name" placeholder="Ej: Meditar 15 min / Ayuno Intermitente">
+        </div>
+
+        <!-- TIMER TOGGLE -->
+        <div style="background: var(--card-sub-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+              <span>⏱️</span> Activar Temporizador
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="toggle-habit-timer" onchange="toggleTimerOptionsView()">
+              <span class="slider-round"></span>
+            </label>
+          </div>
+
+          <div id="timer-options-container" style="display: none; flex-direction: column; gap: 10px; margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--card-border);">
+            <div class="input-field-label">Presets Rápidos de Tiempo:</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <button type="button" class="preset-chip" onclick="setTimerPreset(0, 5, 0)">5m</button>
+              <button type="button" class="preset-chip" onclick="setTimerPreset(0, 15, 0)">15m</button>
+              <button type="button" class="preset-chip" onclick="setTimerPreset(0, 30, 0)">30m</button>
+              <button type="button" class="preset-chip" onclick="setTimerPreset(0, 45, 0)">45m</button>
+              <button type="button" class="preset-chip" onclick="setTimerPreset(1, 0, 0)">1h</button>
+              <button type="button" class="preset-chip" onclick="setTimerPreset(2, 0, 0)">2h</button>
+              <button type="button" class="preset-chip" onclick="setTimerPreset(4, 0, 0)">4h</button>
+              <button type="button" class="preset-chip" onclick="setTimerPreset(8, 0, 0)">8h (Ayuno/Sueño)</button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+              <div class="input-field-group">
+                <div class="input-field-label">Horas:</div>
+                <input type="number" class="native-input" id="input-timer-hr" value="0" min="0" max="72">
+              </div>
+              <div class="input-field-group">
+                <div class="input-field-label">Minutos:</div>
+                <input type="number" class="native-input" id="input-timer-min" value="15" min="0" max="59">
+              </div>
+              <div class="input-field-group">
+                <div class="input-field-label">Segundos:</div>
+                <input type="number" class="native-input" id="input-timer-sec" value="0" min="0" max="59">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-action-cta" style="background: var(--prote-color); color: #FFF; box-shadow: 0 8px 24px var(--prote-glow);" onclick="confirmAddHabit()">
+          ✓ Guardar Hábito
+        </button>
+      </div>
+
+
+    </div>
+  </div>
+
   <script>
+
     // PRELOADED MERCADONA SEED FOOD DATABASE
     const initialSeedFoods = [
       { id: "seed-pan-bimbo", nombre: "Pan Bimbo", kcal_100g: 250.0, prote_100g: 9.0, carbos_100g: 46.0, grasas_100g: 2.7, es_unidad: false },
@@ -1465,8 +2251,9 @@
       { id: "seed-pan-mercadona", nombre: "Pan Mercadona", kcal_100g: 268.0, prote_100g: 8.9, carbos_100g: 54.0, grasas_100g: 1.3, es_unidad: false },
       { id: "seed-galletas-maria-integrales", nombre: "Galletas María Integrales", kcal_100g: 25.0, prote_100g: 0.5, carbos_100g: 3.9, grasas_100g: 0.6, es_unidad: true },
       { id: "seed-avena", nombre: "Avena", kcal_100g: 375.0, prote_100g: 14.0, carbos_100g: 59.0, grasas_100g: 7.0, es_unidad: false },
-      { id: "seed-banana", nombre: "Banana", kcal_100g: 97.6, prote_100g: 1.07, carbos_100g: 22.7, grasas_100g: 0.3, es_unidad: true },
+      { id: "seed-banana", nombre: "Banana / Plátano", kcal_100g: 97.7, prote_100g: 1.08, carbos_100g: 22.77, grasas_100g: 0.31, es_unidad: false },
       { id: "seed-arroz", nombre: "Arroz", kcal_100g: 345.0, prote_100g: 7.9, carbos_100g: 76.0, grasas_100g: 0.7, es_unidad: false },
+
       { id: "seed-pechuga-pollo-mercadona", nombre: "Pechuga Pollo Mercadona", kcal_100g: 108.0, prote_100g: 22.0, carbos_100g: 0.5, grasas_100g: 1.8, es_unidad: false },
       { id: "seed-tortilla-patatas-mercadona", nombre: "Tortilla Patatas Mercadona", kcal_100g: 193.0, prote_100g: 5.7, carbos_100g: 17.0, grasas_100g: 11.0, es_unidad: false },
       { id: "seed-lomo-adobado", nombre: "Lomo Adobado", kcal_100g: 130.0, prote_100g: 20.0, carbos_100g: 0.0, grasas_100g: 3.6, es_unidad: false },
@@ -1475,12 +2262,322 @@
       { id: "seed-anacardos-mercadona", nombre: "Anacardos Mercadona", kcal_100g: 604.0, prote_100g: 20.0, carbos_100g: 21.0, grasas_100g: 48.0, es_unidad: false }
     ];
 
+    // PRELOADED DEFAULT HABITS
+    const initialSeedHabits = [
+      { id: "habit-agua", emoji: "💧", nombre: "Beber 3L de Agua" },
+      { id: "habit-entreno", emoji: "🏋️", nombre: "Entrenamiento de Fuerza / Running" },
+      { id: "habit-creatina", emoji: "💊", nombre: "Creatina / Suplementación" },
+      { id: "habit-sueno", emoji: "😴", nombre: "Dormir 7-8 horas" }
+    ];
+
     // STATE
     let foods = JSON.parse(localStorage.getItem('nutri_foods')) || initialSeedFoods;
     let targets = JSON.parse(localStorage.getItem('nutri_targets')) || { kcal: 3200, prote: 160, carbos: 500, grasas: 70 };
     let logs = JSON.parse(localStorage.getItem('nutri_logs')) || [];
+
+    let storedHabits = JSON.parse(localStorage.getItem('nutri_habits'));
+    let habits = (storedHabits && Array.isArray(storedHabits) && storedHabits.length > 0) ? storedHabits : JSON.parse(JSON.stringify(initialSeedHabits));
+    
+    let habitLogs = JSON.parse(localStorage.getItem('nutri_habit_logs')) || {};
+    let habitTimers = JSON.parse(localStorage.getItem('nutri_habit_timers')) || {};
     let apiKey = localStorage.getItem('gemini_api_key') || '';
     let currentTheme = localStorage.getItem('theme') || 'dark';
+
+    function selectEmoji(emoji) {
+      const input = document.getElementById('input-habit-emoji');
+      if (input) input.value = emoji;
+    }
+
+    function onEmojiCategoryChange(val) {
+      if (val) selectEmoji(val);
+    }
+
+    function openHabitModal() {
+      const nameInput = document.getElementById('input-habit-name');
+      const emojiInput = document.getElementById('input-habit-emoji');
+      const emojiSelect = document.getElementById('select-emoji-category');
+      const timerToggle = document.getElementById('toggle-habit-timer');
+      const timerContainer = document.getElementById('timer-options-container');
+
+      if (nameInput) nameInput.value = '';
+      if (emojiInput) emojiInput.value = '⚡';
+      if (emojiSelect) emojiSelect.value = '';
+      if (timerToggle) timerToggle.checked = false;
+      if (timerContainer) timerContainer.style.display = 'none';
+
+      const hrEl = document.getElementById('input-timer-hr');
+      const minEl = document.getElementById('input-timer-min');
+      const secEl = document.getElementById('input-timer-sec');
+      if (hrEl) hrEl.value = 0;
+      if (minEl) minEl.value = 15;
+      if (secEl) secEl.value = 0;
+
+      openModal('modal-add-habit');
+    }
+
+    function abrirModalHabito() {
+      openHabitModal();
+    }
+
+    function saveHabits() {
+      localStorage.setItem('nutri_habits', JSON.stringify(habits));
+      localStorage.setItem('nutri_habit_logs', JSON.stringify(habitLogs));
+      localStorage.setItem('nutri_habit_timers', JSON.stringify(habitTimers));
+    }
+
+    function toggleTimerOptionsView() {
+      const isChecked = document.getElementById('toggle-habit-timer').checked;
+      document.getElementById('timer-options-container').style.display = isChecked ? 'flex' : 'none';
+    }
+
+    function setTimerPreset(hr, min, sec) {
+      const hrEl = document.getElementById('input-timer-hr');
+      const minEl = document.getElementById('input-timer-min');
+      const secEl = document.getElementById('input-timer-sec');
+      if (hrEl) hrEl.value = hr || 0;
+      if (minEl) minEl.value = min || 0;
+      if (secEl) secEl.value = sec || 0;
+    }
+
+
+    function requestNotificationPermission() {
+      if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+          console.log('[Notification] Permiso de notificaciones:', permission);
+        });
+      }
+    }
+
+    function triggerHabitNotification(habit) {
+      const title = "⏱️ ¡Tiempo completado!";
+      const body = `Has finalizado el tiempo para: ${habit.emoji || '⚡'} ${habit.nombre}. ¡Márcalo como completado!`;
+      const icon = "./apple-touch-icon.png";
+
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.ready.then(reg => {
+          reg.showNotification(title, {
+            body: body,
+            icon: icon,
+            badge: icon,
+            vibrate: [200, 100, 200, 100, 200],
+            tag: `habit-timer-${habit.id}`
+          });
+        });
+      } else if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, { body, icon });
+      }
+
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch (_) {}
+    }
+
+    function toggleHabitTimerState(e, habitId) {
+      e.stopPropagation();
+      requestNotificationPermission();
+
+      const habit = habits.find(h => h.id === habitId);
+      if (!habit || !habit.timerDurationMs) return;
+
+      if (!habitTimers[habitId]) {
+        habitTimers[habitId] = {
+          targetTime: Date.now() + habit.timerDurationMs,
+          remainingMsWhenPaused: null,
+          isRunning: true
+        };
+      } else {
+        const tState = habitTimers[habitId];
+        if (tState.isRunning) {
+          tState.remainingMsWhenPaused = Math.max(0, tState.targetTime - Date.now());
+          tState.isRunning = false;
+          tState.targetTime = null;
+        } else {
+          const remMs = tState.remainingMsWhenPaused != null ? tState.remainingMsWhenPaused : habit.timerDurationMs;
+          tState.targetTime = Date.now() + remMs;
+          tState.remainingMsWhenPaused = null;
+          tState.isRunning = true;
+        }
+      }
+
+      saveHabits();
+      renderHabits();
+    }
+
+    function resetHabitTimer(e, habitId) {
+      e.stopPropagation();
+      delete habitTimers[habitId];
+      saveHabits();
+      renderHabits();
+    }
+
+    function formatMsToCountdown(ms) {
+      if (ms <= 0) return "00:00";
+      const totalSec = Math.floor(ms / 1000);
+      const hr = Math.floor(totalSec / 3600);
+      const min = Math.floor((totalSec % 3600) / 60);
+      const sec = totalSec % 60;
+
+      if (hr > 0) {
+        return `${String(hr).padStart(2, '0')}:${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      }
+      return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    }
+
+    // BACKGROUND TIMER TICK ENGINE
+    setInterval(() => {
+      let needsReRender = false;
+      const now = Date.now();
+
+      Object.keys(habitTimers).forEach(habitId => {
+        const tState = habitTimers[habitId];
+        if (tState && tState.isRunning && tState.targetTime) {
+          const remMs = tState.targetTime - now;
+          if (remMs <= 0) {
+            tState.isRunning = false;
+            tState.targetTime = null;
+            tState.remainingMsWhenPaused = 0;
+
+            const habit = habits.find(h => h.id === habitId);
+            if (habit) {
+              triggerHabitNotification(habit);
+            }
+            needsReRender = true;
+          } else {
+            const el = document.getElementById(`timer-countdown-${habitId}`);
+            if (el) {
+              el.innerText = formatMsToCountdown(remMs);
+            }
+          }
+        }
+      });
+
+      if (needsReRender) {
+        saveHabits();
+        renderHabits();
+      }
+    }, 1000);
+
+    function toggleHabit(habitId) {
+      if (!habitLogs[currentDate]) {
+        habitLogs[currentDate] = {};
+      }
+      habitLogs[currentDate][habitId] = !habitLogs[currentDate][habitId];
+      saveHabits();
+      renderHabits();
+    }
+
+    function confirmAddHabit() {
+      const name = document.getElementById('input-habit-name').value.trim();
+      const emoji = document.getElementById('input-habit-emoji').value.trim() || '⚡';
+      const timerEnabled = document.getElementById('toggle-habit-timer').checked;
+
+      if (!name) return;
+
+      let timerDurationMs = 0;
+      if (timerEnabled) {
+        const hr = parseInt(document.getElementById('input-timer-hr').value) || 0;
+        const min = parseInt(document.getElementById('input-timer-min').value) || 0;
+        const sec = parseInt(document.getElementById('input-timer-sec').value) || 0;
+        timerDurationMs = ((hr * 3600) + (min * 60) + sec) * 1000;
+      }
+
+      const newHabit = {
+        id: 'habit-' + Date.now(),
+        emoji: emoji,
+        nombre: name,
+        timerEnabled: timerEnabled && timerDurationMs > 0,
+        timerDurationMs: timerDurationMs
+      };
+
+      habits.push(newHabit);
+      saveHabits();
+      renderHabits();
+      closeModal('modal-add-habit');
+      document.getElementById('input-habit-name').value = '';
+      document.getElementById('toggle-habit-timer').checked = false;
+      document.getElementById('timer-options-container').style.display = 'none';
+    }
+
+
+    function deleteHabit(habitId) {
+      habits = habits.filter(h => h.id !== habitId);
+      delete habitTimers[habitId];
+      saveHabits();
+      renderHabits();
+    }
+
+    function renderHabits() {
+      const dayLog = habitLogs[currentDate] || {};
+      let completedCount = 0;
+
+      const container = document.getElementById('habits-list-container');
+      if (!container) return;
+
+      if (habits.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-secondary); font-size: 13px; padding: 12px;">No tienes hábitos configurados. Toca '+' para añadir uno.</div>`;
+        document.getElementById('habits-pct-tag').innerText = `0/0 • 0%`;
+        document.getElementById('habits-progress-bar').style.width = '0%';
+        return;
+      }
+
+      container.innerHTML = habits.map(h => {
+        const isCompleted = !!dayLog[h.id];
+        if (isCompleted) completedCount++;
+
+        let timerHTML = '';
+        if (h.timerEnabled && h.timerDurationMs > 0) {
+          const tState = habitTimers[h.id] || {};
+          let remMs = h.timerDurationMs;
+
+          if (tState.isRunning && tState.targetTime) {
+            remMs = Math.max(0, tState.targetTime - Date.now());
+          } else if (tState.remainingMsWhenPaused != null) {
+            remMs = tState.remainingMsWhenPaused;
+          }
+
+          const isRunning = !!tState.isRunning;
+
+          timerHTML = `
+            <div class="habit-timer-pill ${isRunning ? 'active' : ''}">
+              <button class="btn-timer-ctrl" onclick="toggleHabitTimerState(event, '${h.id}')" title="${isRunning ? 'Pausar' : 'Iniciar'}">
+                ${isRunning ? '⏸' : '▶'}
+              </button>
+              <span class="timer-countdown-text" id="timer-countdown-${h.id}">${formatMsToCountdown(remMs)}</span>
+              <button class="btn-timer-reset" onclick="resetHabitTimer(event, '${h.id}')" title="Reiniciar">↺</button>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="habit-row ${isCompleted ? 'completed' : ''}">
+            <div class="habit-left" onclick="toggleHabit('${h.id}')">
+              <div class="habit-checkbox">${isCompleted ? '✓' : ''}</div>
+              <span class="habit-emoji">${h.emoji}</span>
+              <span class="habit-name">${h.nombre}</span>
+              ${timerHTML}
+            </div>
+            <button class="btn-trash-habit" onclick="deleteHabit('${h.id}')" title="Eliminar Hábito">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      const pct = habits.length > 0 ? Math.round((completedCount / habits.length) * 100) : 0;
+      document.getElementById('habits-pct-tag').innerText = `${completedCount}/${habits.length} • ${pct}%`;
+      document.getElementById('habits-progress-bar').style.width = `${pct}%`;
+    }
+
+
 
     function applyTheme(theme) {
       currentTheme = theme;
@@ -1505,14 +2602,60 @@
 
     // INIT
     window.addEventListener('DOMContentLoaded', () => {
+      // ENSURE CLEAN MODE 0 STARTUP ON NEW SESSION / TEST LINK ACCESS
+      if (!sessionStorage.getItem('nutritracker_session_active')) {
+        sessionStorage.setItem('nutritracker_session_active', 'true');
+        localStorage.removeItem('nutritracker_last_ai_analysis');
+        localStorage.removeItem('nutritracker_mentor_chat_history');
+        localStorage.removeItem('nutritracker_coach_chat_history');
+        localStorage.removeItem('nutri_chat_history');
+      }
+
+      // Sync banana seed item in foods list if already stored in localStorage
+      const bananaItem = foods.find(f => f.id === 'seed-banana');
+      if (bananaItem) {
+        bananaItem.nombre = "Banana / Plátano";
+        bananaItem.kcal_100g = 97.7;
+        bananaItem.prote_100g = 1.08;
+        bananaItem.carbos_100g = 22.77;
+        bananaItem.grasas_100g = 0.31;
+        bananaItem.es_unidad = false;
+      }
+
+      if (!habits || !Array.isArray(habits) || habits.length === 0) {
+        habits = JSON.parse(JSON.stringify(initialSeedHabits));
+        saveHabits();
+      }
+
       applyTheme(currentTheme);
       if (apiKey) {
         document.getElementById('input-api-key').value = apiKey;
         document.getElementById('ai-key-input').value = apiKey;
       }
       renderDashboard();
+      loadCoachChatState();
+      updateMentorBannerStatus();
+
+      // Explicit global listeners for Mentor AI banner card & button
+      const btnMentorBanner = document.getElementById('btn-mentor-banner');
+      const btnMentorAction = document.getElementById('mentor-btn-action');
+
+      [btnMentorBanner, btnMentorAction].filter(Boolean).forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openMentorModal();
+        });
+      });
+
       saveState();
     });
+
+
+
+
+
+
 
 
     function saveState() {
@@ -1534,21 +2677,141 @@
       document.getElementById('input-api-key').value = apiKey;
     }
 
+    let selectedMonthOffset = 0; // 0 = current month
+
     function switchView(viewName) {
       activeView = viewName;
       document.getElementById('seg-btn-daily').classList.toggle('active', viewName === 'daily');
       document.getElementById('seg-btn-weekly').classList.toggle('active', viewName === 'weekly');
+      document.getElementById('seg-btn-monthly').classList.toggle('active', viewName === 'monthly');
 
       document.getElementById('view-daily-container').style.display = viewName === 'daily' ? 'flex' : 'none';
       document.getElementById('view-weekly-container').style.display = viewName === 'weekly' ? 'flex' : 'none';
+      document.getElementById('view-monthly-container').style.display = viewName === 'monthly' ? 'flex' : 'none';
       document.getElementById('fab-button').style.display = viewName === 'daily' ? 'flex' : 'none';
 
       if (viewName === 'weekly') {
         renderWeeklyView();
+      } else if (viewName === 'monthly') {
+        renderMonthlyView();
       } else {
         renderDashboard();
       }
     }
+
+    // MONTHLY CALENDAR NAV
+    function changeMonth(offset) {
+      selectedMonthOffset += offset;
+      renderMonthlyView();
+    }
+
+    function resetToCurrentMonth() {
+      selectedMonthOffset = 0;
+      renderMonthlyView();
+    }
+
+    function selectCalendarDate(dateStr) {
+      currentDate = dateStr;
+      switchView('daily');
+    }
+
+    function renderMonthlyView() {
+      const todayObj = new Date();
+      const todayStr = todayObj.toISOString().split('T')[0];
+
+      const baseYear = todayObj.getFullYear();
+      const baseMonth = todayObj.getMonth(); // 0 to 11
+      const targetDateObj = new Date(baseYear, baseMonth + selectedMonthOffset, 1);
+      const year = targetDateObj.getFullYear();
+      const monthIndex = targetDateObj.getMonth();
+
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const monthName = monthNames[monthIndex];
+
+      document.getElementById('label-month-range').innerText = selectedMonthOffset === 0 ? `${monthName} ${year} (Mes Actual)` : `${monthName} ${year}`;
+
+      const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+      const firstDayWeekday = new Date(year, monthIndex, 1).getDay();
+      const startPadding = firstDayWeekday === 0 ? 6 : firstDayWeekday - 1;
+
+      let daysHTML = '';
+
+      for (let p = 0; p < startPadding; p++) {
+        daysHTML += `<div class="calendar-day-cell cell-future" style="opacity:0.1; cursor:default;"></div>`;
+      }
+
+      let totalDaysLogged = 0;
+      let successfulDaysCount = 0;
+
+      for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+        const monthStr = String(monthIndex + 1).padStart(2, '0');
+        const dayStrPadded = String(dayNum).padStart(2, '0');
+        const dateStr = `${year}-${monthStr}-${dayStrPadded}`;
+
+        const isToday = dateStr === todayStr;
+        const isFuture = dateStr > todayStr;
+
+        const dayLogs = logs.filter(l => l.fecha.startsWith(dateStr));
+        const hasLogs = dayLogs.length > 0;
+
+        let dayKcal = 0, dayProte = 0, dayCarbos = 0, dayGrasas = 0;
+        if (hasLogs) {
+          totalDaysLogged++;
+          dayLogs.forEach(log => {
+            const food = foods.find(f => f.id === log.alimentoId);
+            if (food) {
+              const factor = food.es_unidad ? log.cantidad : (log.cantidad / 100.0);
+              dayKcal += food.kcal_100g * factor;
+              dayProte += food.prote_100g * factor;
+              dayCarbos += food.carbos_100g * factor;
+              dayGrasas += food.grasas_100g * factor;
+            }
+          });
+        }
+
+        const isKcalOk = dayKcal >= (targets.kcal * 0.95);
+        const isProteOk = dayProte >= (targets.prote * 0.95);
+        const isCarbosOk = dayCarbos >= (targets.carbos * 0.95);
+        const isGrasasOk = dayGrasas >= (targets.grasas * 0.50) && dayGrasas <= (targets.grasas * 1.08);
+
+        const points = (isKcalOk ? 1 : 0) + (isProteOk ? 1 : 0) + (isCarbosOk ? 1 : 0) + (isGrasasOk ? 1 : 0);
+        const isDaySuccess = points >= 3;
+        if (hasLogs && isDaySuccess) successfulDaysCount++;
+
+        let cellClass = 'calendar-day-cell';
+        if (isToday) cellClass += ' today-marker';
+
+        let badgeHTML = '';
+        if (hasLogs) {
+          if (isDaySuccess) {
+            cellClass += ' cell-success';
+            badgeHTML = `<span class="calendar-badge-mini">✓ ${points}/4</span>`;
+          } else {
+            cellClass += ' cell-fail';
+            badgeHTML = `<span class="calendar-badge-mini">✕ ${points}/4</span>`;
+          }
+        } else {
+          if (isFuture) {
+            cellClass += ' cell-future';
+          } else {
+            cellClass += ' cell-empty-past';
+          }
+        }
+
+        daysHTML += `
+          <div class="${cellClass}" ${isFuture ? '' : `onclick="selectCalendarDate('${dateStr}')"`}>
+            <span>${dayNum}</span>
+            ${badgeHTML}
+          </div>
+        `;
+      }
+
+      document.getElementById('monthly-days-container').innerHTML = daysHTML;
+      document.getElementById('monthly-summary-days').innerText = `${successfulDaysCount}/${totalDaysLogged > 0 ? totalDaysLogged : daysInMonth} Días Cumplidos`;
+      const pctSuccess = totalDaysLogged > 0 ? Math.round((successfulDaysCount / totalDaysLogged) * 100) : 0;
+      document.getElementById('monthly-pct-tag').innerText = `${pctSuccess}%`;
+    }
+
 
     // DATE NAV
     function changeDate(offsetDays) {
@@ -1579,21 +2842,24 @@
     // RENDER DASHBOARD & RINGS
     function renderDashboard() {
       document.getElementById('label-date').innerText = formatDateLabel(currentDate);
+      renderHabits();
 
       const dayLogs = logs.filter(l => l.fecha.startsWith(currentDate));
+
 
       let totalKcal = 0, totalProte = 0, totalCarbos = 0, totalGrasas = 0;
 
       dayLogs.forEach(log => {
         const food = foods.find(f => f.id === log.alimentoId);
         if (food) {
-          const factor = log.cantidad / 100.0;
+          const factor = food.es_unidad ? log.cantidad : (log.cantidad / 100.0);
           totalKcal += food.kcal_100g * factor;
           totalProte += food.prote_100g * factor;
           totalCarbos += food.carbos_100g * factor;
           totalGrasas += food.grasas_100g * factor;
         }
       });
+
 
       // Update Center Ring Text
       document.getElementById('center-kcal-val').innerText = totalKcal.toFixed(0);
@@ -1630,11 +2896,12 @@
         const food = foods.find(f => f.id === log.alimentoId);
         if (!food) return '';
 
-        const factor = log.cantidad / 100.0;
+        const factor = food.es_unidad ? log.cantidad : (log.cantidad / 100.0);
         const itemKcal = (food.kcal_100g * factor).toFixed(0);
         const itemProte = (food.prote_100g * factor).toFixed(1);
         const itemCarbos = (food.carbos_100g * factor).toFixed(1);
         const itemGrasas = (food.grasas_100g * factor).toFixed(1);
+
 
         const qtyLabel = food.es_unidad ? `${log.cantidad} ud.` : `${log.cantidad} g`;
 
@@ -1745,13 +3012,14 @@
         dayLogs.forEach(log => {
           const food = foods.find(f => f.id === log.alimentoId);
           if (food) {
-            const factor = log.cantidad / 100.0;
+            const factor = food.es_unidad ? log.cantidad : (log.cantidad / 100.0);
             dayKcal += food.kcal_100g * factor;
             dayProte += food.prote_100g * factor;
             dayCarbos += food.carbos_100g * factor;
             dayGrasas += food.grasas_100g * factor;
           }
         });
+
 
         const isKcalOk = dayKcal >= (targets.kcal * 0.95);
         const isProteOk = dayProte >= (targets.prote * 0.95);
@@ -1850,76 +3118,104 @@
       const kcalFromCarbos = totalKcal - (totalProte * 4) - (totalGrasas * 9);
       const totalCarbos = Math.max(100, Math.round(kcalFromCarbos / 4));
 
+      let timingStrategy = "Distribución uniforme. Consume carbohidratos complejos 1-2h antes del entreno y proteínas de rápida absorción (whey/claras) al finalizar.";
+      if (estres >= 7 || sueno < 7) {
+        timingStrategy = "⚠️ Alto estrés/Poco descanso (Estrés " + estres + "/10): Concentra el 65% de carbohidratos peri-entreno y grasas antiinflamatorias en la cena para mitigar fatiga del SNC.";
+      }
+
       return {
         kcal: totalKcal,
         prote: totalProte,
         carbos: totalCarbos,
         grasas: totalGrasas,
-        razonamiento: `Cálculo científico deportivo: BMR ${(bmr).toFixed(0)} kcal + superávit por metabolismo (${metabolismo.split(' ')[0]}) y ${fuerza}d fuerza.`
+        timing: timingStrategy,
+        razonamiento: `Cálculo fisiológico ISSN/ACSM: TDEE ${(tdee).toFixed(0)} kcal ajustado por metabolismo (${metabolismo.split(' ')[0]}), ${fuerza}d fuerza y nivel de estrés ${estres}/10.`,
+        source: apiKey ? 'Coach IA (Cálculo Fisiológico Fallback)' : 'Coach IA (Modo Fisiológico Offline 🧠)'
       };
     }
 
+
     // ==========================================
-    // GEMINI PRO AI API INTEGRATION WITH ROBUST FALLBACK
+    // HIGH-PERFORMANCE AI COACH INTEGRATION (GEMINI 2.0 FLASH API)
     // ==========================================
     async function callGeminiAPI() {
-      apiKey = document.getElementById('ai-key-input').value.trim();
-      localStorage.setItem('gemini_api_key', apiKey);
+      const calcBtn = document.getElementById('btn-calc-gemini');
+      if (calcBtn) {
+        if (calcBtn.disabled) return;
+        calcBtn.disabled = true;
+        calcBtn.dataset.originalText = calcBtn.innerHTML;
+        calcBtn.innerHTML = 'Calculando... ⏳';
+        calcBtn.style.opacity = '0.5';
+        calcBtn.style.cursor = 'not-allowed';
+      }
 
-      const peso = parseFloat(document.getElementById('ai-peso').value) || 75;
-      const altura = parseFloat(document.getElementById('ai-altura').value) || 175;
-      const edad = parseInt(document.getElementById('ai-edad').value) || 25;
-      const fuerza = parseInt(document.getElementById('ai-fuerza').value) || 4;
-      const cardio = parseInt(document.getElementById('ai-cardio').value) || 20;
-      const estres = parseInt(document.getElementById('ai-estres').value) || 5;
-      const sueno = parseFloat(document.getElementById('ai-sueno').value) || 7;
-      const pasos = parseInt(document.getElementById('ai-pasos').value) || 10000;
-      const objetivo = document.getElementById('ai-objetivo').value;
-      const metabolismo = document.getElementById('ai-metabolismo').value;
+      try {
+        // Clean API Key from whitespace or quotes
+        const rawInputKey = document.getElementById('ai-key-input').value || document.getElementById('input-api-key').value || localStorage.getItem('gemini_api_key') || '';
+        apiKey = rawInputKey.replace(/['"]/g, '').trim();
+        if (apiKey) localStorage.setItem('gemini_api_key', apiKey);
 
-      document.getElementById('ai-form-step').style.display = 'none';
-      document.getElementById('ai-loading-step').style.display = 'flex';
-      document.getElementById('ai-results-step').style.display = 'none';
+        const peso = parseFloat(document.getElementById('ai-peso').value) || 75;
+        const altura = parseFloat(document.getElementById('ai-altura').value) || 175;
+        const edad = parseInt(document.getElementById('ai-edad').value) || 25;
+        const fuerza = parseInt(document.getElementById('ai-fuerza').value) || 4;
+        const cardio = parseInt(document.getElementById('ai-cardio').value) || 20;
+        const estres = parseInt(document.getElementById('ai-estres').value) || 5;
+        const sueno = parseFloat(document.getElementById('ai-sueno').value) || 7;
+        const pasos = parseInt(document.getElementById('ai-pasos').value) || 10000;
+        const objetivo = document.getElementById('ai-objetivo').value;
+        const metabolismo = document.getElementById('ai-metabolismo').value;
 
-      const prompt = `Actúa como un Nutricionista Deportivo de Alto Rendimiento. Analiza el siguiente perfil del atleta:
-- Peso: ${peso} kg, Altura: ${altura} cm, Edad: ${edad} años.
-- Tipo de Metabolismo: ${metabolismo}. (NOTA CRÍTICA DE METABOLISMO: Si el metabolismo es 'Muy Rápido / Ectomorfo', añade un superávit o margen calórico adicional del +15% al +25% en calorías y carbohidratos porque el usuario quema energía aceleradamente incluso en reposo).
-- Entrenamiento de fuerza: ${fuerza} días/semana. Cardio: ${cardio} min/día.
-- Pasos diarios estimados: ${pasos}.
-- Nivel de estrés percibido (1 a 10): ${estres} (Nota: El cortisol elevado requiere un ajuste sutil en la relación carbos/grasas).
-- Horas de sueño promedio: ${sueno}h.
-- Objetivo principal: ${objetivo}.
+        document.getElementById('ai-form-step').style.display = 'none';
+        document.getElementById('ai-loading-step').style.display = 'flex';
+        document.getElementById('ai-results-step').style.display = 'none';
 
-Calcula el gasto calórico total diario (TDEE) ajustado por su tipo de metabolismo y la distribución óptima de macronutrientes (Kcal, Proteínas en gramos, Carbohidratos en gramos y Grasas en gramos).
+        // SINGLE PROMPT CONTAINING ROLE, PHYSIOLOGICAL LOGIC AND STRUCTURED JSON INSTRUCTIONS
+        const promptUsuario = `Eres un Fisiólogo del Ejercicio y Nutricionista Deportivo de Alto Rendimiento (estándares ISSN / ACSM).
+Analiza el siguiente perfil de atleta:
+- Peso: ${peso} kg | Altura: ${altura} cm | Edad: ${edad} años.
+- Tipo de Metabolismo: ${metabolismo}.
+- Entrenamiento de fuerza: ${fuerza} días/semana | Cardio/Carrera: ${cardio} min/día | Pasos diarios: ${pasos}.
+- Nivel de Estrés (1-10): ${estres} | Horas de Sueño: ${sueno}h/noche.
+- Objetivo Principal: ${objetivo}.
 
-RESPONDE ÚNICAMENTE Y EXCLUSIVAMENTE CON UN OBJETO JSON VÁLIDO EN ESTE FORMATO EXACTO (sin marcas markdown de código ni texto adicional):
+Lógica de cálculo:
+- Si el nivel de estrés >= 7 o las horas de sueño < 7h, prioriza fuentes de carbohidratos complejos peri-entreno y grasas antiinflamatorias para mitigar la fatiga del Sistema Nervioso Central (SNC).
+- Calcula superávit limpio (+250 a +400 kcal) para ganancia de masa magra o déficit progresivo (-400 kcal) según el objetivo del atleta.
+
+FORMATO DE RESPUESTA: EXCLUSIVAMENTE UN OBJETO JSON VÁLIDO SIN BLOQUES MARKDOWN NI TEXTO EXTERIOR:
 {
-  "kcal": 3200,
-  "proteinas": 160,
-  "carbohidratos": 500,
-  "grasas": 70,
-  "razonamiento": "Explicación de 2 frases justificando los macronutrientes según el metabolismo, estrés y entrenamiento."
+  "calorias": number,
+  "proteinas": number,
+  "carbohidratos": number,
+  "grasas": number,
+  "estrategiaTiming": "Breve recomendación sobre qué priorizar antes/después del entreno.",
+  "justificacionFisiologica": "Explicación técnica de 2 frases justificando el cálculo."
 }`;
 
-      // VALID OFFICIAL GOOGLE API ENDPOINTS TO TRY IN SEQUENCE
-      const endpoints = [
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`
-      ];
+        // OFFICIAL GEMINI 3.6 FLASH ENDPOINT
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
-      let apiSuccess = false;
-      let lastErrorMessage = '';
+        let apiSuccess = false;
+        let lastErrorMessage = '';
 
-      if (apiKey.length > 5) {
-        for (const url of endpoints) {
+        if (apiKey.length > 5) {
           try {
-            const response = await fetch(url, {
+            const response = await fetch(apiUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
+                contents: [
+                  {
+                    parts: [
+                      { text: promptUsuario }
+                    ]
+                  }
+                ],
+                generationConfig: {
+                  responseMimeType: "application/json",
+                  temperature: 0.2
+                }
               })
             });
 
@@ -1931,15 +3227,16 @@ RESPONDE ÚNICAMENTE Y EXCLUSIVAMENTE CON UN OBJETO JSON VÁLIDO EN ESTE FORMATO
                 const jsonRes = JSON.parse(cleanedJSONText);
 
                 tempAiResult = {
-                  kcal: parseFloat(jsonRes.kcal) || 3200,
+                  kcal: parseFloat(jsonRes.calorias || jsonRes.kcal) || 3200,
                   prote: parseFloat(jsonRes.proteinas) || 160,
                   carbos: parseFloat(jsonRes.carbohidratos) || 500,
                   grasas: parseFloat(jsonRes.grasas) || 70,
-                  razonamiento: jsonRes.razonamiento || 'Propuesta personalizada de Gemini Pro.',
-                  source: 'Gemini Pro API ✨'
+                  timing: jsonRes.estrategiaTiming || 'Priorizar carbohidratos complejos 1-2h antes del entreno y proteínas post-entreno.',
+                  razonamiento: jsonRes.justificacionFisiologica || jsonRes.razonamiento || 'Propuesta fisiológica de alto rendimiento.',
+                  source: 'Coach IA (En vivo)',
+                  isOnline: true
                 };
                 apiSuccess = true;
-                break;
               }
             } else {
               const errData = await response.json().catch(() => ({}));
@@ -1949,33 +3246,89 @@ RESPONDE ÚNICAMENTE Y EXCLUSIVAMENTE CON UN OBJETO JSON VÁLIDO EN ESTE FORMATO
             lastErrorMessage = e.message;
           }
         }
+
+        // IF API FAILED OR KEY WAS MISSING -> SCIENTIFIC LOCAL ALGORITHM FALLBACK
+        if (!apiSuccess) {
+          console.warn('API Key no disponible o error en Gemini API. Usando algoritmo fisiológico deportivo local.', lastErrorMessage);
+          
+          const scRes = calculateScientificMacrosLocal(peso, altura, edad, fuerza, cardio, estres, sueno, pasos, objetivo, metabolismo);
+          tempAiResult = {
+            kcal: scRes.kcal,
+            prote: scRes.prote,
+            carbos: scRes.carbos,
+            grasas: scRes.grasas,
+            timing: scRes.timing,
+            razonamiento: scRes.razonamiento + (lastErrorMessage ? ` (Error API: ${lastErrorMessage})` : ''),
+            source: apiKey ? 'Coach IA (Modo Offline - Clave No Válida)' : 'Coach IA (Modo Offline 🧠)',
+            isOnline: false
+          };
+        }
+
+        // Render Result Card
+        document.getElementById('ai-res-kcal').innerText = tempAiResult.kcal;
+        document.getElementById('ai-res-prote').innerText = `${tempAiResult.prote}g`;
+        document.getElementById('ai-res-carbos').innerText = `${tempAiResult.carbos}g`;
+        document.getElementById('ai-res-grasas').innerText = `${tempAiResult.grasas}g`;
+        document.getElementById('ai-res-timing').innerHTML = `⏱️ <strong>Estrategia Timing:</strong> ${tempAiResult.timing}`;
+        document.getElementById('ai-res-razonamiento').innerHTML = `🔬 <strong>Justificación Fisiológica:</strong> ${tempAiResult.razonamiento}`;
+
+        const sourceBadge = document.getElementById('ai-badge-source');
+        if (tempAiResult.isOnline) {
+          sourceBadge.style.background = 'rgba(52, 199, 89, 0.2)';
+          sourceBadge.style.color = '#34C759';
+          sourceBadge.style.border = '1px solid rgba(52, 199, 89, 0.4)';
+          sourceBadge.innerText = '● ' + tempAiResult.source;
+        } else {
+          sourceBadge.style.background = 'rgba(255, 149, 0, 0.2)';
+          sourceBadge.style.color = 'var(--carbos-color)';
+          sourceBadge.style.border = '1px solid rgba(255, 149, 0, 0.4)';
+          sourceBadge.innerText = tempAiResult.source;
+        }
+
+        // Store temporary input data for preview mode (without saving to localStorage yet)
+        tempAiResult.datosUsuario = { peso, altura, edad, metabolismo, fuerzaDias: fuerza, cardioMin: cardio, estres, sueno, pasos, objetivo };
+
+        document.getElementById('ai-loading-step').style.display = 'none';
+        document.getElementById('ai-results-step').style.display = 'flex';
+
+      } finally {
+        if (calcBtn) {
+          calcBtn.disabled = false;
+          if (calcBtn.dataset.originalText) calcBtn.innerHTML = calcBtn.dataset.originalText;
+          calcBtn.style.opacity = '1';
+          calcBtn.style.cursor = 'pointer';
+        }
       }
+    }
 
-      // IF API FAILED OR KEY WAS MISSING -> SCIENTIFIC LOCAL ALGORITHM FALLBACK (100% GUARANTEED TO WORK)
-      if (!apiSuccess) {
-        console.warn('API Key no disponible o error en Gemini API. Usando algoritmo científico deportivo local.', lastErrorMessage);
-        
-        const scRes = calculateScientificMacrosLocal(peso, altura, edad, fuerza, cardio, estres, sueno, pasos, objetivo, metabolismo);
-        tempAiResult = {
-          kcal: scRes.kcal,
-          prote: scRes.prote,
-          carbos: scRes.carbos,
-          grasas: scRes.grasas,
-          razonamiento: scRes.razonamiento + (lastErrorMessage ? ` (Nota: ${lastErrorMessage})` : ''),
-          source: apiKey ? 'Algoritmo Científico (API Key Inválida)' : 'Algoritmo Científico Offline 🧮'
-        };
+
+
+
+
+    function openAiModal() {
+      const storedAnalysis = localStorage.getItem('nutritracker_last_ai_analysis');
+      if (storedAnalysis) {
+        try {
+          const analysis = JSON.parse(storedAnalysis);
+          if (analysis.datosUsuario) {
+            const d = analysis.datosUsuario;
+            if (d.peso) document.getElementById('ai-peso').value = d.peso;
+            if (d.altura) document.getElementById('ai-altura').value = d.altura;
+            if (d.edad) document.getElementById('ai-edad').value = d.edad;
+            if (d.fuerzaDias != null) document.getElementById('ai-fuerza').value = d.fuerzaDias;
+            if (d.cardioMin != null) document.getElementById('ai-cardio').value = d.cardioMin;
+            if (d.estres != null) document.getElementById('ai-estres').value = d.estres;
+            if (d.sueno != null) document.getElementById('ai-sueno').value = d.sueno;
+            if (d.pasos != null) document.getElementById('ai-pasos').value = d.pasos;
+            if (d.objetivo) document.getElementById('ai-objetivo').value = d.objetivo;
+            if (d.metabolismo) document.getElementById('ai-metabolismo').value = d.metabolismo;
+          }
+        } catch (e) {}
       }
-
-      // Render Result Card
-      document.getElementById('ai-res-kcal').innerText = tempAiResult.kcal;
-      document.getElementById('ai-res-prote').innerText = `${tempAiResult.prote}g`;
-      document.getElementById('ai-res-carbos').innerText = `${tempAiResult.carbos}g`;
-      document.getElementById('ai-res-grasas').innerText = `${tempAiResult.grasas}g`;
-      document.getElementById('ai-res-razonamiento').innerText = `🤖 "${tempAiResult.razonamiento}"`;
-      document.getElementById('ai-badge-source').innerText = tempAiResult.source;
-
+      document.getElementById('ai-form-step').style.display = 'flex';
       document.getElementById('ai-loading-step').style.display = 'none';
-      document.getElementById('ai-results-step').style.display = 'flex';
+      document.getElementById('ai-results-step').style.display = 'none';
+      openModal('modal-gemini-ai');
     }
 
     function applyAiTargets() {
@@ -1987,13 +3340,514 @@ RESPONDE ÚNICAMENTE Y EXCLUSIVAMENTE CON UN OBJETO JSON VÁLIDO EN ESTE FORMATO
         grasas: tempAiResult.grasas
       };
       saveState();
+
+      // Reset previous chat history exclusively on confirming/applying targets
+      chatHistory = [];
+      localStorage.removeItem('nutritracker_mentor_chat_history');
+      localStorage.removeItem('nutritracker_coach_chat_history');
+      localStorage.removeItem('nutri_chat_history');
+
+      const areas = [
+        document.getElementById('chat-messages-area'),
+        document.getElementById('mentor-chat-messages-area')
+      ].filter(Boolean);
+      areas.forEach(area => { area.innerHTML = ''; });
+
+      const d = tempAiResult.datosUsuario || {
+        peso: parseFloat(document.getElementById('ai-peso').value) || 75,
+        altura: parseFloat(document.getElementById('ai-altura').value) || 175,
+        edad: parseInt(document.getElementById('ai-edad').value) || 25,
+        fuerzaDias: parseInt(document.getElementById('ai-fuerza').value) || 4,
+        cardioMin: parseInt(document.getElementById('ai-cardio').value) || 20,
+        estres: parseInt(document.getElementById('ai-estres').value) || 5,
+        sueno: parseFloat(document.getElementById('ai-sueno').value) || 7,
+        pasos: parseInt(document.getElementById('ai-pasos').value) || 10000,
+        objetivo: document.getElementById('ai-objetivo').value,
+        metabolismo: document.getElementById('ai-metabolismo').value
+      };
+
+      const aiAnalysisObj = {
+        datosUsuario: d,
+        macros: { kcal: tempAiResult.kcal, proteinas: tempAiResult.prote, carbohidratos: tempAiResult.carbos, grasas: tempAiResult.grasas },
+        estrategiaTiming: tempAiResult.timing,
+        justificacionFisiologica: tempAiResult.razonamiento,
+        fechaCalculo: new Date().toISOString()
+      };
+      // EXCLUSIVE PERSISTENCE TRIGGER
+      localStorage.setItem('nutritracker_last_ai_analysis', JSON.stringify(aiAnalysisObj));
+
+      initCoachChatContext();
+      updateMentorBannerStatus();
       renderDashboard();
       if (activeView === 'weekly') renderWeeklyView();
       closeModal('modal-gemini-ai');
-      alert('¡Objetivos calculados e integrados exitosamente!');
+      alert('¡Objetivos calculados e integrados exitosamente! Tu Mentor IA ha sido activado.');
     }
 
+
+    // ==========================================
+    // UNIFIED CHAT ENGINE (SINGLE SOURCE OF TRUTH)
+    // ==========================================
+    const CHAT_STORAGE_KEY = 'nutritracker_mentor_chat_history';
+
+    let chatHistory = [];
+    let chatSystemPrompt = "";
+    let isGenerating = false;
+
+    function saveCoachChatState() {
+      try {
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+      } catch (e) {
+        console.warn('Error guardando historial de chat en localStorage:', e);
+      }
+    }
+
+    function loadCoachChatState() {
+      const storedHistory = localStorage.getItem(CHAT_STORAGE_KEY) || localStorage.getItem('nutritracker_coach_chat_history') || localStorage.getItem('nutri_chat_history');
+      if (storedHistory) {
+        try {
+          const parsedHistory = JSON.parse(storedHistory);
+          if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
+            chatHistory = parsedHistory;
+            const areas = [
+              document.getElementById('chat-messages-area'),
+              document.getElementById('mentor-chat-messages-area')
+            ].filter(Boolean);
+
+            areas.forEach(area => {
+              area.innerHTML = '';
+              chatHistory.forEach(msg => {
+                const text = msg.parts?.[0]?.text || '';
+                if (text) {
+                  const bubble = document.createElement('div');
+                  bubble.className = `chat-bubble ${msg.role}`;
+                  let formatted = text
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/^\s*[-•]\s+(.*)$/gim, '• $1')
+                    .replace(/\n/g, '<br>');
+                  bubble.innerHTML = formatted;
+                  area.appendChild(bubble);
+                }
+              });
+              area.scrollTop = area.scrollHeight;
+            });
+            return true;
+          }
+        } catch (e) {
+          console.warn('Error al restaurar historial de chat:', e);
+        }
+      }
+      return false;
+    }
+
+    function clearCoachChat() {
+      if (isGenerating) return;
+      if (chatHistory.length > 0) {
+        if (!confirm('¿Deseas reiniciar la conversación con tu Mentor Deportivo?')) return;
+      }
+      chatHistory = [];
+      localStorage.removeItem(CHAT_STORAGE_KEY);
+      localStorage.removeItem('nutritracker_coach_chat_history');
+      localStorage.removeItem('nutri_chat_history');
+
+      const areas = [
+        document.getElementById('chat-messages-area'),
+        document.getElementById('mentor-chat-messages-area')
+      ].filter(Boolean);
+
+      areas.forEach(area => { area.innerHTML = ''; });
+      initCoachChatContext();
+    }
+
+    function clearMentorChat() {
+      clearCoachChat();
+    }
+
+    function toggleCoachChat() {
+      const container = document.getElementById('coach-chat-container');
+      if (!container) return;
+      const isHidden = container.style.display === 'none';
+      container.style.display = isHidden ? 'flex' : 'none';
+
+      if (isHidden) {
+        if (chatHistory.length === 0) {
+          const restored = loadCoachChatState();
+          if (!restored) {
+            initCoachChatContext();
+          }
+        }
+        const area = document.getElementById('chat-messages-area');
+        if (area) area.scrollTop = area.scrollHeight;
+      }
+    }
+
+    function updateMentorBannerStatus() {
+      const storedAnalysis = localStorage.getItem('nutritracker_last_ai_analysis');
+      const aiBannerSub = document.getElementById('ai-banner-sub');
+      const aiBannerBtn = document.getElementById('ai-banner-btn');
+      const mentorBanner = document.getElementById('btn-mentor-banner');
+      const mentorSub = document.getElementById('mentor-summary-sub');
+
+      if (storedAnalysis) {
+        try {
+          const analysis = JSON.parse(storedAnalysis);
+          if (analysis && analysis.macros) {
+            if (aiBannerSub) aiBannerSub.innerText = 'Macros personalizadas activas con IA';
+            if (aiBannerBtn) aiBannerBtn.innerText = 'Recalcular 🔄';
+
+            if (mentorBanner) mentorBanner.style.display = 'flex';
+            if (mentorSub) {
+              const met = analysis.datosUsuario?.metabolismo ? analysis.datosUsuario.metabolismo.split(' ')[0] : '';
+              mentorSub.innerText = `${analysis.macros.kcal} kcal | ${analysis.macros.proteinas}g P | ${analysis.macros.carbohidratos}g C | ${analysis.macros.grasas}g G ${met ? '(' + met + ')' : ''}`;
+            }
+            return;
+          }
+        } catch (e) {}
+      }
+
+      if (aiBannerSub) aiBannerSub.innerText = 'Calcula tus macros según estrés, cardio y metabolismo';
+      if (aiBannerBtn) aiBannerBtn.innerText = 'Calcular 🤖';
+
+      if (mentorBanner) mentorBanner.style.display = 'none';
+    }
+
+    function openMentorModal() {
+      const storedAnalysis = localStorage.getItem('nutritracker_last_ai_analysis');
+      try {
+        if (storedAnalysis) {
+          const analysis = JSON.parse(storedAnalysis);
+          const pill = document.getElementById('mentor-macros-pill');
+          if (pill && analysis.macros) {
+            const met = analysis.datosUsuario?.metabolismo ? analysis.datosUsuario.metabolismo.split(' ')[0] : '';
+            pill.innerText = `🔥 ${analysis.macros.kcal} kcal  |  🥩 ${analysis.macros.proteinas}g P  |  🍚 ${analysis.macros.carbohidratos}g C  |  🥑 ${analysis.macros.grasas}g G${met ? '  |  🧬 ' + met : ''}`;
+          }
+        }
+      } catch (e) {}
+
+      loadCoachChatState();
+
+      if (chatHistory.length === 0) {
+        initCoachChatContext();
+      }
+
+      openModal('modal-mentor-chat');
+
+      setTimeout(() => {
+        const area = document.getElementById('mentor-chat-messages-area');
+        if (area) area.scrollTop = area.scrollHeight;
+        const input = document.getElementById('mentor-user-input');
+        if (input) input.focus();
+      }, 100);
+    }
+
+
+    function initCoachChatContext() {
+      const storedAnalysis = localStorage.getItem('nutritracker_last_ai_analysis');
+      let analysis = null;
+      if (storedAnalysis) {
+        try { analysis = JSON.parse(storedAnalysis); } catch (e) {}
+      }
+
+      const peso = analysis?.datosUsuario?.peso || parseFloat(document.getElementById('ai-peso')?.value) || 75;
+      const altura = analysis?.datosUsuario?.altura || parseFloat(document.getElementById('ai-altura')?.value) || 175;
+      const edad = analysis?.datosUsuario?.edad || parseInt(document.getElementById('ai-edad')?.value) || 25;
+      const fuerza = analysis?.datosUsuario?.fuerzaDias || parseInt(document.getElementById('ai-fuerza')?.value) || 4;
+      const cardio = analysis?.datosUsuario?.cardioMin || parseInt(document.getElementById('ai-cardio')?.value) || 20;
+      const estres = analysis?.datosUsuario?.estres || parseInt(document.getElementById('ai-estres')?.value) || 5;
+      const sueno = analysis?.datosUsuario?.sueno || parseFloat(document.getElementById('ai-sueno')?.value) || 7;
+      const pasos = analysis?.datosUsuario?.pasos || parseInt(document.getElementById('ai-pasos')?.value) || 10000;
+      const objetivo = analysis?.datosUsuario?.objetivo || document.getElementById('ai-objetivo')?.value || 'Volumen Limpio';
+      const metabolismo = analysis?.datosUsuario?.metabolismo || document.getElementById('ai-metabolismo')?.value || 'Normal';
+
+      const kcal = analysis?.macros?.kcal || (tempAiResult ? tempAiResult.kcal : 3200);
+      const prote = analysis?.macros?.proteinas || (tempAiResult ? tempAiResult.prote : 160);
+      const carbos = analysis?.macros?.carbohidratos || (tempAiResult ? tempAiResult.carbos : 500);
+      const grasas = analysis?.macros?.grasas || (tempAiResult ? tempAiResult.grasas : 70);
+      const timing = analysis?.estrategiaTiming || (tempAiResult ? tempAiResult.timing : 'Priorizar carbohidratos complejos peri-entreno.');
+      const razonamiento = analysis?.justificacionFisiologica || (tempAiResult ? tempAiResult.razonamiento : 'Propuesta fisiológica de alto rendimiento.');
+
+      chatSystemPrompt = `Actúa como un Fisiólogo del Ejercicio y Nutricionista Deportivo de Élite con un estilo directo, claro y de alta densidad de información.
+
+REGLAS ESTRICTAS DE ESTILO DE RESPUESTA:
+- PROHIBIDO usar introducciones vacías, frases motivacionales genéricas (ej: "¡Vamos a por ello, campeón!", "¡Hola atleta!") o resúmenes innecesarios de los datos del usuario.
+- Comienza la respuesta DIRECTAMENTE en la primera línea con la solución técnica, el desglose de comidas con gramos exactos, los macros por toma y los tiempos de ingesta en viñetas o listas legibles.
+
+PERFIL DEL ATLETA:
+- Peso: ${peso} kg | Altura: ${altura} cm | Edad: ${edad} años | Metabolismo: ${metabolismo}
+- Fuerza: ${fuerza}d/semana | Cardio/Carrera: ${cardio} min/día | Pasos: ${pasos}
+- Nivel de Estrés: ${estres}/10 | Horas de Sueño: ${sueno}h/noche | Objetivo: ${objetivo}
+
+PLAN DE MACRONUTRIENTES CALCULADO:
+- Calorías Totales: ${kcal} kcal | Proteínas: ${prote}g | Carbohidratos: ${carbos}g | Grasas: ${grasas}g
+- Timing: ${timing}
+- Justificación Fisiológica: ${razonamiento}`;
+
+      if (chatHistory.length === 0 && storedAnalysis) {
+        const welcomeMsg = `¡Hola! 👋 Soy tu Mentor Deportivo y Nutricionista 1 a 1.\n\nHe fijado tu plan diario en **${kcal} kcal** (${prote}g Proteína, ${carbos}g Carbos, ${grasas}g Grasas).\n\n🔬 **Enfoque Fisiológico:** Este reparto está optimizado para tus ${peso}kg (${objetivo}, metabolismo ${metabolismo}) y tu nivel de actividad (${fuerza}d fuerza / ${cardio}min cardio con nivel de estrés ${estres}/10).\n\n🏆 **Objetivo:** Mantén el enfoque y la consistencia diaria. Estoy aquí para resolver tus dudas sobre reparto por comidas, recetas, horarios pre/post entreno o suplementación. ¿Por dónde empezamos?`;
+
+        chatHistory.push({
+          role: 'model',
+          parts: [{ text: welcomeMsg }]
+        });
+        renderChatMessage('model', welcomeMsg);
+      }
+
+      saveCoachChatState();
+    }
+
+
+
+    function renderChatMessage(role, text) {
+      const areas = [
+        document.getElementById('chat-messages-area'),
+        document.getElementById('mentor-chat-messages-area')
+      ].filter(Boolean);
+
+      if (areas.length === 0) return;
+
+      let formatted = text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^\s*[-•]\s+(.*)$/gim, '• $1')
+        .replace(/\n/g, '<br>');
+
+      areas.forEach(area => {
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${role}`;
+        bubble.innerHTML = formatted;
+        area.appendChild(bubble);
+        area.scrollTop = area.scrollHeight;
+      });
+    }
+
+    function sendQuickPrompt(promptText) {
+      sendChatMessage(promptText);
+    }
+
+    function sendMentorQuickPrompt(promptText) {
+      sendChatMessage(promptText);
+    }
+
+    function sendMentorChatMessage() {
+      sendChatMessage();
+    }
+
+    async function sendChatMessage(customText) {
+      if (isGenerating) return;
+
+      const coachInput = document.getElementById('chat-user-input');
+      const mentorInput = document.getElementById('mentor-user-input');
+
+      let userText = customText || (coachInput && coachInput.value.trim()) || (mentorInput && mentorInput.value.trim()) || '';
+      if (!userText) return;
+
+      isGenerating = true;
+
+      // VISUAL LOCKOUT FOR BOTH INPUTS
+      [coachInput, mentorInput].forEach(inp => {
+        if (inp) {
+          inp.value = '';
+          inp.disabled = true;
+          inp.placeholder = 'El Mentor IA está respondiendo...';
+        }
+      });
+
+      const sendBtns = [document.getElementById('btn-send-chat'), document.getElementById('btn-send-mentor')].filter(Boolean);
+      sendBtns.forEach(btn => {
+        btn.disabled = true;
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'not-allowed';
+      });
+
+      const chips = document.querySelectorAll('.chat-chip');
+      chips.forEach(chip => {
+        chip.style.pointerEvents = 'none';
+        chip.style.opacity = '0.5';
+      });
+
+      const indicators = [document.getElementById('chat-typing-indicator'), document.getElementById('mentor-chat-typing-indicator')].filter(Boolean);
+
+      try {
+        if (chatHistory.length === 0 && !chatSystemPrompt) {
+          initCoachChatContext();
+        }
+
+        renderChatMessage('user', userText);
+
+        chatHistory.push({
+          role: 'user',
+          parts: [{ text: userText }]
+        });
+        saveCoachChatState();
+
+        indicators.forEach(ind => ind.style.display = 'flex');
+
+        const rawInputKey = document.getElementById('ai-key-input')?.value || document.getElementById('input-api-key')?.value || localStorage.getItem('gemini_api_key') || '';
+        const activeApiKey = rawInputKey.replace(/['"]/g, '').trim();
+
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:streamGenerateContent?alt=sse&key=${activeApiKey}`;
+
+        let aiReplyText = "";
+        let streamSuccess = false;
+        const areas = [document.getElementById('chat-messages-area'), document.getElementById('mentor-chat-messages-area')].filter(Boolean);
+        let bubbles = [];
+
+        if (activeApiKey.length > 5 && areas.length > 0) {
+          try {
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                systemInstruction: {
+                  parts: [{ text: chatSystemPrompt }]
+                },
+                contents: chatHistory,
+                generationConfig: {
+                  maxOutputTokens: 8192,
+                  temperature: 0.3
+                }
+              })
+            });
+
+            if (response.ok && response.body) {
+              indicators.forEach(ind => ind.style.display = 'none');
+
+              areas.forEach(area => {
+                const b = document.createElement('div');
+                b.className = 'chat-bubble model';
+                area.appendChild(b);
+                bubbles.push(b);
+              });
+
+              const reader = response.body.getReader();
+              const decoder = new TextDecoder('utf-8');
+              let buffer = '';
+
+              while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                  const trimmed = line.trim();
+                  if (trimmed.startsWith('data: ')) {
+                    const jsonStr = trimmed.slice(6);
+                    if (jsonStr === '[DONE]') continue;
+                    try {
+                      const parsed = JSON.parse(jsonStr);
+                      const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                      if (textChunk) {
+                        aiReplyText += textChunk;
+                        updateChatBubbleText(bubbles, aiReplyText);
+                        areas.forEach(a => a.scrollTop = a.scrollHeight);
+                        streamSuccess = true;
+                      }
+                    } catch (e) {}
+                  }
+                }
+              }
+
+              if (buffer.trim().startsWith('data: ')) {
+                const jsonStr = buffer.trim().slice(6);
+                if (jsonStr !== '[DONE]') {
+                  try {
+                    const parsed = JSON.parse(jsonStr);
+                    const textChunk = parsed?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                    if (textChunk) {
+                      aiReplyText += textChunk;
+                      updateChatBubbleText(bubbles, aiReplyText);
+                      areas.forEach(a => a.scrollTop = a.scrollHeight);
+                      streamSuccess = true;
+                    }
+                  } catch (e) {}
+                }
+              }
+            }
+          } catch (e) {
+            console.warn('Error en el streaming de la API de Gemini:', e);
+          }
+        }
+
+        if (!streamSuccess) {
+          indicators.forEach(ind => ind.style.display = 'none');
+          aiReplyText = generateLocalCoachAdvice(userText);
+          if (bubbles.length === 0) {
+            renderChatMessage('model', aiReplyText);
+          } else {
+            updateChatBubbleText(bubbles, aiReplyText);
+          }
+        }
+
+        chatHistory.push({
+          role: 'model',
+          parts: [{ text: aiReplyText }]
+        });
+        saveCoachChatState();
+
+      } finally {
+        isGenerating = false;
+        indicators.forEach(ind => ind.style.display = 'none');
+
+        if (coachInput) {
+          coachInput.disabled = false;
+          coachInput.placeholder = 'Pregunta sobre tus macros o comidas...';
+        }
+        if (mentorInput) {
+          mentorInput.disabled = false;
+          mentorInput.placeholder = 'Hazle una consulta a tu Mentor...';
+        }
+
+        sendBtns.forEach(btn => {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+        });
+
+        chips.forEach(chip => {
+          chip.style.pointerEvents = 'auto';
+          chip.style.opacity = '1';
+        });
+      }
+    }
+
+    function updateChatBubbleText(bubbles, text) {
+      if (!bubbles) return;
+      const bubbleList = Array.isArray(bubbles) ? bubbles : [bubbles];
+      let formatted = text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^\s*[-•]\s+(.*)$/gim, '• $1')
+        .replace(/\n/g, '<br>');
+      bubbleList.forEach(b => {
+        if (b) b.innerHTML = formatted;
+      });
+    }
+
+    function generateLocalCoachAdvice(query) {
+      const q = query.toLowerCase();
+      const kcal = tempAiResult ? tempAiResult.kcal : 3200;
+      const carbos = tempAiResult ? tempAiResult.carbos : 500;
+      const prote = tempAiResult ? tempAiResult.prote : 160;
+
+      if (q.includes('carbohidratos') || q.includes('empach') || q.includes('reparto')) {
+        return `Para asimilar **${carbos}g de carbohidratos** sin pesadez digestiva:\n\n- **Divide en 4-5 tomas:** Ej. Avena en el desayuno (100g), Arroz/Macarrones en comida y cena (125g c/u) y Pan/Banana en merienda.\n- **Fuentes de rápida asimilación peri-entreno:** Usa arroz blanco o plátano 1h antes de entrenar y harina de arroz/crema de arroz post-entreno.\n- **Hidratación:** Bebe 3L de agua repartidos en el día para almacenar el glucógeno muscular sin hinchazón.`;
+      } else if (q.includes('fuentes') || q.includes('recomiendas') || q.includes('comida')) {
+        return `Nuestras fuentes estrella para tus **${kcal} kcal**:\n\n- **Proteínas (${prote}g):** Pechuga de pollo, lomo adobado, claras de huevo, pescado blanco/atún y queso batido 0%.\n- **Carbohidratos (${carbos}g):** Macarrones, arroz, avena integral, pan Bimbo y plátanos.\n- **Grasas:** Aceite de oliva virgen extra, frutos secos (anacardos/almendras) y yemas de huevo.`;
+      } else if (q.includes('antes') || q.includes('después') || q.includes('entrenar')) {
+        return `**Protocolo Peri-Entrenamiento Recomendado:**\n\n- **Pre-Entreno (60-90 min antes):** 80g de Carbos complejos + 25g Proteína (ej: 1 plátano grande + 1 bowl de avena o tostadas con tortilla/claras).\n- **Post-Entreno (0-45 min después):** 100g de Carbos de rápida digestión + 35g Proteína (ej: Arroz/Macarrones con Pechuga de Pollo + suplementación de Creatina).`;
+      } else {
+        return `Con tu objetivo de **${kcal} kcal**, lo más importante es la consistencia diaria. Procura repartir la proteína (${prote}g) en 4 tomas de ~40g cada una y concentrar los carbohidratos alrededor de tus sesiones de entrenamiento de fuerza.`;
+      }
+    }
+
+
+
     // SEARCH MODAL
+
     function openSearchModal() {
       document.getElementById('step-search').style.display = 'block';
       document.getElementById('step-config').style.display = 'none';
@@ -2054,13 +3908,14 @@ RESPONDE ÚNICAMENTE Y EXCLUSIVAMENTE CON UN OBJETO JSON VÁLIDO EN ESTE FORMATO
     function updateLivePreview() {
       if (!selectedFoodForLog) return;
       const qty = parseFloat(document.getElementById('input-qty').value) || 0;
-      const factor = qty / 100.0;
+      const factor = selectedFoodForLog.es_unidad ? qty : (qty / 100.0);
 
       document.getElementById('prev-kcal').innerText = (selectedFoodForLog.kcal_100g * factor).toFixed(0);
       document.getElementById('prev-prote').innerText = `${(selectedFoodForLog.prote_100g * factor).toFixed(1)}g`;
       document.getElementById('prev-carbos').innerText = `${(selectedFoodForLog.carbos_100g * factor).toFixed(1)}g`;
       document.getElementById('prev-grasas').innerText = `${(selectedFoodForLog.grasas_100g * factor).toFixed(1)}g`;
     }
+
 
     function confirmAddLog() {
       if (!selectedFoodForLog) return;
@@ -2147,7 +4002,39 @@ RESPONDE ÚNICAMENTE Y EXCLUSIVAMENTE CON UN OBJETO JSON VÁLIDO EN ESTE FORMATO
     // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=3.1.0').then((reg) => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           console.log('[PWA] Service Worker registrado exitosamente:', reg.scope);
           
           reg.addEventListener('updatefound', () => {
