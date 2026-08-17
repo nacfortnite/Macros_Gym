@@ -1720,6 +1720,118 @@
       opacity: 1;
     }
 
+    /* --- Feedback táctil interactivo en botones y tarjetas clickables --- */
+    button,
+    .nav-tab-btn,
+    .league-pill-badge,
+    .streak-pill-badge,
+    .food-item-card,
+    .meal-card-item {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1), filter 0.1s ease, box-shadow 0.15s ease !important;
+    }
+
+    button:active,
+    .nav-tab-btn:active,
+    .league-pill-badge:active,
+    .streak-pill-badge:active {
+      transform: scale(0.95) !important;
+      filter: brightness(1.15) !important;
+    }
+
+    /* --- Micro-animación de pulso y celebración al cumplir >= 3/4 macros --- */
+    @keyframes pulseCelebration {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+      }
+      35% {
+        transform: scale(1.05);
+        box-shadow: 0 0 24px rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(0.98);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    .celebrate-goal {
+      animation: pulseCelebration 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+    }
+
+    /* --- Micro-animación de entrada al añadir un alimento nuevo --- */
+    @keyframes foodItemPop {
+      0% {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .food-item-new {
+      animation: foodItemPop 0.25s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    }
+
+    /* --- Estilos del Switch / Toggle de Sonido en Ajustes --- */
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #2a2d36;
+      border-radius: 9999px;
+      transition: background-color 0.2s ease;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #10b981;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+
 
     .tabs-scroll-container {
       display: flex !important;
@@ -2361,9 +2473,21 @@
         <input type="number" class="native-input" id="target-input-grasas" value="70">
       </div>
 
-      <button class="btn-action-cta" onclick="saveTargets()">Guardar Objetivos</button>
+      <div class="setting-row" style="margin-top: 8px;">
+        <div>
+          <div style="font-weight: 800; font-size: 14px; color: var(--text-primary);">🔊 Sonidos y Háptica Audio FX:</div>
+          <div style="font-size: 11px; color: var(--text-secondary);">Efectos de sonido retro al pulsar botones y celebrar objetivos</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-sound-fx" checked onchange="toggleSoundFXSetting(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <button class="btn-action-cta" onclick="saveTargets()" style="margin-top: 14px;">Guardar Objetivos</button>
     </div>
   </div>
+
 
   <!-- MODAL 3: CREATE CUSTOM FOOD -->
   <div class="modal-backdrop" id="modal-custom-food">
@@ -2523,10 +2647,104 @@
           <div>• <strong>+100 ELO:</strong> Día perfecto de macros (4/4 Macros cumplidos).</div>
           <div>• <strong>+200 ELO:</strong> Bonus por alcanzar racha de 7 días consecutivos.</div>
           <div>• <strong>-30 ELO:</strong> Día sin registros o incumplimiento nutricional.</div>
-        </div>
+        <!-- BOTÓN RETAR A UN AMIGO -->
+        <button class="btn-action-cta" onclick="openModal('modal-challenge-link')" style="margin-top: 14px; background: linear-gradient(90deg, #FF2D55, #A855F7); color: #FFF; box-shadow: 0 4px 14px rgba(255, 45, 85, 0.4);">
+          ⚔️ Retar a un Amigo / Crear Duelo 1 vs 1
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- MODAL: DESAFIAR A UN AMIGO (RETAR DUELO P2P) -->
+  <div class="modal-backdrop" id="modal-challenge-link">
+    <div class="modal-sheet">
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
+      <div class="sheet-header">
+        <div class="sheet-title" style="display: flex; align-items: center; gap: 8px; color: #FF2D55;">
+          <span>⚔️</span> Crear Enlace de Duelo 1 vs 1
+        </div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-challenge-link')">✕</button>
+      </div>
+
+      <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+        Exporta tu rendimiento semanal en un enlace cifrado seguro y reta a tus amigos a ver quién mantiene mayor disciplina nutricional.
+      </div>
+
+      <div class="input-field-group" style="margin-bottom: 12px;">
+        <div class="input-field-label">Tu Nombre / Alias de Atleta:</div>
+        <input type="text" class="native-input" id="vs-user-alias" value="Nacho" placeholder="Ej: Nacho" oninput="actualizarEnlaceDueloUI()">
+      </div>
+
+      <div class="input-field-group" style="background: rgba(255, 45, 85, 0.1); padding: 12px; border-radius: 16px; border: 1px solid rgba(255, 45, 85, 0.3); margin-bottom: 14px;">
+        <div class="input-field-label" style="color: var(--kcal-color);">🔗 Tu Enlace Único de Batalla:</div>
+        <input type="text" class="native-input" id="input-url-duelo" readonly style="font-size: 12px; font-weight: 700; color: #FFF; background: rgba(0,0,0,0.4);" onclick="this.select()">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-action-cta" onclick="copiarEnlaceDuelo()" style="background: var(--prote-color); color: #000; box-shadow: 0 4px 14px var(--prote-glow);">
+          📋 Copiar Enlace de Batalla
+        </button>
+        <button class="btn-action-cta" onclick="enviarRetoWhatsApp()" style="background: #25D366; color: #FFF; box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);">
+          📲 Enviar Reto por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ARENA DE COMBATE 1 VS 1 (VERSUS HEAD-TO-HEAD) -->
+  <div class="modal-backdrop" id="modal-arena-versus">
+    <div class="modal-sheet" style="max-height: 92vh; background: radial-gradient(circle at top, rgba(255,45,85,0.15) 0%, rgba(15,15,18,0.98) 70%);">
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
+      <div class="sheet-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+        <div class="sheet-title" style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px; color: #FFD700; font-size: 18px; font-weight: 900;">
+          <span>⚔️</span> IRON CLASH: DUELO 1 VS 1 <span>⚔️</span>
+        </div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-arena-versus')">✕</button>
+      </div>
+
+      <!-- VERSUS HEADER AVATARS -->
+      <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin: 14px 0; text-align: center;">
+        <!-- YOU -->
+        <div style="background: rgba(48, 176, 199, 0.15); border: 1px solid rgba(48, 176, 199, 0.4); padding: 12px; border-radius: 16px;">
+          <div style="font-size: 28px;">🥋</div>
+          <div style="font-weight: 900; font-size: 15px; color: var(--prote-color);" id="vs-my-name">Tú</div>
+          <div style="font-size: 11px; font-weight: 800; color: var(--text-secondary);" id="vs-my-div">Plata</div>
+        </div>
+
+        <!-- VS BADGE -->
+        <div style="font-size: 20px; font-weight: 900; color: #FF2D55; text-shadow: 0 0 10px rgba(255,45,85,0.8); background: rgba(255,45,85,0.2); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,45,85,0.5);">
+          VS
+        </div>
+
+        <!-- RIVAL -->
+        <div style="background: rgba(255, 45, 85, 0.15); border: 1px solid rgba(255, 45, 85, 0.4); padding: 12px; border-radius: 16px;">
+          <div style="font-size: 28px;">🥊</div>
+          <div style="font-weight: 900; font-size: 15px; color: var(--kcal-color);" id="vs-rival-name">Rival</div>
+          <div style="font-size: 11px; font-weight: 800; color: var(--text-secondary);" id="vs-rival-div">Plata</div>
+        </div>
+      </div>
+
+      <!-- VERDICT BANNER -->
+      <div id="vs-verdict-banner" style="text-align: center; padding: 12px; border-radius: 16px; font-weight: 900; font-size: 15px; margin-bottom: 14px; background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.4); color: #FFD700;">
+        🏆 ¡VICTORIA! Tienes mayor disciplina semanal
+      </div>
+
+      <!-- COMPARISON METRICS GRID -->
+      <div style="display: flex; flex-direction: column; gap: 10px;" id="vs-metrics-container">
+        <!-- 4 head-to-head metric cards rendered dynamically -->
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn-action-cta" onclick="openModal('modal-challenge-link')" style="background: linear-gradient(90deg, #FF2D55, #A855F7); color: #FFF;">
+          🔁 Devolver el Reto / Compartir Mi Resultado
+        </button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- MODAL 4: GEMINI AI ASSISTANT QUESTIONNAIRE & RESULTS -->
 
@@ -3407,10 +3625,59 @@
       }
     }
 
+    let isSoundFXEnabled = localStorage.getItem('nutritracker_sound_fx') !== 'false';
+
+    function toggleSoundFXSetting(val) {
+      isSoundFXEnabled = val;
+      localStorage.setItem('nutritracker_sound_fx', val ? 'true' : 'false');
+    }
+
+    function playSoundFX(type) {
+      if (!isSoundFXEnabled) return;
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'click' || type === 'tap') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'add' || type === 'success') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.setValueAtTime(880, now + 0.08);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.16);
+          osc.start(now);
+          osc.stop(now + 0.16);
+        } else if (type === 'celebration' || type === 'goal') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
+          osc.start(now);
+          osc.stop(now + 0.45);
+        }
+      } catch (e) {}
+    }
+
     function toggleTheme() {
       const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
       applyTheme(nextTheme);
     }
+
     
     let activeView = 'daily'; // 'daily' or 'weekly'
     let currentDate = new Date().toISOString().split('T')[0];
@@ -3609,6 +3876,7 @@
     }
 
     function showGamificationToast(msg) {
+      playSoundFX('celebration');
       let toast = document.getElementById('gamification-toast');
       if (!toast) {
         toast = document.createElement('div');
@@ -3623,9 +3891,219 @@
       }, 3500);
     }
 
+
+    // ==========================================
+    // SISTEMA DE DUELOS 1 VS 1 P2P (IRON CLASH)
+    // ==========================================
+    function calcularAdherenciaSemanaActual() {
+      const monday = getMondayOfWeek(0);
+      let successDays = 0;
+      let totalLoggedDays = 0;
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        const dateStr = d.toISOString().split('T')[0];
+        const dayLogs = logs.filter(l => l.fecha.startsWith(dateStr));
+        if (dayLogs.length > 0) {
+          totalLoggedDays++;
+          const evalRes = evaluarDiaCumplido(dateStr);
+          if (evalRes.count >= 3) successDays++;
+        }
+      }
+
+      if (totalLoggedDays === 0) return 0;
+      return Math.round((successDays / 7) * 100);
+    }
+
+    function calcularTotalProteinaSemana() {
+      const monday = getMondayOfWeek(0);
+      let totalProte = 0;
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        const dateStr = d.toISOString().split('T')[0];
+        const dayLogs = logs.filter(l => l.fecha.startsWith(dateStr));
+        dayLogs.forEach(log => {
+          const food = foods.find(f => f.id === log.alimentoId);
+          if (food) {
+            const factor = food.es_unidad ? log.cantidad : (log.cantidad / 100.0);
+            totalProte += food.prote_100g * factor;
+          }
+        });
+      }
+
+      return Math.round(totalProte);
+    }
+
+    function generarEnlaceDuelo() {
+      const leagueState = getLeagueState();
+      const rewardsState = getRewardsState();
+      const alias = document.getElementById('vs-user-alias')?.value.trim() || "Atleta NutriTracker";
+
+      const datosDuelo = {
+        u: alias,
+        d: leagueState.divisionActual || "Bronce",
+        e: leagueState.puntosElo || 250,
+        r: rewardsState.rachaActual || 0,
+        a: calcularAdherenciaSemanaActual(),
+        p: calcularTotalProteinaSemana(),
+        f: new Date().toISOString().split('T')[0]
+      };
+
+      const hashDuelo = btoa(encodeURIComponent(JSON.stringify(datosDuelo)));
+      const urlDuelo = `${window.location.origin}${window.location.pathname}?vs=${hashDuelo}`;
+
+      return { urlDuelo, hashDuelo, datosDuelo };
+    }
+
+    function actualizarEnlaceDueloUI() {
+      const res = generarEnlaceDuelo();
+      const input = document.getElementById('input-url-duelo');
+      if (input) input.value = res.urlDuelo;
+    }
+
+    function copiarEnlaceDuelo() {
+      const res = generarEnlaceDuelo();
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(res.urlDuelo).then(() => {
+          showGamificationToast("📋 ¡Enlace de Batalla copiado al portapapeles!");
+        }).catch(() => {
+          fallbackCopiar(res.urlDuelo);
+        });
+      } else {
+        fallbackCopiar(res.urlDuelo);
+      }
+    }
+
+    function fallbackCopiar(text) {
+      const input = document.getElementById('input-url-duelo');
+      if (input) {
+        input.value = text;
+        input.select();
+        document.execCommand('copy');
+        showGamificationToast("📋 ¡Enlace de Batalla copiado!");
+      }
+    }
+
+    function enviarRetoWhatsApp() {
+      const res = generarEnlaceDuelo();
+      const text = `🔥 ¡Te reto a un duelo de macros en NutriTracker Pro! Comprueba quién tiene más disciplina aquí: ${res.urlDuelo}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function abrirModalVersus(rival) {
+      const myLeague = getLeagueState();
+      const myRewards = getRewardsState();
+      const myAlias = document.getElementById('vs-user-alias')?.value.trim() || "Tú (NutriTracker)";
+      const myAdh = calcularAdherenciaSemanaActual();
+      const myProte = calcularTotalProteinaSemana();
+
+      const myData = {
+        u: myAlias,
+        d: myLeague.divisionActual,
+        e: myLeague.puntosElo,
+        r: myRewards.rachaActual,
+        a: myAdh,
+        p: myProte
+      };
+
+      // Set Headings
+      document.getElementById('vs-my-name').innerText = myData.u;
+      document.getElementById('vs-my-div').innerText = `${myData.e} ELO (${myData.d})`;
+      document.getElementById('vs-rival-name').innerText = rival.u || "Rival";
+      document.getElementById('vs-rival-div').innerText = `${rival.e || 0} ELO (${rival.d || 'Bronce'})`;
+
+      // Compare 4 Metrics
+      let myWins = 0, rivalWins = 0;
+
+      // 1. Adherence
+      const adhDiff = myData.a - rival.a;
+      if (adhDiff > 0) myWins++; else if (adhDiff < 0) rivalWins++;
+
+      // 2. Protein
+      const proteDiff = myData.p - rival.p;
+      if (proteDiff > 0) myWins++; else if (proteDiff < 0) rivalWins++;
+
+      // 3. ELO
+      const eloDiff = myData.e - rival.e;
+      if (eloDiff > 0) myWins++; else if (eloDiff < 0) rivalWins++;
+
+      // 4. Streak
+      const streakDiff = myData.r - rival.r;
+      if (streakDiff > 0) myWins++; else if (streakDiff < 0) rivalWins++;
+
+      // Render Verdict
+      const banner = document.getElementById('vs-verdict-banner');
+      if (banner) {
+        if (myWins > rivalWins) {
+          banner.style.background = 'rgba(54, 211, 153, 0.15)';
+          banner.style.borderColor = 'rgba(54, 211, 153, 0.4)';
+          banner.style.color = '#36D399';
+          banner.innerHTML = `🏆 ¡VICTORIA (${myWins}-${rivalWins})! Tienes mayor disciplina semanal`;
+          playSoundFX('celebration');
+        } else if (rivalWins > myWins) {
+          banner.style.background = 'rgba(255, 59, 48, 0.15)';
+          banner.style.borderColor = 'rgba(255, 59, 48, 0.4)';
+          banner.style.color = '#FF3B30';
+          banner.innerHTML = `💀 DERROTA (${myWins}-${rivalWins}): Tu rival ha mantenido mejor constancia esta semana`;
+        } else {
+          banner.style.background = 'rgba(255, 204, 0, 0.15)';
+          banner.style.borderColor = 'rgba(255, 204, 0, 0.4)';
+          banner.style.color = '#FFCC00';
+          banner.innerHTML = `⚖️ EMPATE TÁCTICO (${myWins}-${rivalWins}): Ambos están al mismo nivel`;
+        }
+      }
+
+      // Render 4 Comparison Metrics
+      const container = document.getElementById('vs-metrics-container');
+      if (container) {
+        const metrics = [
+          { name: "🎯 Adherencia Semanal", myVal: `${myData.a}%`, rivalVal: `${rival.a}%`, win: myData.a > rival.a, tie: myData.a === rival.a },
+          { name: "🥩 Proteína Semanal Total", myVal: `${myData.p}g`, rivalVal: `${rival.p}g`, win: myData.p > rival.p, tie: myData.p === rival.p },
+          { name: "🏆 Puntos ELO / Rango", myVal: `${myData.e} ELO`, rivalVal: `${rival.e} ELO`, win: myData.e > rival.e, tie: myData.e === rival.e },
+          { name: "🔥 Racha Activa", myVal: `${myData.r} días`, rivalVal: `${rival.r} días`, win: myData.r > rival.r, tie: myData.r === rival.r }
+        ];
+
+        container.innerHTML = metrics.map(m => `
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 14px;">
+            <div style="font-size: 12px; font-weight: 800; color: var(--text-secondary); margin-bottom: 6px; text-align: center;">${m.name}</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-weight: 900; font-size: 15px;">
+              <div style="text-align: center; color: ${m.win ? '#36D399' : (m.tie ? '#FFCC00' : 'var(--text-primary)')}; background: ${m.win ? 'rgba(54,211,153,0.1)' : 'transparent'}; padding: 6px; border-radius: 8px;">
+                ${m.myVal} ${m.win ? '👑' : ''}
+              </div>
+              <div style="text-align: center; color: ${!m.win && !m.tie ? '#FF2D55' : (m.tie ? '#FFCC00' : 'var(--text-primary)')}; background: ${!m.win && !m.tie ? 'rgba(255,45,85,0.1)' : 'transparent'}; padding: 6px; border-radius: 8px;">
+                ${m.rivalVal} ${!m.win && !m.tie ? '👑' : ''}
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      openModal('modal-arena-versus');
+    }
+
+    function detectarRetoDuelo() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vsData = urlParams.get('vs');
+      if (!vsData) return;
+
+      try {
+        const rival = JSON.parse(decodeURIComponent(atob(vsData)));
+        window.history.replaceState({}, document.title, window.location.pathname);
+        setTimeout(() => {
+          abrirModalVersus(rival);
+        }, 600);
+      } catch (err) {
+        console.error("Error al procesar el código de duelo", err);
+      }
+    }
+
     // ==========================================
     // NUTRITIONAL ADHERENCE EVALUATOR (>= 3/4 MACROS)
     // ==========================================
+
     function evaluarDiaCumplido(fechaStr) {
       const targetDate = fechaStr || currentDate;
       const dayLogs = logs.filter(l => l.fecha.startsWith(targetDate));
@@ -3975,6 +4453,9 @@
       renderRewardsUI();
       renderLeagueUI();
       initModalDragToClose();
+      actualizarEnlaceDueloUI();
+      detectarRetoDuelo();
+
 
 
 
@@ -4004,7 +4485,22 @@
         });
       }
 
+      // Global tap sound listener on interactive elements
+      document.addEventListener('click', (e) => {
+        const target = e.target.closest('button, .nav-tab-btn, .league-pill-badge, .streak-pill-badge, .preset-chip, .chat-chip, .reward-streak-pill');
+        if (target) {
+          playSoundFX('click');
+        }
+      });
+
+      // Sync sound toggle checkbox state in modal settings
+      const soundToggle = document.getElementById('toggle-sound-fx');
+      if (soundToggle) {
+        soundToggle.checked = isSoundFXEnabled;
+      }
+
       saveState();
+
 
     });
 
@@ -4286,6 +4782,12 @@
           txtAdh.style.color = '#36D399';
           dotAdh.style.background = '#36D399';
           dotAdh.style.boxShadow = '0 0 8px rgba(54, 211, 153, 0.8)';
+
+          if (!badgeAdh.classList.contains('celebrate-goal')) {
+            badgeAdh.classList.add('celebrate-goal');
+            playSoundFX('celebration');
+            setTimeout(() => badgeAdh.classList.remove('celebrate-goal'), 700);
+          }
         } else if (evalRes.count === 2) {
           badgeAdh.style.background = 'rgba(255, 204, 0, 0.15)';
           badgeAdh.style.borderColor = 'rgba(255, 204, 0, 0.4)';
@@ -4302,6 +4804,7 @@
       }
 
       renderRewardsUI();
+
 
 
 
@@ -4346,8 +4849,9 @@
         const qtyLabel = food.es_unidad ? `${log.cantidad} ud.` : `${log.cantidad} g`;
 
         return `
-          <div class="log-item-card">
+          <div class="log-item-card food-item-new">
             <div class="log-item-left">
+
               <div class="log-title-row">
                 <span class="log-item-name">${food.nombre}</span>
                 <span class="log-qty-badge">${qtyLabel}</span>
@@ -5843,7 +6347,9 @@ PLAN DE MACRONUTRIENTES CALCULADO:
     // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=10.2.0').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=12.0.0').then((reg) => {
+
+
 
 
 
