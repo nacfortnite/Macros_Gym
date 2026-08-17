@@ -68,19 +68,27 @@
 
 
     html, body {
+      overflow-x: hidden !important;
+      width: 100%;
+      max-width: 100vw;
+      position: relative;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
+      max-width: 100%;
     }
 
     body {
@@ -89,6 +97,9 @@
       display: flex;
       justify-content: center;
       min-height: 100vh;
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden !important;
       padding-bottom: 100px;
       transition: background-color 0.3s ease, color 0.3s ease;
       overscroll-behavior-y: contain;
@@ -100,6 +111,58 @@
       touch-action: none;
     }
 
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      overflow-x: hidden !important;
+      box-sizing: border-box;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .input-field-group, .native-input, select.native-input, input.native-input {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .chat-bubble, #ai-res-timing, #ai-res-razonamiento, .mentor-banner-sub, .ai-banner-sub, .sheet-title, .preview-lbl, .preview-num {
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    #ai-form-step, #ai-results-step, #ai-loading-step, #coach-chat-container, #modal-gemini-ai .modal-sheet, #modal-mentor-chat .modal-sheet {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden !important;
+      box-sizing: border-box;
+    }
+
+    .preview-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .preview-stats-grid > div {
+      min-width: 0;
+      overflow: hidden;
+      text-align: center;
+      background: var(--card-sub-bg);
+      padding: 8px 4px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
     .seg-btn, .btn-action-cta, .modal-sheet, .chat-chip, .icon-btn, .fab-neon, .mentor-banner-card, .ai-banner-card, .btn-mentor-sparkle, .btn-ai-sparkle, .btn-close-sheet, .sheet-close-btn, .brand-badge, .date-nav-bar {
       user-select: none;
       -webkit-user-select: none;
@@ -109,6 +172,7 @@
     .app-header, .macro-tile, .hero-rings-card, .date-nav-bar, .modal-sheet, .day-card, .log-item-card, .search-box-input, .native-input, .seg-btn, .icon-btn, .streak-hero-card, .ai-banner-card {
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
+
 
 
 
@@ -4061,7 +4125,8 @@ PLAN DE MACRONUTRIENTES CALCULADO:
     // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=3.2.0').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=3.3.0').then((reg) => {
+
 
 
 
