@@ -89,7 +89,37 @@
       -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
       max-width: 100%;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
     }
+
+    /* MINIMALIST iOS ULTRA-THIN FLOATING SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 4px !important;
+      height: 4px !important;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent !important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.25) !important;
+      border-radius: 9999px !important;
+      transition: background 0.2s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover,
+    ::-webkit-scrollbar-thumb:active {
+      background: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    ::-webkit-scrollbar-button,
+    ::-webkit-scrollbar-corner {
+      display: none !important;
+      background: transparent !important;
+    }
+
 
     body {
       background-color: var(--bg-black);
@@ -1271,6 +1301,9 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      overscroll-behavior: contain !important;
+      overscroll-behavior-y: contain !important;
+      touch-action: none;
     }
 
     .modal-backdrop.active {
@@ -1291,12 +1324,21 @@
       flex-direction: column;
       gap: 16px;
       overflow-y: auto;
-      overscroll-behavior-y: contain;
+      overscroll-behavior: contain !important;
+      overscroll-behavior-y: contain !important;
+      touch-action: pan-y;
       -webkit-overflow-scrolling: touch;
       border-top: 1px solid var(--card-border);
       transform: translateY(100%);
       transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
       will-change: transform, opacity;
+    }
+
+    #chat-messages-area, #mentor-chat-messages-area, .habits-list-container, #logs-container {
+      overscroll-behavior: contain !important;
+      overscroll-behavior-y: contain !important;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
     }
 
     .modal-backdrop.active .modal-sheet {
@@ -1305,14 +1347,35 @@
     }
 
 
-    .sheet-handle {
-      width: 36px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
-      align-self: center;
-      margin-bottom: 4px;
+
+    .drag-handle-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 0 6px 0;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
+
+    .drag-handle-container:active {
+      cursor: grabbing;
+    }
+
+    .sheet-handle, .drag-handle {
+      width: 44px;
+      height: 5px;
+      background-color: rgba(255, 255, 255, 0.28);
+      border-radius: 3px;
+      transition: background-color 0.2s ease;
+    }
+
+    .drag-handle-container:active .drag-handle, .drag-handle-container:active .sheet-handle {
+      background-color: rgba(255, 255, 255, 0.65);
+    }
+
 
     .sheet-header {
       display: flex;
@@ -1818,7 +1881,8 @@
   <!-- MODAL 1: SEARCH & PORTION CONFIG -->
   <div class="modal-backdrop" id="modal-search">
     <div class="modal-sheet">
-      <div class="sheet-handle"></div>
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
       <div class="sheet-header">
         <div class="sheet-title" id="modal-search-title">Añadir Alimento</div>
         <button class="sheet-close-btn" onclick="closeModal('modal-search')">✕</button>
@@ -1883,7 +1947,8 @@
   <!-- MODAL 2: GOALS SETTINGS & GEMINI API KEY -->
   <div class="modal-backdrop" id="modal-targets">
     <div class="modal-sheet">
-      <div class="sheet-handle"></div>
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
       <div class="sheet-header">
         <div class="sheet-title">Configurar Objetivos</div>
         <button class="sheet-close-btn" onclick="closeModal('modal-targets')">✕</button>
@@ -1925,7 +1990,8 @@
   <!-- MODAL 3: CREATE CUSTOM FOOD -->
   <div class="modal-backdrop" id="modal-custom-food">
     <div class="modal-sheet">
-      <div class="sheet-handle"></div>
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
       <div class="sheet-header">
         <div class="sheet-title">Crear Nuevo Alimento</div>
         <button class="sheet-close-btn" onclick="closeModal('modal-custom-food')">✕</button>
@@ -1968,7 +2034,8 @@
   <!-- MODAL 4: GEMINI AI ASSISTANT QUESTIONNAIRE & RESULTS -->
   <div class="modal-backdrop" id="modal-gemini-ai">
     <div class="modal-sheet">
-      <div class="sheet-handle"></div>
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
       <div class="sheet-header">
         <div class="sheet-title" style="color: var(--ai-purple); display: flex; align-items: center; gap: 8px;">
           <span>🤖</span> Coach IA de Alto Rendimiento
@@ -2155,7 +2222,8 @@
   <div class="modal-backdrop" id="modal-mentor-chat">
 
     <div class="modal-sheet" style="max-height: 90vh; display: flex; flex-direction: column;">
-      <div class="sheet-handle"></div>
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
       
       <!-- HEADER WITH MACRO RESUMEN & CONTROLS -->
       <div class="sheet-header" style="padding-bottom: 12px; border-bottom: 1px solid var(--card-border);">
@@ -2216,7 +2284,8 @@
   <div class="modal-backdrop" id="modal-add-habit">
 
     <div class="modal-sheet">
-      <div class="sheet-handle"></div>
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
       <div class="sheet-header">
         <div class="sheet-title">Nuevo Hábito Diario</div>
         <button class="sheet-close-btn" onclick="closeModal('modal-add-habit')">✕</button>
@@ -4097,7 +4166,25 @@ PLAN DE MACRONUTRIENTES CALCULADO:
       alert(`¡"${name}" guardado exitosamente!`);
     }
 
-    // MODAL UTILS WITH BODY OVERFLOW LOCKING
+    // GLOBAL BODY SCROLL LOCK & ANTI-SCROLL CHAINING UTILS
+    function bloquearScrollFondo() {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
+    }
+
+    function desbloquearScrollFondo() {
+      const modalesAbiertos = document.querySelectorAll('.modal-backdrop.active');
+      if (modalesAbiertos.length === 0) {
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+        document.documentElement.style.overflow = '';
+        document.body.classList.remove('modal-open');
+      }
+    }
+
+    // MODAL UTILS WITH GUARANTEED SCROLL LOCKING
     function openModal(id) {
       if (id === 'modal-gemini-ai') {
         document.getElementById('ai-form-step').style.display = 'block';
@@ -4107,7 +4194,7 @@ PLAN DE MACRONUTRIENTES CALCULADO:
       const modal = document.getElementById(id);
       if (modal) {
         modal.classList.add('active');
-        document.body.classList.add('modal-open');
+        bloquearScrollFondo();
       }
     }
 
@@ -4116,16 +4203,88 @@ PLAN DE MACRONUTRIENTES CALCULADO:
       if (modal) {
         modal.classList.remove('active');
       }
-      const anyActive = document.querySelector('.modal-backdrop.active');
-      if (!anyActive) {
-        document.body.classList.remove('modal-open');
-      }
+      desbloquearScrollFondo();
     }
+
+    // SWIPE-TO-DISMISS / DRAG-TO-CLOSE TOUCH GESTURE ENGINE
+    function setupSwipeToDismiss(modalElement) {
+      if (!modalElement) return;
+      const handleElement = modalElement.querySelector('.drag-handle-container') || modalElement.querySelector('.sheet-handle');
+      const card = modalElement.querySelector('.modal-sheet');
+      if (!handleElement || !card) return;
+
+      let startY = 0;
+      let currentY = 0;
+      let isDragging = false;
+
+      handleElement.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        currentY = startY;
+        isDragging = true;
+        card.style.transition = 'none';
+      }, { passive: true });
+
+      handleElement.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        const deltaY = currentY - startY;
+
+        if (deltaY > 0) {
+          card.style.transform = `translateY(${deltaY}px)`;
+          modalElement.style.opacity = Math.max(0.15, 1 - deltaY / 500);
+        }
+      }, { passive: true });
+
+      handleElement.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        const deltaY = currentY - startY;
+
+        card.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease';
+        modalElement.style.transition = 'opacity 0.25s ease';
+
+        if (deltaY > 120) {
+          card.style.transform = 'translateY(100%)';
+          modalElement.style.opacity = '0';
+          setTimeout(() => {
+            closeModal(modalElement.id);
+            card.style.transform = '';
+            card.style.transition = '';
+            modalElement.style.opacity = '';
+            modalElement.style.transition = '';
+          }, 250);
+        } else {
+          card.style.transform = 'translateY(0)';
+          modalElement.style.opacity = '1';
+          setTimeout(() => {
+            card.style.transition = '';
+            modalElement.style.transition = '';
+          }, 280);
+        }
+        startY = 0;
+        currentY = 0;
+      });
+    }
+
+    // INITIALIZE SWIPE-TO-DISMISS & BACKDROP LISTENERS
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        setupSwipeToDismiss(backdrop);
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) {
+            closeModal(backdrop.id);
+          }
+        });
+      });
+    });
 
     // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=3.3.0').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=3.6.0').then((reg) => {
+
+
+
 
 
 
