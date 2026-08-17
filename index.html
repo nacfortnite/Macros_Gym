@@ -1255,12 +1255,16 @@
       transform: scale(0.95);
     }
 
-    /* FLOATING ACTION BUTTON (FAB) */
-    .fab-neon {
+    /* FLOATING ACTION BUTTON (FAB) & ANTI-FLICKER GPU STABILIZATION */
+    #fab-button,
+    #btnAbrirModalAlimento,
+    .fab-neon,
+    .btn-anadir-alimento {
       position: fixed;
       bottom: calc(24px + env(safe-area-inset-bottom));
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translate3d(0, 0, 0);
+      -webkit-transform: translateX(-50%) translate3d(0, 0, 0);
       width: calc(100% - 32px);
       max-width: 448px;
       height: 58px;
@@ -1276,19 +1280,41 @@
       gap: 10px;
       cursor: pointer;
       box-shadow: 0 10px 30px var(--kcal-glow);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+      opacity: 1;
+      pointer-events: auto !important;
+      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease;
       z-index: 999 !important;
       touch-action: manipulation !important;
-      pointer-events: auto !important;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
+
+      /* Blindaje anti-parpadeo y estabilización de GPU */
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      contain: layout style;
+      will-change: auto;
     }
 
-    .fab-neon:active {
-      transform: translateX(-50%) scale(0.96) !important;
+    #fab-button.oculto,
+    #btnAbrirModalAlimento.oculto,
+    .fab-neon.oculto,
+    .btn-anadir-alimento.oculto {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: translateX(-50%) translateY(16px) translate3d(0, 0, 0) !important;
+      -webkit-transform: translateX(-50%) translateY(16px) translate3d(0, 0, 0) !important;
+    }
+
+    #fab-button:active,
+    #btnAbrirModalAlimento:active,
+    .fab-neon:active,
+    .btn-anadir-alimento:active {
+      transform: translateX(-50%) scale(0.96) translate3d(0, 0, 0) !important;
+      -webkit-transform: translateX(-50%) scale(0.96) translate3d(0, 0, 0) !important;
       box-shadow: 0 4px 16px var(--kcal-glow);
     }
+
 
 
     .modal-backdrop {
@@ -1548,6 +1574,153 @@
       transform: scale(0.98);
     }
 
+    /* GAMIFICATION & REWARDS STYLES */
+    .reward-streak-pill {
+      background: rgba(255, 149, 0, 0.15);
+      border: 1px solid rgba(255, 149, 0, 0.35);
+      color: #FF9500;
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .reward-streak-pill:active {
+      transform: scale(0.95);
+      background: rgba(255, 149, 0, 0.25);
+    }
+
+    .trophy-hero-card {
+      background: linear-gradient(135deg, rgba(255, 45, 85, 0.12), rgba(175, 82, 222, 0.12));
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .trophy-hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      text-align: center;
+    }
+
+    .stat-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-num {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-primary);
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 700;
+    }
+
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .badge-card {
+      background: var(--card-sub-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: opacity 0.2s ease;
+    }
+
+    .badge-card.locked {
+      opacity: 0.45;
+      filter: grayscale(1);
+    }
+
+    .badge-card.unlocked {
+      border-color: rgba(255, 204, 0, 0.4);
+      background: linear-gradient(135deg, rgba(255, 204, 0, 0.08), rgba(255, 149, 0, 0.08));
+    }
+
+    .badge-icon-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge-emoji {
+      font-size: 26px;
+    }
+
+    .badge-status-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    .badge-card.unlocked .badge-status-tag {
+      background: rgba(54, 211, 153, 0.2);
+      color: #36D399;
+    }
+
+    .badge-card.locked .badge-status-tag {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+    }
+
+    .badge-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .badge-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.3;
+    }
+
+    /* GAMIFICATION TOAST POPUP */
+    .gamification-toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(28, 28, 30, 0.95);
+      border: 1px solid var(--kcal-color);
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(16px);
+      z-index: 99999 !important;
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .gamification-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+
     .tabs-scroll-container {
       display: flex !important;
       width: 100% !important;
@@ -1602,6 +1775,9 @@
         <h1 class="brand-title">NutriTracker Pro</h1>
       </div>
       <div class="header-btns">
+        <button class="reward-streak-pill" id="btn-trophy-room" onclick="openModal('modal-trophies')" title="Sala de Trofeos y Logros">
+          <span id="streak-pill-text">🔥 0d | 🛡️ 1</span>
+        </button>
         <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Alternar Modo Claro / Oscuro">
           ☀️
         </button>
@@ -1616,6 +1792,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
       </div>
+
     </header>
 
     <!-- GEMINI AI BANNER HERO -->
@@ -1703,9 +1880,11 @@
               <div class="rings-center-info">
                 <div class="rings-center-val" id="center-kcal-val">0</div>
                 <div class="rings-center-sub" id="center-kcal-sub">/ 3200 KCAL</div>
+                <div class="rings-center-adherence" id="center-adherence-pill" style="font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 10px; margin-top: 4px; background: rgba(255, 255, 255, 0.1); color: var(--text-secondary);">🎯 Adherencia: 0/4 Macros</div>
               </div>
             </div>
           </div>
+
 
           <!-- 4 MACRO METRICS GRID -->
           <div class="metrics-grid">
@@ -1910,11 +2089,12 @@
 
   </div>
 
-  <!-- FLOATING ACTION BUTTON (FAB) -->
-  <button class="fab-neon" id="fab-button" onclick="openSearchModal()">
+  <!-- FLOATING ACTION BUTTON (FAB) STATIC DOM ELEMENT -->
+  <button class="fab-neon btn-anadir-alimento" id="fab-button" type="button" onclick="openSearchModal()">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
     <span>Añadir Alimento</span>
   </button>
+
 
   <!-- MODAL 1: SEARCH & PORTION CONFIG -->
   <div class="modal-backdrop" id="modal-search">
@@ -1926,13 +2106,39 @@
         <button class="sheet-close-btn" onclick="closeModal('modal-search')">✕</button>
       </div>
 
-      <!-- STEP 1: SEARCH -->
+      <!-- STEP 1: SEARCH & MEAL TABS -->
       <div id="step-search">
-        <input type="text" class="search-box-input" id="search-query" placeholder="Buscar en Mercadona o alimentos..." oninput="filterFoods()">
-        <div class="results-scroll" id="search-results-list" style="margin-top: 12px;"></div>
-        <button class="preset-chip" style="width: 100%; margin-top: 12px; text-align: center; color: var(--prote-color);" onclick="closeModal('modal-search'); openModal('modal-custom-food');">
-          ¿No encuentras tu alimento? Créalo aquí
-        </button>
+        <div class="segmented-nav" style="margin-bottom: 12px;">
+          <button class="seg-btn active" id="search-tab-single" onclick="switchSearchTab('single')">🥗 Alimentos Sueltos</button>
+          <button class="seg-btn" id="search-tab-meals" onclick="switchSearchTab('meals')">🍲 Mis Comidas</button>
+        </div>
+
+        <!-- TAB SINGLE FOODS -->
+        <div id="step-search-single">
+          <input type="text" class="search-box-input" id="search-query" placeholder="Buscar en Mercadona o alimentos..." oninput="filterFoods()">
+          <div class="results-scroll" id="search-results-list" style="margin-top: 12px;"></div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="preset-chip" style="flex: 1; text-align: center; color: var(--prote-color);" onclick="closeModal('modal-search'); openModal('modal-custom-food');">
+              ¿No encuentras tu alimento? Créalo aquí
+            </button>
+            <button class="preset-chip" style="flex: 1; text-align: center; color: var(--ai-purple); border-color: rgba(175, 82, 222, 0.4);" onclick="openCreateMealModal()">
+              🍲 Crear Receta Compuesta
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB COMPOSED MEALS -->
+        <div id="step-search-meals" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-weight: 800; font-size: 14px;">Recetas y Comidas Guardadas:</span>
+            <button class="preset-chip" style="background: var(--ai-purple); color: #FFF; border: none; font-weight: 800;" onclick="openCreateMealModal()">
+              + Nueva Receta
+            </button>
+          </div>
+          <div class="results-scroll" id="saved-meals-list-container">
+            <!-- Dynamically rendered meals -->
+          </div>
+        </div>
       </div>
 
       <!-- STEP 2: PORTION CONFIG & LIVE PREVIEW -->
@@ -1980,6 +2186,123 @@
         <button class="btn-action-cta" onclick="confirmAddLog()">Añadir al día</button>
       </div>
     </div>
+  </div>
+
+  <!-- MODAL: CREAR NUEVA COMIDA / RECETA COMPUESTA -->
+  <div class="modal-backdrop" id="modal-create-meal">
+    <div class="modal-sheet" style="max-height: 92vh;">
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
+      <div class="sheet-header">
+        <div class="sheet-title" style="display: flex; align-items: center; gap: 8px;">
+          <span>🍲</span> Crear Nueva Comida / Receta
+        </div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-create-meal')">✕</button>
+      </div>
+
+      <div class="input-field-group">
+        <div class="input-field-label">Nombre de la Comida / Receta:</div>
+        <input type="text" class="native-input" id="meal-input-name" placeholder="Ej. Arroz con Pollo y Aguacate" style="font-size: 15px;">
+      </div>
+
+      <div class="input-field-group">
+        <div class="input-field-label">Categoría de Comida:</div>
+        <select class="native-input" id="meal-input-category" style="font-size: 15px;">
+          <option value="Almuerzo">Almuerzo</option>
+          <option value="Desayuno">Desayuno</option>
+          <option value="Cena">Cena</option>
+          <option value="Merienda">Merienda</option>
+          <option value="Snack">Snack</option>
+        </select>
+      </div>
+
+      <!-- ADD INGREDIENT SECTION -->
+      <div style="background: var(--card-sub-bg); padding: 14px; border-radius: 18px; border: 1px solid var(--card-border); margin-top: 4px;">
+        <div style="font-weight: 800; font-size: 14px; margin-bottom: 10px; color: var(--text-primary);">Añadir Ingredientes:</div>
+        
+        <div class="input-field-group" style="margin-bottom: 10px;">
+          <select class="native-input" id="meal-select-food" style="font-size: 14px;">
+            <!-- Dynamically populated from foods list -->
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="number" class="native-input" id="meal-input-qty" value="100" placeholder="Gramos / Uds" style="font-size: 15px; flex: 1;">
+          <button class="preset-chip" style="background: var(--kcal-color); color: #FFF; border: none; font-weight: 800; padding: 12px 16px;" onclick="addIngredientToDraftMeal()">
+            + Añadir
+          </button>
+        </div>
+      </div>
+
+      <!-- INGREDIENTS LIST IN DRAFT MEAL -->
+      <div style="margin-top: 14px;">
+        <div class="section-header" style="margin-bottom: 8px;">
+          <span>Ingredientes en la Receta</span>
+          <span id="meal-draft-count" style="font-size: 13px; color: var(--prote-color);">0 ítems</span>
+        </div>
+        <div id="meal-draft-ingredients-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto;">
+          <!-- Dynamically rendered list of ingredients -->
+        </div>
+      </div>
+
+      <!-- LIVE TOTALS SUMMARY CARD -->
+      <div class="neon-preview-card" style="margin-top: 14px;">
+        <div class="preview-header-title">📊 Totales de la Receta</div>
+        <div class="preview-stats-grid">
+          <div>
+            <div class="preview-num" style="color: var(--kcal-color);" id="meal-live-kcal">0</div>
+            <div class="preview-lbl">Kcal</div>
+          </div>
+          <div>
+            <div class="preview-num" style="color: var(--prote-color);" id="meal-live-prote">0g</div>
+            <div class="preview-lbl">Proteínas</div>
+          </div>
+          <div>
+            <div class="preview-num" style="color: var(--carbos-color);" id="meal-live-carbos">0g</div>
+            <div class="preview-lbl">Carbos</div>
+          </div>
+          <div>
+            <div class="preview-num" style="color: var(--grasas-color);" id="meal-live-grasas">0g</div>
+            <div class="preview-lbl">Grasas</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 14px;">
+        <button class="btn-action-cta" style="flex: 1;" onclick="saveDraftMeal(false)">💾 Guardar Receta</button>
+        <button class="btn-action-cta" style="flex: 1; background: var(--prote-color); box-shadow: none;" onclick="saveDraftMeal(true)">🚀 Guardar y Registrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRAR COMIDA POR RACIÓN -->
+  <div class="modal-backdrop" id="modal-portion-meal">
+    <div class="modal-sheet">
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+
+      <div class="sheet-header">
+        <div class="sheet-title" style="display: flex; align-items: center; gap: 8px;">
+          <span>🍽️</span> Registrar Comida en Diario
+        </div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-portion-meal')">✕</button>
+      </div>
+
+      <div style="background: var(--card-sub-bg); padding: 14px; border-radius: 18px; border: 1px solid var(--kcal-color); margin-bottom: 14px;">
+        <div style="font-weight: 800; font-size: 17px;" id="portion-meal-name">Arroz con Pollo</div>
+        <div style="font-size: 13px; color: var(--text-secondary);" id="portion-meal-base">1 Receta Completa: 625 kcal</div>
+      </div>
+
+      <div class="input-field-group">
+        <div class="input-field-label">Selecciona la Ración a Consumir:</div>
+        <div class="chips-row" style="margin-top: 6px;">
+          <button class="preset-chip" onclick="confirmPortionMeal(1.0)">1 Ración (100%)</button>
+          <button class="preset-chip" onclick="confirmPortionMeal(0.5)">0.5 Ración (50%)</button>
+          <button class="preset-chip" onclick="confirmPortionMeal(1.5)">1.5 Raciones (150%)</button>
+          <button class="preset-chip" onclick="confirmPortionMeal(2.0)">2 Raciones (200%)</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- MODAL 2: GOALS SETTINGS & GEMINI API KEY -->
@@ -2069,8 +2392,62 @@
     </div>
   </div>
 
+  <!-- MODAL: SALA DE TROFEOS Y GAMIFICACIÓN -->
+  <div class="modal-backdrop" id="modal-trophies">
+    <div class="modal-sheet" style="max-height: 90vh;">
+      <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
+      <div class="sheet-header">
+        <div class="sheet-title" style="display: flex; align-items: center; gap: 8px;">
+          <span>🏆</span> Sala de Trofeos y Logros
+        </div>
+        <button class="sheet-close-btn" onclick="closeModal('modal-trophies')">✕</button>
+      </div>
+
+      <!-- TOP STREAK & SHIELD HERO CARD -->
+      <div class="trophy-hero-card">
+        <div class="trophy-hero-stats">
+          <div class="stat-col">
+            <div class="stat-num" id="trophy-streak-val">0d</div>
+            <div class="stat-lbl">Racha Actual 🔥</div>
+          </div>
+          <div class="stat-col">
+            <div class="stat-num" id="trophy-max-streak-val">0d</div>
+            <div class="stat-lbl">Racha Máxima ⚡</div>
+          </div>
+          <div class="stat-col">
+            <div class="stat-num" id="trophy-shields-val">1/2</div>
+            <div class="stat-lbl">Escudos 🛡️</div>
+          </div>
+        </div>
+
+        <!-- BELT PROGRESS BAR -->
+        <div style="margin-top: 14px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 6px;">
+            <span id="trophy-belt-name">⚪ Cinturón Blanco</span>
+            <span id="trophy-belt-next" style="color: var(--text-secondary);">Siguiente: 🔵 Azul</span>
+          </div>
+          <div class="habits-progress-track">
+            <div class="habits-progress-bar" id="trophy-belt-progress" style="width: 0%; background: var(--prote-color);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BADGES CATALOG GRID -->
+      <div style="margin-top: 8px;">
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span>Insignias y Logros</span>
+          <span id="trophies-count-tag" style="font-size: 13px; color: var(--prote-color);">0/6 Desbloqueados</span>
+        </div>
+        <div class="badges-grid" id="badges-grid-container">
+          <!-- Dynamically rendered badges -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 4: GEMINI AI ASSISTANT QUESTIONNAIRE & RESULTS -->
   <div class="modal-backdrop" id="modal-gemini-ai">
+
     <div class="modal-sheet">
       <div class="drag-handle-container"><div class="sheet-handle drag-handle"></div></div>
 
@@ -2439,29 +2816,180 @@
 
   <script>
 
-    // PRELOADED MERCADONA SEED FOOD DATABASE
+    // PRELOADED VOLUME PLAN FOOD DATABASE (29 ITEMS)
     const initialSeedFoods = [
       { id: "seed-pan-bimbo", nombre: "Pan Bimbo", kcal_100g: 250.0, prote_100g: 9.0, carbos_100g: 46.0, grasas_100g: 2.7, es_unidad: false },
-      { id: "seed-claras-huevo", nombre: "Claras de Huevo", kcal_100g: 42.0, prote_100g: 11.0, carbos_100g: 0.0, grasas_100g: 0.0, es_unidad: false },
+      { id: "seed-claras-huevo", nombre: "Claras de Huevo (100ml)", kcal_100g: 42.0, prote_100g: 11.0, carbos_100g: 0.0, grasas_100g: 0.0, es_unidad: false },
       { id: "seed-macarrones", nombre: "Macarrones", kcal_100g: 354.0, prote_100g: 13.0, carbos_100g: 71.0, grasas_100g: 1.5, es_unidad: false },
-      { id: "seed-leche", nombre: "Leche", kcal_100g: 113.0, prote_100g: 15.0, carbos_100g: 12.0, grasas_100g: 0.5, es_unidad: false },
+      { id: "seed-leche-proteica", nombre: "Leche Proteica Mercadona (100ml)", kcal_100g: 45.2, prote_100g: 6.0, carbos_100g: 4.8, grasas_100g: 0.2, es_unidad: false },
+      { id: "seed-leche-normal", nombre: "Leche Normal (100ml)", kcal_100g: 62.0, prote_100g: 3.1, carbos_100g: 4.6, grasas_100g: 3.5, es_unidad: false },
       { id: "seed-jamon-york", nombre: "Jamón York", kcal_100g: 102.0, prote_100g: 11.3, carbos_100g: 7.1, grasas_100g: 3.2, es_unidad: false },
-      { id: "seed-tomate-mercadona", nombre: "Tomate Mercadona", kcal_100g: 201.0, prote_100g: 1.6, carbos_100g: 14.3, grasas_100g: 15.0, es_unidad: false },
+      { id: "seed-aceite-oliva", nombre: "Aceite de Oliva", kcal_100g: 822.0, prote_100g: 0.0, carbos_100g: 0.0, grasas_100g: 91.0, es_unidad: false },
+      { id: "seed-tomate-frito-mercadona", nombre: "Tomate Frito Mercadona", kcal_100g: 201.0, prote_100g: 1.6, carbos_100g: 14.3, grasas_100g: 15.0, es_unidad: false },
+      { id: "seed-salchichas-paquete", nombre: "Salchichas (Paquete)", kcal_100g: 353.76, prote_100g: 20.24, carbos_100g: 9.15, grasas_100g: 6.51, es_unidad: false },
       { id: "seed-lomo-familiar-mercadona", nombre: "Lomo Familiar Mercadona", kcal_100g: 152.0, prote_100g: 18.0, carbos_100g: 0.0, grasas_100g: 8.9, es_unidad: false },
-      { id: "seed-patatas-fritas", nombre: "Patatas Fritas", kcal_100g: 170.0, prote_100g: 2.4, carbos_100g: 21.0, grasas_100g: 6.0, es_unidad: false },
-      { id: "seed-pan-mercadona", nombre: "Pan Mercadona", kcal_100g: 268.0, prote_100g: 8.9, carbos_100g: 54.0, grasas_100g: 1.3, es_unidad: false },
-      { id: "seed-galletas-maria-integrales", nombre: "Galletas María Integrales", kcal_100g: 25.0, prote_100g: 0.5, carbos_100g: 3.9, grasas_100g: 0.6, es_unidad: true },
-      { id: "seed-avena", nombre: "Avena", kcal_100g: 375.0, prote_100g: 14.0, carbos_100g: 59.0, grasas_100g: 7.0, es_unidad: false },
-      { id: "seed-banana", nombre: "Banana / Plátano", kcal_100g: 97.7, prote_100g: 1.08, carbos_100g: 22.77, grasas_100g: 0.31, es_unidad: false },
-      { id: "seed-arroz", nombre: "Arroz", kcal_100g: 345.0, prote_100g: 7.9, carbos_100g: 76.0, grasas_100g: 0.7, es_unidad: false },
-
-      { id: "seed-pechuga-pollo-mercadona", nombre: "Pechuga Pollo Mercadona", kcal_100g: 108.0, prote_100g: 22.0, carbos_100g: 0.5, grasas_100g: 1.8, es_unidad: false },
-      { id: "seed-tortilla-patatas-mercadona", nombre: "Tortilla Patatas Mercadona", kcal_100g: 193.0, prote_100g: 5.7, carbos_100g: 17.0, grasas_100g: 11.0, es_unidad: false },
       { id: "seed-lomo-adobado", nombre: "Lomo Adobado", kcal_100g: 130.0, prote_100g: 20.0, carbos_100g: 0.0, grasas_100g: 3.6, es_unidad: false },
+      { id: "seed-patatas-fritas", nombre: "Patatas Fritas", kcal_100g: 170.0, prote_100g: 2.4, carbos_100g: 21.0, grasas_100g: 6.0, es_unidad: false },
+      { id: "seed-patatas-hervidas", nombre: "Patatas Hervidas", kcal_100g: 80.0, prote_100g: 1.2, carbos_100g: 18.0, grasas_100g: 0.1, es_unidad: false },
+      { id: "seed-pan-mercadona", nombre: "Pan Mercadona / Barra Pan", kcal_100g: 268.0, prote_100g: 8.9, carbos_100g: 54.0, grasas_100g: 1.3, es_unidad: false },
+      { id: "seed-galletas-maria-integrales", nombre: "Galletas María Integrales (1 ud)", kcal_100g: 25.0, prote_100g: 0.5, carbos_100g: 3.9, grasas_100g: 0.6, es_unidad: true },
+      { id: "seed-copos-avena", nombre: "Copos de Avena", kcal_100g: 375.0, prote_100g: 14.0, carbos_100g: 59.0, grasas_100g: 7.0, es_unidad: false },
+      { id: "seed-platano-banana", nombre: "Plátano / Banana (100g)", kcal_100g: 97.79, prote_100g: 1.08, carbos_100g: 22.79, grasas_100g: 0.31, es_unidad: false },
+      { id: "seed-proteina-scoop", nombre: "Proteína en Polvo (1 Scoop 20g P)", kcal_100g: 80.0, prote_100g: 20.0, carbos_100g: 0.0, grasas_100g: 0.0, es_unidad: true },
+      { id: "seed-arroz-blanco", nombre: "Arroz Blanco", kcal_100g: 345.0, prote_100g: 7.9, carbos_100g: 76.0, grasas_100g: 0.7, es_unidad: false },
+      { id: "seed-pechuga-pollo-mercadona", nombre: "Pechuga de Pollo Mercadona", kcal_100g: 108.0, prote_100g: 22.0, carbos_100g: 0.5, grasas_100g: 1.8, es_unidad: false },
+      { id: "seed-tortilla-patatas-cebolla", nombre: "Tortilla Patatas con Cebolla Mercadona", kcal_100g: 193.0, prote_100g: 5.7, carbos_100g: 17.0, grasas_100g: 11.0, es_unidad: false },
+      { id: "seed-tortilla-calabacin", nombre: "Tortilla de Calabacín Mercadona", kcal_100g: 147.0, prote_100g: 5.5, carbos_100g: 12.0, grasas_100g: 8.4, es_unidad: false },
       { id: "seed-lentejas-cocidas", nombre: "Lentejas Cocidas", kcal_100g: 116.0, prote_100g: 9.0, carbos_100g: 24.0, grasas_100g: 0.4, es_unidad: false },
+      { id: "seed-migas-palacios", nombre: "Ración Migas Palacios", kcal_100g: 408.0, prote_100g: 9.9, carbos_100g: 51.0, grasas_100g: 18.0, es_unidad: true },
       { id: "seed-pez-limon", nombre: "Pez Limón", kcal_100g: 120.0, prote_100g: 21.0, carbos_100g: 0.0, grasas_100g: 4.5, es_unidad: false },
-      { id: "seed-anacardos-mercadona", nombre: "Anacardos Mercadona", kcal_100g: 604.0, prote_100g: 20.0, carbos_100g: 21.0, grasas_100g: 48.0, es_unidad: false }
+      { id: "seed-pez-espada", nombre: "Pez Espada", kcal_100g: 130.0, prote_100g: 20.0, carbos_100g: 0.0, grasas_100g: 1.0, es_unidad: false },
+      { id: "seed-carne-tomate", nombre: "Carne con Tomate", kcal_100g: 150.0, prote_100g: 16.0, carbos_100g: 3.0, grasas_100g: 8.0, es_unidad: false },
+      { id: "seed-pisto", nombre: "Pisto", kcal_100g: 60.0, prote_100g: 1.0, carbos_100g: 3.0, grasas_100g: 3.0, es_unidad: false },
+      { id: "seed-anacardos-mercadona", nombre: "Anacardos Mercadona", kcal_100g: 604.0, prote_100g: 20.0, carbos_100g: 21.0, grasas_100g: 48.0, es_unidad: false },
+      { id: "seed-platano-banana-200g", nombre: "1 Banana (200g)", kcal_100g: 195.58, prote_100g: 2.16, carbos_100g: 45.58, grasas_100g: 0.62, es_unidad: true }
     ];
+
+    // PRELOADED VOLUME PLAN COMPOSED MEALS (13 ITEMS - OFFICIAL EXACT MACROS)
+    const initialSeedMeals = [
+      {
+        id: "seed-meal-2-tostadas-aceite",
+        nombre: "2 Tostadas Aceite",
+        categoria: "Desayuno",
+        ingredientes: [
+          { id: "seed-pan-mercadona", nombre: "Barra de Pan (180g)", gramos: 180, kcal: 482.4, prot: 16.02, carbs: 97.2, grasas: 2.34 },
+          { id: "seed-aceite-oliva", nombre: "Aceite de Oliva (18g)", gramos: 18, kcal: 147.96, prot: 0.0, carbs: 0.0, grasas: 16.38 }
+        ],
+        totales: { gramosTotales: 198, calorias: 630.92, proteinas: 11.125, carbos: 67.50, grasas: 16.185 }
+      },
+      {
+        id: "seed-meal-tostada-solo-aceite",
+        nombre: "Tostada Solo Aceite (18g aceite)",
+        categoria: "Desayuno",
+        ingredientes: [
+          { id: "seed-pan-mercadona", nombre: "Barra de Pan (90g)", gramos: 90, kcal: 241.2, prot: 8.01, carbs: 48.6, grasas: 1.17 },
+          { id: "seed-aceite-oliva", nombre: "Aceite de Oliva (9g)", gramos: 9, kcal: 73.98, prot: 0.0, carbs: 0.0, grasas: 8.19 }
+        ],
+        totales: { gramosTotales: 99, calorias: 315.46, proteinas: 5.56, carbos: 33.75, grasas: 8.09 }
+      },
+      {
+        id: "seed-meal-tostada-jamon-aceite",
+        nombre: "Tostada Jamón York (18g aceite + 2/3 lonchas)",
+        categoria: "Desayuno",
+        ingredientes: [
+          { id: "seed-pan-mercadona", nombre: "Barra de Pan (90g)", gramos: 90, kcal: 241.2, prot: 8.01, carbs: 48.6, grasas: 1.17 },
+          { id: "seed-jamon-york", nombre: "Jamón York (30g)", gramos: 30, kcal: 30.6, prot: 3.39, carbs: 2.13, grasas: 0.96 },
+          { id: "seed-aceite-oliva", nombre: "Aceite de Oliva (9g)", gramos: 9, kcal: 73.98, prot: 0.0, carbs: 0.0, grasas: 8.19 }
+        ],
+        totales: { gramosTotales: 129, calorias: 346.06, proteinas: 8.39, carbos: 35.53, grasas: 8.89 }
+      },
+      {
+        id: "seed-meal-2-tostadas-casa",
+        nombre: "2 Tostadas Casa (Aceite y Jamón York)",
+        categoria: "Desayuno",
+        ingredientes: [
+          { id: "seed-pan-mercadona", nombre: "Pan Mercadona (140g)", gramos: 140, kcal: 375.2, prot: 12.46, carbs: 75.6, grasas: 1.82 },
+          { id: "seed-jamon-york", nombre: "Jamón York (50g)", gramos: 50, kcal: 51.0, prot: 5.65, carbs: 3.55, grasas: 1.6 }
+        ],
+        totales: { gramosTotales: 190, calorias: 429.64, proteinas: 20.00, carbos: 64.00, grasas: 0.00 }
+      },
+      {
+        id: "seed-meal-4-tostadas-fritas-huevo",
+        nombre: "4 Tostadas Fritas de Huevo",
+        categoria: "Almuerzo",
+        ingredientes: [
+          { id: "seed-pan-bimbo", nombre: "Pan Bimbo (4 rebanadas)", gramos: 120, kcal: 300.0, prot: 10.8, carbs: 55.2, grasas: 3.24 },
+          { id: "seed-claras-huevo", nombre: "Claras de Huevo (200ml)", gramos: 200, kcal: 84.0, prot: 22.0, carbs: 0.0, grasas: 0.0 },
+          { id: "seed-aceite-oliva", nombre: "Aceite de Oliva (25g)", gramos: 25, kcal: 205.5, prot: 0.0, carbs: 0.0, grasas: 22.75 }
+        ],
+        totales: { gramosTotales: 345, calorias: 601.28, proteinas: 33.52, carbos: 58.88, grasas: 25.30 }
+      },
+      {
+        id: "seed-meal-batido-avena-galletas",
+        nombre: "Batido Prote (50g avena, 350ml leche, 1 banana 200g, 4 galletas maría integrales, 20g prote)",
+        categoria: "Desayuno",
+        ingredientes: [
+          { id: "seed-copos-avena", nombre: "Copos de Avena", gramos: 50, kcal: 187.5, prot: 7.0, carbs: 29.5, grasas: 3.5 },
+          { id: "seed-leche-normal", nombre: "Leche Normal (350ml)", gramos: 350, kcal: 217.0, prot: 10.85, carbs: 16.1, grasas: 12.25 },
+          { id: "seed-platano-banana-200g", nombre: "1 Banana (200g)", gramos: 200, kcal: 195.58, prot: 2.16, carbs: 45.58, grasas: 0.62 },
+          { id: "seed-galletas-maria-integrales", nombre: "Galletas María Integrales (4 ud)", gramos: 4, es_unidad: true, kcal: 100, prot: 2.0, carbs: 15.6, grasas: 2.4 },
+          { id: "seed-proteina-scoop", nombre: "Proteína en Polvo (1 Scoop)", gramos: 1, es_unidad: true, kcal: 80, prot: 20.0, carbs: 0.0, grasas: 0.0 }
+        ],
+        totales: { gramosTotales: 605, calorias: 464.68, proteinas: 49.54, carbos: 72.10, grasas: 5.10 }
+      },
+      {
+        id: "seed-meal-batido-arroz",
+        nombre: "Batido Prote Arroz (50g arroz, 350ml leche, 20g prote)",
+        categoria: "Merienda",
+        ingredientes: [
+          { id: "seed-arroz-blanco", nombre: "Arroz Blanco (50g)", gramos: 50, kcal: 172.5, prot: 3.95, carbs: 38.0, grasas: 0.35 },
+          { id: "seed-leche-normal", nombre: "Leche Normal (350ml)", gramos: 350, kcal: 217.0, prot: 10.85, carbs: 16.1, grasas: 12.25 },
+          { id: "seed-proteina-scoop", nombre: "Proteína en Polvo (1 Scoop)", gramos: 1, es_unidad: true, kcal: 80, prot: 20.0, carbs: 0.0, grasas: 0.0 }
+        ],
+        totales: { gramosTotales: 401, calorias: 354.20, proteinas: 23.98, carbos: 61.60, grasas: 1.24 }
+      },
+      {
+        id: "seed-meal-batido-nuevo",
+        nombre: "Batido Prote Nuevo",
+        categoria: "Merienda",
+        ingredientes: [
+          { id: "seed-copos-avena", nombre: "Copos de Avena (80g)", gramos: 80, kcal: 300.0, prot: 11.2, carbs: 47.2, grasas: 5.6 },
+          { id: "seed-leche-normal", nombre: "Leche Normal (400ml)", gramos: 400, kcal: 248.0, prot: 12.4, carbs: 18.4, grasas: 14.0 },
+          { id: "seed-platano-banana", nombre: "Plátano (150g)", gramos: 150, kcal: 146.68, prot: 1.62, carbs: 34.18, grasas: 0.46 },
+          { id: "seed-proteina-scoop", nombre: "Proteína en Polvo (1 Scoop)", gramos: 1, es_unidad: true, kcal: 80, prot: 20.0, carbs: 0.0, grasas: 0.0 }
+        ],
+        totales: { gramosTotales: 631, calorias: 791.11, proteinas: 44.10, carbos: 105.64, grasas: 19.21 }
+      },
+      {
+        id: "seed-meal-almuerzo-200-250",
+        nombre: "Almuerzo 200g Arroz + 250g Pechuga",
+        categoria: "Almuerzo",
+        ingredientes: [
+          { id: "seed-arroz-blanco", nombre: "Arroz Blanco (200g seco)", gramos: 200, kcal: 690.0, prot: 15.8, carbs: 152.0, grasas: 1.4 },
+          { id: "seed-pechuga-pollo-mercadona", nombre: "Pechuga de Pollo (250g)", gramos: 250, kcal: 270.0, prot: 55.0, carbs: 1.25, grasas: 4.5 }
+        ],
+        totales: { gramosTotales: 450, calorias: 960.00, proteinas: 70.80, carbos: 153.25, grasas: 5.90 }
+      },
+      {
+        id: "seed-meal-almuerzo-grande",
+        nombre: "Almuerzo Grande 350g Arroz + 250g Pechuga",
+        categoria: "Almuerzo",
+        ingredientes: [
+          { id: "seed-arroz-blanco", nombre: "Arroz Blanco (350g)", gramos: 350, kcal: 1207.5, prot: 27.65, carbs: 266.0, grasas: 2.45 },
+          { id: "seed-pechuga-pollo-mercadona", nombre: "Pechuga de Pollo (250g)", gramos: 250, kcal: 270.0, prot: 55.0, carbs: 1.25, grasas: 4.5 }
+        ],
+        totales: { gramosTotales: 600, calorias: 1477.50, proteinas: 82.65, carbos: 267.25, grasas: 6.95 }
+      },
+      {
+        id: "seed-meal-media-barra-pan",
+        nombre: "1/2 Barra de Pan",
+        categoria: "Almuerzo",
+        ingredientes: [
+          { id: "seed-pan-mercadona", nombre: "Barra de Pan Mercadona (125g)", gramos: 125, kcal: 335.0, prot: 11.13, carbs: 67.5, grasas: 1.63 }
+        ],
+        totales: { gramosTotales: 125, calorias: 337.50, proteinas: 11.13, carbos: 68.75, grasas: 1.63 }
+      },
+      {
+        id: "seed-meal-media-tortilla-mercadona",
+        nombre: "1/2 Tortilla Mercadona",
+        categoria: "Cena",
+        ingredientes: [
+          { id: "seed-tortilla-patatas-cebolla", nombre: "Tortilla Patatas con Cebolla (300g)", gramos: 300, kcal: 579.0, prot: 17.1, carbs: 51.0, grasas: 33.0 }
+        ],
+        totales: { gramosTotales: 300, calorias: 579.00, proteinas: 17.10, carbos: 51.00, grasas: 33.00 }
+      },
+      {
+        id: "seed-meal-vaso-leche-colacao",
+        nombre: "Vaso Leche Colacao / Café",
+        categoria: "Desayuno",
+        ingredientes: [
+          { id: "seed-leche-proteica", nombre: "Leche Proteica Mercadona (250ml)", gramos: 250, kcal: 113.0, prot: 15.0, carbs: 12.0, grasas: 0.5 }
+        ],
+        totales: { gramosTotales: 250, calorias: 166.62, proteinas: 18.00, carbos: 12.00, grasas: 0.00 }
+      }
+    ];
+
+
 
     // PRELOADED DEFAULT HABITS
     const initialSeedHabits = [
@@ -2806,6 +3334,333 @@
     let selectedFoodForLog = null;
     let tempAiResult = null;
 
+    // ==========================================
+    // GAMIFICATION & REWARDS SYSTEM (PERSISTENCE)
+    // ==========================================
+    const REWARDS_STORAGE_KEY = 'nutritracker_rewards_state';
+
+    const BELT_RANKS = [
+      { level: 1, name: "⚪ Cinturón Blanco", emoji: "⚪", minDays: 0, maxDays: 2 },
+      { level: 2, name: "🔵 Cinturón Azul", emoji: "🔵", minDays: 3, maxDays: 13 },
+      { level: 3, name: "🟣 Cinturón Morado", emoji: "🟣", minDays: 14, maxDays: 29 },
+      { level: 4, name: "🟤 Cinturón Marrón", emoji: "🟤", minDays: 30, maxDays: 59 },
+      { level: 5, name: "⚫ Cinturón Negro", emoji: "⚫", minDays: 60, maxDays: Infinity }
+    ];
+
+    const ACHIEVEMENTS_CATALOG = [
+      { id: 'primer_registro', title: 'Primer Paso', desc: 'Registrar tu primer alimento', emoji: '👟' },
+      { id: 'meta_proteina', title: 'Maestro de la Proteína', desc: 'Alcanzar el 100% de la meta proteica en un día', emoji: '🥩' },
+      { id: 'francotirador', title: 'Francotirador', desc: 'Quedar a ±50 kcal del objetivo diario', emoji: '🎯' },
+      { id: 'racha_7', title: 'Semana de Hierro', desc: 'Completar 7 días de racha consecutivos', emoji: '🛡️' },
+      { id: 'primer_batch', title: 'Estrategia Batch', desc: 'Guardar un alimento o receta personalizada', emoji: '🥗' },
+      { id: 'cinturon_negro', title: 'Leyenda del Rendimiento', desc: 'Alcanzar el Cinturón Negro (60+ días)', emoji: '🥋' }
+    ];
+
+    function getRewardsState() {
+      try {
+        const stored = localStorage.getItem(REWARDS_STORAGE_KEY);
+        if (stored) return JSON.parse(stored);
+      } catch (e) {}
+      return {
+        rachaActual: 0,
+        rachaMaxima: 0,
+        ultimaFechaRegistro: null,
+        escudosRacha: 1,
+        cinturonNivel: 1,
+        logrosDesbloqueados: []
+      };
+    }
+
+    function saveRewardsState(state) {
+      try {
+        localStorage.setItem(REWARDS_STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function getBeltForDays(days) {
+      if (days >= 60) return BELT_RANKS[4];
+      if (days >= 30) return BELT_RANKS[3];
+      if (days >= 14) return BELT_RANKS[2];
+      if (days >= 3) return BELT_RANKS[1];
+      return BELT_RANKS[0];
+    }
+
+    function showGamificationToast(msg) {
+      let toast = document.getElementById('gamification-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'gamification-toast';
+        toast.className = 'gamification-toast';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // ==========================================
+    // NUTRITIONAL ADHERENCE EVALUATOR (>= 3/4 MACROS)
+    // ==========================================
+    function evaluarDiaCumplido(fechaStr) {
+      const targetDate = fechaStr || currentDate;
+      const dayLogs = logs.filter(l => l.fecha.startsWith(targetDate));
+
+      let totalKcal = 0, totalProte = 0, totalCarbos = 0, totalGrasas = 0;
+      dayLogs.forEach(log => {
+        const food = foods.find(f => f.id === log.alimentoId);
+        if (food) {
+          const factor = food.es_unidad ? log.cantidad : (log.cantidad / 100.0);
+          totalKcal += food.kcal_100g * factor;
+          totalProte += food.prote_100g * factor;
+          totalCarbos += food.carbos_100g * factor;
+          totalGrasas += food.grasas_100g * factor;
+        }
+      });
+
+      // 1. Calorías: ±10% range
+      const isKcalOk = targets.kcal > 0 && totalKcal >= (targets.kcal * 0.90) && totalKcal <= (targets.kcal * 1.10);
+
+      // 2. Proteínas: >= 90%
+      const isProteOk = targets.prote > 0 && totalProte >= (targets.prote * 0.90);
+
+      // 3. Carbohidratos: ±15% range
+      const isCarbosOk = targets.carbos > 0 && totalCarbos >= (targets.carbos * 0.85) && totalCarbos <= (targets.carbos * 1.15);
+
+      // 4. Grasas: ±15% range
+      const isGrasasOk = targets.grasas > 0 && totalGrasas >= (targets.grasas * 0.85) && totalGrasas <= (targets.grasas * 1.15);
+
+      let count = 0;
+      if (isKcalOk) count++;
+      if (isProteOk) count++;
+      if (isCarbosOk) count++;
+      if (isGrasasOk) count++;
+
+      return {
+        cumplido: count >= 3,
+        count: count,
+        details: { isKcalOk, isProteOk, isCarbosOk, isGrasasOk },
+        totals: { totalKcal, totalProte, totalCarbos, totalGrasas }
+      };
+    }
+
+    function recordFoodActionForRewards(dateStr) {
+      let state = getRewardsState();
+      const todayStr = dateStr || currentDate;
+      const evalResult = evaluarDiaCumplido(todayStr);
+
+      if (!state.ultimaFechaRegistro) {
+        if (evalResult.cumplido) {
+          state.rachaActual = 1;
+          state.rachaMaxima = 1;
+          state.ultimaFechaRegistro = todayStr;
+        } else {
+          state.rachaActual = 0;
+        }
+      } else if (state.ultimaFechaRegistro !== todayStr) {
+        const lastDate = new Date(state.ultimaFechaRegistro);
+        const currDate = new Date(todayStr);
+        const diffDays = Math.round((currDate - lastDate) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+          if (evalResult.cumplido) {
+            state.rachaActual += 1;
+            if (state.rachaActual % 7 === 0) {
+              if (state.escudosRacha < 2) {
+                state.escudosRacha += 1;
+                showGamificationToast("🛡️ ¡Nuevo escudo ganado por racha de 7 días!");
+              }
+            }
+            state.ultimaFechaRegistro = todayStr;
+          } else {
+            if (state.escudosRacha > 0) {
+              state.escudosRacha -= 1;
+              showGamificationToast("🛡️ Escudo activado: No alcanzaste el 3/4 de macros, pero tu racha sigue protegida");
+            } else {
+              state.rachaActual = 0;
+              showGamificationToast("⚠️ Racha reseteada: Se requieren al menos 3 de 4 macros cumplidos");
+            }
+          }
+        } else if (diffDays > 1) {
+          if (state.escudosRacha > 0) {
+            state.escudosRacha -= 1;
+            showGamificationToast("🛡️ Escudo activado: Día saltado, pero tu racha sigue protegida");
+          } else {
+            state.rachaActual = evalResult.cumplido ? 1 : 0;
+            if (!evalResult.cumplido) {
+              showGamificationToast("⚠️ Racha reseteada: Se requieren al menos 3 de 4 macros cumplidos");
+            }
+          }
+          if (evalResult.cumplido) {
+            state.ultimaFechaRegistro = todayStr;
+          }
+        }
+        state.rachaMaxima = Math.max(state.rachaMaxima, state.rachaActual);
+      } else {
+        if (evalResult.cumplido && state.rachaActual === 0) {
+          state.rachaActual = 1;
+          state.rachaMaxima = Math.max(state.rachaMaxima, 1);
+        }
+      }
+
+      const belt = getBeltForDays(state.rachaActual);
+      state.cinturonNivel = belt.level;
+
+      saveRewardsState(state);
+      checkAchievements();
+      renderRewardsUI();
+    }
+
+    function checkAchievements() {
+      let state = getRewardsState();
+      const unlocked = new Set(state.logrosDesbloqueados || []);
+      let newlyUnlocked = [];
+
+      // 1. primer_registro
+      if (logs.length > 0 && !unlocked.has('primer_registro')) {
+        unlocked.add('primer_registro');
+        newlyUnlocked.push('primer_registro');
+      }
+
+      // 2. racha_7
+      if (state.rachaActual >= 7 && !unlocked.has('racha_7')) {
+        unlocked.add('racha_7');
+        newlyUnlocked.push('racha_7');
+      }
+
+      // 3. cinturon_negro
+      if (state.rachaActual >= 60 && !unlocked.has('cinturon_negro')) {
+        unlocked.add('cinturon_negro');
+        newlyUnlocked.push('cinturon_negro');
+      }
+
+      // 4. primer_batch (custom food created)
+      if (foods.some(f => f.id.startsWith('custom-')) && !unlocked.has('primer_batch')) {
+        unlocked.add('primer_batch');
+        newlyUnlocked.push('primer_batch');
+      }
+
+      // 5. meta_proteina & 6. francotirador
+      const todayStr = new Date().toISOString().split('T')[0];
+      const dayLogs = logs.filter(l => l.fecha.startsWith(todayStr));
+      let totalKcal = 0, totalProte = 0;
+      dayLogs.forEach(log => {
+        const food = foods.find(f => f.id === log.alimentoId);
+        if (food) {
+          const factor = food.es_unidad ? log.cantidad : (log.cantidad / 100.0);
+          totalKcal += food.kcal_100g * factor;
+          totalProte += food.prote_100g * factor;
+        }
+      });
+
+      if (targets.prote > 0 && totalProte >= targets.prote && !unlocked.has('meta_proteina')) {
+        unlocked.add('meta_proteina');
+        newlyUnlocked.push('meta_proteina');
+      }
+
+      if (targets.kcal > 0 && Math.abs(totalKcal - targets.kcal) <= 50 && totalKcal > 0 && !unlocked.has('francotirador')) {
+        unlocked.add('francotirador');
+        newlyUnlocked.push('francotirador');
+      }
+
+      state.logrosDesbloqueados = Array.from(unlocked);
+      saveRewardsState(state);
+
+      newlyUnlocked.forEach(id => {
+        const ach = ACHIEVEMENTS_CATALOG.find(a => a.id === id);
+        if (ach) {
+          showGamificationToast(`🎉 ¡Logro Desbloqueado: ${ach.title}! ${ach.emoji}`);
+        }
+      });
+    }
+
+    function renderRewardsUI() {
+      const state = getRewardsState();
+      const belt = getBeltForDays(state.rachaActual);
+      const evalToday = evaluarDiaCumplido(currentDate);
+
+      // 1. Update Header Pill Text
+      const pillText = document.getElementById('streak-pill-text');
+      if (pillText) {
+        pillText.innerText = `🔥 ${state.rachaActual}d (${evalToday.count}/4) | 🛡️ ${state.escudosRacha}`;
+      }
+
+      // 2. Update Trophy Room Modal Elements
+      const streakVal = document.getElementById('trophy-streak-val');
+      const maxStreakVal = document.getElementById('trophy-max-streak-val');
+      const shieldsVal = document.getElementById('trophy-shields-val');
+      const beltName = document.getElementById('trophy-belt-name');
+      const beltNext = document.getElementById('trophy-belt-next');
+      const beltProgress = document.getElementById('trophy-belt-progress');
+
+      if (streakVal) streakVal.innerText = `${state.rachaActual}d`;
+      if (maxStreakVal) maxStreakVal.innerText = `${state.rachaMaxima}d`;
+      if (shieldsVal) shieldsVal.innerText = `${state.escudosRacha}/2`;
+      if (beltName) beltName.innerText = belt.name;
+
+      let nextBelt = BELT_RANKS[belt.level] || null;
+      if (nextBelt) {
+        if (beltNext) beltNext.innerText = `Siguiente: ${nextBelt.emoji} ${nextBelt.name.split(' ')[1]}`;
+        const range = nextBelt.minDays - belt.minDays;
+        const currentProgress = state.rachaActual - belt.minDays;
+        const pct = Math.min(100, Math.max(0, Math.round((currentProgress / range) * 100)));
+        if (beltProgress) beltProgress.style.width = `${pct}%`;
+      } else {
+        if (beltNext) beltNext.innerText = `¡Nivel Máximo Leyenda! ✨`;
+        if (beltProgress) beltProgress.style.width = `100%`;
+      }
+
+      // 3. Render Badges Grid
+      const container = document.getElementById('badges-grid-container');
+      const unlockedSet = new Set(state.logrosDesbloqueados || []);
+      const countTag = document.getElementById('trophies-count-tag');
+      if (countTag) {
+        countTag.innerText = `${unlockedSet.size}/${ACHIEVEMENTS_CATALOG.length} Desbloqueados`;
+      }
+
+      if (container) {
+        container.innerHTML = ACHIEVEMENTS_CATALOG.map(ach => {
+          const isUnlocked = unlockedSet.has(ach.id);
+          return `
+            <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
+              <div class="badge-icon-row">
+                <span class="badge-emoji">${ach.emoji}</span>
+                <span class="badge-status-tag">${isUnlocked ? '✓ Conseguido' : '🔒 Bloqueado'}</span>
+              </div>
+              <div class="badge-title">${ach.title}</div>
+              <div class="badge-desc">${ach.desc}</div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+
+    function syncSeedFoodsAndMeals() {
+      // 1. Sync foods
+      initialSeedFoods.forEach(seedF => {
+        const idx = foods.findIndex(f => f.id === seedF.id || f.nombre.toLowerCase().trim() === seedF.nombre.toLowerCase().trim());
+        if (idx === -1) {
+          foods.push(seedF);
+        } else {
+          foods[idx] = { ...foods[idx], ...seedF };
+        }
+      });
+      localStorage.setItem('nutri_foods', JSON.stringify(foods));
+
+      // 2. Sync savedMeals
+      initialSeedMeals.forEach(seedM => {
+        const idx = savedMeals.findIndex(m => m.id === seedM.id || m.nombre.toLowerCase().trim() === seedM.nombre.toLowerCase().trim());
+        if (idx === -1) {
+          savedMeals.push(seedM);
+        } else {
+          savedMeals[idx] = { ...savedMeals[idx], ...seedM };
+        }
+      });
+      localStorage.setItem(MEALS_STORAGE_KEY, JSON.stringify(savedMeals));
+    }
+
     // INIT
     window.addEventListener('DOMContentLoaded', () => {
       // ENSURE CLEAN MODE 0 STARTUP ON NEW SESSION / TEST LINK ACCESS
@@ -2817,23 +3672,15 @@
         localStorage.removeItem('nutri_chat_history');
       }
 
-      // Sync banana seed item in foods list if already stored in localStorage
-      const bananaItem = foods.find(f => f.id === 'seed-banana');
-      if (bananaItem) {
-        bananaItem.nombre = "Banana / Plátano";
-        bananaItem.kcal_100g = 97.7;
-        bananaItem.prote_100g = 1.08;
-        bananaItem.carbos_100g = 22.77;
-        bananaItem.grasas_100g = 0.31;
-        bananaItem.es_unidad = false;
-      }
+      applyTheme(currentTheme);
+      loadSavedMeals();
+      syncSeedFoodsAndMeals();
 
       if (!habits || !Array.isArray(habits) || habits.length === 0) {
         habits = JSON.parse(JSON.stringify(initialSeedHabits));
         saveHabits();
       }
 
-      applyTheme(currentTheme);
       if (apiKey) {
         document.getElementById('input-api-key').value = apiKey;
         document.getElementById('ai-key-input').value = apiKey;
@@ -2842,6 +3689,10 @@
       loadCoachChatState();
       updateMentorBannerStatus();
       setupNativeScrollSnapTabs();
+      checkAchievements();
+      renderRewardsUI();
+
+
 
 
 
@@ -2899,6 +3750,13 @@
 
     let selectedMonthOffset = 0; // 0 = current month
 
+    function updateFabVisibility(viewName) {
+      const fabBtn = document.getElementById('fab-button') || document.getElementById('btnAbrirModalAlimento');
+      if (fabBtn) {
+        fabBtn.classList.toggle('oculto', viewName !== 'daily');
+      }
+    }
+
     function switchView(viewName) {
       activeView = viewName;
       document.getElementById('seg-btn-daily').classList.toggle('active', viewName === 'daily');
@@ -2914,7 +3772,7 @@
         container.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
       }
 
-      document.getElementById('fab-button').style.display = viewName === 'daily' ? 'flex' : 'none';
+      updateFabVisibility(viewName);
 
       if (viewName === 'weekly') {
         renderWeeklyView();
@@ -2945,7 +3803,7 @@
           document.getElementById('seg-btn-weekly').classList.toggle('active', newView === 'weekly');
           document.getElementById('seg-btn-monthly').classList.toggle('active', newView === 'monthly');
 
-          document.getElementById('fab-button').style.display = newView === 'daily' ? 'flex' : 'none';
+          updateFabVisibility(newView);
 
           if (newView === 'weekly') {
             renderWeeklyView();
@@ -2957,6 +3815,7 @@
         }
       }, { passive: true });
     }
+
 
 
 
@@ -3124,9 +3983,28 @@
       });
 
 
-      // Update Center Ring Text
+      // Update Center Ring Text & Adherence Pill
       document.getElementById('center-kcal-val').innerText = totalKcal.toFixed(0);
       document.getElementById('center-kcal-sub').innerText = `/ ${targets.kcal} KCAL`;
+
+      const evalRes = evaluarDiaCumplido(currentDate);
+      const adhPill = document.getElementById('center-adherence-pill');
+      if (adhPill) {
+        adhPill.innerText = `🎯 Adherencia hoy: ${evalRes.count}/4 Macros`;
+        if (evalRes.count >= 3) {
+          adhPill.style.background = 'rgba(54, 211, 153, 0.25)';
+          adhPill.style.color = '#36D399';
+        } else if (evalRes.count === 2) {
+          adhPill.style.background = 'rgba(255, 204, 0, 0.25)';
+          adhPill.style.color = '#FFCC00';
+        } else {
+          adhPill.style.background = 'rgba(255, 59, 48, 0.25)';
+          adhPill.style.color = '#FF3B30';
+        }
+      }
+
+      renderRewardsUI();
+
 
       // Update Concentric Rings SVG Stroke Offsets
       updateRingSVG('kcal', totalKcal, targets.kcal, 515.2);
@@ -4112,14 +4990,311 @@ PLAN DE MACRONUTRIENTES CALCULADO:
 
     // SEARCH MODAL
 
+    // ==========================================
+    // COMPOSED MEALS / RECIPES SYSTEM
+    // ==========================================
+    const MEALS_STORAGE_KEY = 'nutritracker_saved_meals';
+    let savedMeals = [];
+    let draftMealIngredients = [];
+    let selectedMealForPortion = null;
+
+    function loadSavedMeals() {
+      try {
+        const stored = localStorage.getItem(MEALS_STORAGE_KEY);
+        if (stored) savedMeals = JSON.parse(stored);
+      } catch (e) {
+        savedMeals = [];
+      }
+    }
+
+    function saveSavedMealsState() {
+      try {
+        localStorage.setItem(MEALS_STORAGE_KEY, JSON.stringify(savedMeals));
+      } catch (e) {}
+    }
+
+    function switchSearchTab(tab) {
+      const btnSingle = document.getElementById('search-tab-single');
+      const btnMeals = document.getElementById('search-tab-meals');
+      const stepSingle = document.getElementById('step-search-single');
+      const stepMeals = document.getElementById('step-search-meals');
+
+      if (btnSingle) btnSingle.classList.toggle('active', tab === 'single');
+      if (btnMeals) btnMeals.classList.toggle('active', tab === 'meals');
+
+      if (stepSingle) stepSingle.style.display = tab === 'single' ? 'block' : 'none';
+      if (stepMeals) stepMeals.style.display = tab === 'meals' ? 'block' : 'none';
+
+      if (tab === 'meals') {
+        renderSavedMealsList();
+      }
+    }
+
+    function openCreateMealModal() {
+      draftMealIngredients = [];
+      const nameInput = document.getElementById('meal-input-name');
+      const qtyInput = document.getElementById('meal-input-qty');
+      if (nameInput) nameInput.value = '';
+      if (qtyInput) qtyInput.value = '100';
+
+      // Populate food select dropdown
+      const select = document.getElementById('meal-select-food');
+      if (select) {
+        select.innerHTML = foods.map(f => `
+          <option value="${f.id}">${f.nombre} (${f.kcal_100g} kcal / ${f.es_unidad ? 'ud' : '100g'})</option>
+        `).join('');
+      }
+
+      renderDraftMealIngredients();
+      closeModal('modal-search');
+      openModal('modal-create-meal');
+    }
+
+    function addIngredientToDraftMeal() {
+      const foodSelect = document.getElementById('meal-select-food');
+      const qtyInput = document.getElementById('meal-input-qty');
+      if (!foodSelect || !qtyInput) return;
+
+      const foodId = foodSelect.value;
+      const food = foods.find(f => f.id === foodId);
+      const qty = parseFloat(qtyInput.value) || 0;
+
+      if (!food || qty <= 0) {
+        alert('Selecciona un alimento y cantidad válida');
+        return;
+      }
+
+      const factor = food.es_unidad ? qty : (qty / 100.0);
+      const ingredient = {
+        id: food.id,
+        nombre: food.nombre,
+        gramos: qty,
+        es_unidad: food.es_unidad,
+        kcal: Math.round(food.kcal_100g * factor),
+        prot: parseFloat((food.prote_100g * factor).toFixed(1)),
+        carbs: parseFloat((food.carbos_100g * factor).toFixed(1)),
+        grasas: parseFloat((food.grasas_100g * factor).toFixed(1))
+      };
+
+      draftMealIngredients.push(ingredient);
+      renderDraftMealIngredients();
+    }
+
+    function removeIngredientFromDraftMeal(index) {
+      draftMealIngredients.splice(index, 1);
+      renderDraftMealIngredients();
+    }
+
+    function renderDraftMealIngredients() {
+      const container = document.getElementById('meal-draft-ingredients-list');
+      const countTag = document.getElementById('meal-draft-count');
+
+      if (countTag) countTag.innerText = `${draftMealIngredients.length} ingredientes`;
+
+      let totGramos = 0, totKcal = 0, totProte = 0, totCarbos = 0, totGrasas = 0;
+
+      if (container) {
+        if (draftMealIngredients.length === 0) {
+          container.innerHTML = `<div style="text-align: center; color: var(--text-secondary); font-size: 13px; padding: 12px;">Sin ingredientes añadidos. Usa el selector para añadir alimentos.</div>`;
+        } else {
+          container.innerHTML = draftMealIngredients.map((ing, idx) => {
+            totGramos += ing.gramos;
+            totKcal += ing.kcal;
+            totProte += ing.prot;
+            totCarbos += ing.carbs;
+            totGrasas += ing.grasas;
+
+            return `
+              <div class="result-row" style="padding: 10px 12px;">
+                <div>
+                  <div style="font-weight: 800; font-size: 14px;">${ing.nombre}</div>
+                  <div style="font-size: 12px; color: var(--text-secondary);">${ing.gramos}${ing.es_unidad ? ' ud.' : 'g'} • P: ${ing.prot}g | C: ${ing.carbs}g | G: ${ing.grasas}g</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="color: var(--kcal-color); font-weight: 900; font-size: 13px;">${ing.kcal} kcal</span>
+                  <button class="preset-chip" style="color: #FF3B30; padding: 4px 8px;" onclick="removeIngredientFromDraftMeal(${idx})">🗑️</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // Update Live Totals
+      document.getElementById('meal-live-kcal').innerText = totKcal.toFixed(0);
+      document.getElementById('meal-live-prote').innerText = `${totProte.toFixed(1)}g`;
+      document.getElementById('meal-live-carbos').innerText = `${totCarbos.toFixed(1)}g`;
+      document.getElementById('meal-live-grasas').innerText = `${totGrasas.toFixed(1)}g`;
+    }
+
+    function saveDraftMeal(logToday = false) {
+      const nameInput = document.getElementById('meal-input-name');
+      const catInput = document.getElementById('meal-input-category');
+      const mealName = nameInput ? nameInput.value.trim() : '';
+      const category = catInput ? catInput.value : 'Almuerzo';
+
+      if (!mealName) {
+        alert('Por favor introduce un nombre para la comida');
+        return;
+      }
+      if (draftMealIngredients.length === 0) {
+        alert('Añade al menos un ingrediente a la receta');
+        return;
+      }
+
+      let totGramos = 0, totKcal = 0, totProte = 0, totCarbos = 0, totGrasas = 0;
+      draftMealIngredients.forEach(ing => {
+        totGramos += ing.gramos;
+        totKcal += ing.kcal;
+        totProte += ing.prot;
+        totCarbos += ing.carbs;
+        totGrasas += ing.grasas;
+      });
+
+      const newMeal = {
+        id: "meal_" + Date.now(),
+        nombre: mealName,
+        categoria: category,
+        ingredientes: [...draftMealIngredients],
+        totales: {
+          gramosTotales: totGramos,
+          calorias: Math.round(totKcal),
+          proteinas: parseFloat(totProte.toFixed(1)),
+          carbos: parseFloat(totCarbos.toFixed(1)),
+          grasas: parseFloat(totGrasas.toFixed(1))
+        }
+      };
+
+      savedMeals.push(newMeal);
+      saveSavedMealsState();
+      checkAchievements();
+      renderRewardsUI();
+      showGamificationToast(`🍲 Receta "${mealName}" guardada con éxito`);
+
+      if (logToday) {
+        logComposedMealToDiary(newMeal.id, 1.0);
+      }
+
+      closeModal('modal-create-meal');
+      openSearchModal();
+      switchSearchTab('meals');
+    }
+
+    function renderSavedMealsList() {
+      const container = document.getElementById('saved-meals-list-container');
+      if (!container) return;
+
+      if (savedMeals.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 24px 12px; color: var(--text-secondary);">
+            <div style="font-size: 32px; margin-bottom: 8px;">🍲</div>
+            <div style="font-weight: 800; font-size: 15px; color: var(--text-primary);">Aún no tienes comidas guardadas</div>
+            <div style="font-size: 12px; margin-top: 4px;">Crea combinaciones de alimentos y regístralas en 1 solo clic.</div>
+            <button class="btn-action-cta" style="margin-top: 14px;" onclick="openCreateMealModal()">+ Crear Primera Comida</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = savedMeals.map(m => {
+        const t = m.totales;
+        const ingNames = m.ingredientes.map(i => i.nombre).join(', ');
+        return `
+          <div class="result-row" style="flex-direction: column; align-items: flex-start; gap: 8px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+              <div>
+                <span class="badge-status-tag" style="background: rgba(175, 82, 222, 0.2); color: var(--ai-purple); margin-right: 6px;">${m.categoria}</span>
+                <span style="font-weight: 800; font-size: 16px;">${m.nombre}</span>
+              </div>
+              <span style="color: var(--kcal-color); font-weight: 900; font-size: 15px;">${t.calorias} kcal</span>
+            </div>
+
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.3;">
+              <strong>Ingredientes (${m.ingredientes.length}):</strong> ${ingNames}
+            </div>
+
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--card-border);">
+              <div style="font-size: 12px; color: var(--text-secondary); font-weight: 700;">
+                P: <span style="color: var(--prote-color);">${t.proteinas}g</span> | C: <span style="color: var(--carbos-color);">${t.carbos}g</span> | G: <span style="color: var(--grasas-color);">${t.grasas}g</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="preset-chip" style="color: #FF3B30; padding: 6px 10px;" onclick="deleteSavedMeal('${m.id}')">🗑️</button>
+                <button class="preset-chip" style="background: var(--kcal-color); color: #FFF; border: none; font-weight: 800; padding: 6px 12px;" onclick="openPortionMealModal('${m.id}')">+ Registrar</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteSavedMeal(mealId) {
+      if (confirm('¿Deseas eliminar esta comida guardada?')) {
+        savedMeals = savedMeals.filter(m => m.id !== mealId);
+        saveSavedMealsState();
+        renderSavedMealsList();
+      }
+    }
+
+    function openPortionMealModal(mealId) {
+      selectedMealForPortion = savedMeals.find(m => m.id === mealId);
+      if (!selectedMealForPortion) return;
+
+      document.getElementById('portion-meal-name').innerText = selectedMealForPortion.nombre;
+      document.getElementById('portion-meal-base').innerText = `1 Receta Completa: ${selectedMealForPortion.totales.calorias} kcal (P: ${selectedMealForPortion.totales.proteinas}g | C: ${selectedMealForPortion.totales.carbos}g | G: ${selectedMealForPortion.totales.grasas}g)`;
+      
+      openModal('modal-portion-meal');
+    }
+
+    function confirmPortionMeal(factor) {
+      if (!selectedMealForPortion) return;
+      logComposedMealToDiary(selectedMealForPortion.id, factor);
+    }
+
+    function logComposedMealToDiary(mealId, portionFactor = 1.0) {
+      const meal = savedMeals.find(m => m.id === mealId);
+      if (!meal) return;
+
+      const compositeFoodId = 'composed-' + meal.id;
+      let foodObj = foods.find(f => f.id === compositeFoodId);
+      if (!foodObj) {
+        foodObj = {
+          id: compositeFoodId,
+          nombre: `🍲 ${meal.nombre} (${meal.categoria})`,
+          kcal_100g: meal.totales.calorias,
+          prote_100g: meal.totales.proteinas,
+          carbos_100g: meal.totales.carbos,
+          grasas_100g: meal.totales.grasas,
+          es_unidad: true
+        };
+        foods.push(foodObj);
+        saveState();
+      }
+
+      logs.push({
+        id: 'log-' + Date.now(),
+        alimentoId: foodObj.id,
+        cantidad: portionFactor,
+        fecha: currentDate
+      });
+
+      saveState();
+      recordFoodActionForRewards(currentDate);
+      renderDashboard();
+      closeModal('modal-search');
+      closeModal('modal-portion-meal');
+      showGamificationToast(`¡Registrado "${meal.nombre}" (${Math.round(portionFactor * 100)}%) hoy! 🚀`);
+    }
+
     function openSearchModal() {
       document.getElementById('step-search').style.display = 'block';
       document.getElementById('step-config').style.display = 'none';
       document.getElementById('modal-search-title').innerText = 'Añadir Alimento';
       document.getElementById('search-query').value = '';
+      switchSearchTab('single');
       filterFoods();
       openModal('modal-search');
     }
+
 
     function filterFoods() {
       const q = document.getElementById('search-query').value.toLowerCase().trim();
@@ -4194,8 +5369,10 @@ PLAN DE MACRONUTRIENTES CALCULADO:
       });
 
       saveState();
+      recordFoodActionForRewards(currentDate);
       renderDashboard();
       closeModal('modal-search');
+
     }
 
     // TARGETS
@@ -4245,9 +5422,12 @@ PLAN DE MACRONUTRIENTES CALCULADO:
 
       foods.push(newFood);
       saveState();
+      checkAchievements();
+      renderRewardsUI();
       closeModal('modal-custom-food');
-      alert(`¡"${name}" guardado exitosamente!`);
+      showGamificationToast(`¡"${name}" creado exitosamente! 🥗`);
     }
+
 
     // GLOBAL BODY SCROLL LOCK & ANTI-SCROLL CHAINING UTILS
     function bloquearScrollFondo() {
@@ -4364,7 +5544,13 @@ PLAN DE MACRONUTRIENTES CALCULADO:
     // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=4.4.0').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=8.1.0').then((reg) => {
+
+
+
+
+
+
 
 
 
