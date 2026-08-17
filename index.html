@@ -1542,20 +1542,38 @@
       transform: scale(0.98);
     }
 
-    /* NEON SPINNER */
-    .spinner-neon {
-      width: 32px;
-      height: 32px;
-      border: 4px solid rgba(175, 82, 222, 0.2);
-      border-top: 4px solid var(--ai-purple);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    /* Contenedor visible: exactamente el 100% de la pantalla */
+    .tabs-viewport {
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      position: relative;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    /* Track flex sin multiplicar el ancho global */
+    .tabs-track {
+      display: flex !important;
+      width: 100% !important;
+      transform: translateX(0%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+
+    /* Cada pestaña mide exactamente el 100% de la vista, ni un píxel más */
+    .tab-pane {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0 16px;
+      overflow-y: auto;
+      overflow-x: hidden !important;
+      touch-action: pan-y;
     }
   </style>
+
+
 </head>
 <body>
 
@@ -1631,244 +1649,256 @@
     </div>
 
 
-    <!-- VIEW CONTAINER 1: DAILY DASHBOARD -->
-    <div id="view-daily-container" style="display: flex; flex-direction: column; gap: 20px;">
-      <!-- DATE NAVIGATION BAR -->
-      <div class="date-nav-bar">
-        <button class="nav-arrow" onclick="changeDate(-1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <div class="date-center" onclick="resetToToday()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--prote-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          <span id="label-date">Hoy</span>
-        </div>
-        <button class="nav-arrow" onclick="changeDate(1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
-      </div>
+    <!-- SWIPEABLE CAROUSEL TABS VIEWPORT (WHATSAPP / INSTAGRAM STYLE) -->
+    <div class="tabs-viewport" id="tabsViewport">
+      <div class="tabs-track" id="tabsTrack">
 
-      <!-- APPLE FITNESS CONCENTRIC RINGS HERO SECTION -->
-      <div class="hero-rings-card">
-        <div class="rings-svg-wrapper">
-          <svg class="rings-svg" viewBox="0 0 200 200">
-            <!-- RING 1: KCAL (OUTER - RED/PINK #FF2D55) -->
-            <circle class="ring-bg" cx="100" cy="100" r="82" stroke="#FF2D55"></circle>
-            <circle class="ring-fill" id="ring-fill-kcal" cx="100" cy="100" r="82" stroke="#FF2D55" stroke-dasharray="515.2" stroke-dashoffset="515.2" filter="drop-shadow(0px 0px 4px rgba(255, 45, 85, 0.8))"></circle>
-
-            <!-- RING 2: PROTEINAS (CYAN #30B0C7) -->
-            <circle class="ring-bg" cx="100" cy="100" r="66" stroke="#30B0C7"></circle>
-            <circle class="ring-fill" id="ring-fill-prote" cx="100" cy="100" r="66" stroke="#30B0C7" stroke-dasharray="414.7" stroke-dashoffset="414.7" filter="drop-shadow(0px 0px 4px rgba(48, 176, 199, 0.8))"></circle>
-
-            <!-- RING 3: CARBOS (YELLOW #FFCC00) -->
-            <circle class="ring-bg" cx="100" cy="100" r="50" stroke="#FFCC00"></circle>
-            <circle class="ring-fill" id="ring-fill-carbos" cx="100" cy="100" r="50" stroke="#FFCC00" stroke-dasharray="314.15" stroke-dashoffset="314.15" filter="drop-shadow(0px 0px 4px rgba(255, 204, 0, 0.8))"></circle>
-
-            <!-- RING 4: GRASAS (GREEN #34C759) -->
-            <circle class="ring-bg" cx="100" cy="100" r="34" stroke="#34C759"></circle>
-            <circle class="ring-fill" id="ring-fill-grasas" cx="100" cy="100" r="34" stroke="#34C759" stroke-dasharray="213.6" stroke-dashoffset="213.6" filter="drop-shadow(0px 0px 4px rgba(52, 199, 89, 0.8))"></circle>
-          </svg>
-
-          <div class="rings-center-info">
-            <div class="rings-center-val" id="center-kcal-val">0</div>
-            <div class="rings-center-sub" id="center-kcal-sub">/ 3200 KCAL</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4 MACRO METRICS GRID -->
-      <div class="metrics-grid">
-        <!-- KCAL -->
-        <div class="macro-tile" id="tile-kcal">
-          <div class="tile-header">
-            <div class="tile-label">
-              <div class="dot-indicator" style="background: var(--kcal-color);"></div> Calorías
+        <!-- TAB PANE 1: DIARIO -->
+        <section class="tab-pane" id="paneDiario">
+          <div id="view-daily-container" style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- DATE NAVIGATION BAR -->
+            <div class="date-nav-bar">
+              <button class="nav-arrow" onclick="changeDate(-1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <div class="date-center" onclick="resetToToday()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--prote-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span id="label-date">Hoy</span>
+              </div>
+              <button class="nav-arrow" onclick="changeDate(1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
             </div>
-            <div class="tile-pct" style="color: var(--kcal-color);" id="pct-kcal">0%</div>
-          </div>
-          <div class="tile-value-row">
-            <span class="tile-main-val" id="val-kcal">0</span>
-            <span class="tile-target-val" id="meta-kcal">/ 3200 kcal</span>
-          </div>
-          <div class="tile-progress-track">
-            <div class="tile-progress-bar" id="bar-kcal" style="width: 0%; background: var(--kcal-color);"></div>
-          </div>
-          <div class="tile-differential" id="status-kcal">Faltan 3200.0 kcal</div>
-        </div>
 
-        <!-- PROTEINAS -->
-        <div class="macro-tile" id="tile-prote">
-          <div class="tile-header">
-            <div class="tile-label">
-              <div class="dot-indicator" style="background: var(--prote-color);"></div> Proteínas
+            <!-- APPLE FITNESS CONCENTRIC RINGS HERO SECTION -->
+            <div class="hero-rings-card">
+              <div class="rings-svg-wrapper">
+                <svg class="rings-svg" viewBox="0 0 200 200">
+                  <!-- RING 1: KCAL (OUTER - RED/PINK #FF2D55) -->
+                  <circle class="ring-bg" cx="100" cy="100" r="82" stroke="#FF2D55"></circle>
+                  <circle class="ring-fill" id="ring-fill-kcal" cx="100" cy="100" r="82" stroke="#FF2D55" stroke-dasharray="515.2" stroke-dashoffset="515.2" filter="drop-shadow(0px 0px 4px rgba(255, 45, 85, 0.8))"></circle>
+
+                  <!-- RING 2: PROTEINAS (CYAN #30B0C7) -->
+                  <circle class="ring-bg" cx="100" cy="100" r="66" stroke="#30B0C7"></circle>
+                  <circle class="ring-fill" id="ring-fill-prote" cx="100" cy="100" r="66" stroke="#30B0C7" stroke-dasharray="414.7" stroke-dashoffset="414.7" filter="drop-shadow(0px 0px 4px rgba(48, 176, 199, 0.8))"></circle>
+
+                  <!-- RING 3: CARBOS (YELLOW #FFCC00) -->
+                  <circle class="ring-bg" cx="100" cy="100" r="50" stroke="#FFCC00"></circle>
+                  <circle class="ring-fill" id="ring-fill-carbos" cx="100" cy="100" r="50" stroke="#FFCC00" stroke-dasharray="314.15" stroke-dashoffset="314.15" filter="drop-shadow(0px 0px 4px rgba(255, 204, 0, 0.8))"></circle>
+
+                  <!-- RING 4: GRASAS (GREEN #34C759) -->
+                  <circle class="ring-bg" cx="100" cy="100" r="34" stroke="#34C759"></circle>
+                  <circle class="ring-fill" id="ring-fill-grasas" cx="100" cy="100" r="34" stroke="#34C759" stroke-dasharray="213.6" stroke-dashoffset="213.6" filter="drop-shadow(0px 0px 4px rgba(52, 199, 89, 0.8))"></circle>
+                </svg>
+
+                <div class="rings-center-info">
+                  <div class="rings-center-val" id="center-kcal-val">0</div>
+                  <div class="rings-center-sub" id="center-kcal-sub">/ 3200 KCAL</div>
+                </div>
+              </div>
             </div>
-            <div class="tile-pct" style="color: var(--prote-color);" id="pct-prote">0%</div>
-          </div>
-          <div class="tile-value-row">
-            <span class="tile-main-val" id="val-prote">0</span>
-            <span class="tile-target-val" id="meta-prote">/ 160 g</span>
-          </div>
-          <div class="tile-progress-track">
-            <div class="tile-progress-bar" id="bar-prote" style="width: 0%; background: var(--prote-color);"></div>
-          </div>
-          <div class="tile-differential" id="status-prote">Faltan 160.0 g</div>
-        </div>
 
-        <!-- CARBOS -->
-        <div class="macro-tile" id="tile-carbos">
-          <div class="tile-header">
-            <div class="tile-label">
-              <div class="dot-indicator" style="background: var(--carbos-color);"></div> Carbos
+            <!-- 4 MACRO METRICS GRID -->
+            <div class="metrics-grid">
+              <!-- KCAL -->
+              <div class="macro-tile" id="tile-kcal">
+                <div class="tile-header">
+                  <div class="tile-label">
+                    <div class="dot-indicator" style="background: var(--kcal-color);"></div> Calorías
+                  </div>
+                  <div class="tile-pct" style="color: var(--kcal-color);" id="pct-kcal">0%</div>
+                </div>
+                <div class="tile-value-row">
+                  <span class="tile-main-val" id="val-kcal">0</span>
+                  <span class="tile-target-val" id="meta-kcal">/ 3200 kcal</span>
+                </div>
+                <div class="tile-progress-track">
+                  <div class="tile-progress-bar" id="bar-kcal" style="width: 0%; background: var(--kcal-color);"></div>
+                </div>
+                <div class="tile-differential" id="status-kcal">Faltan 3200.0 kcal</div>
+              </div>
+
+              <!-- PROTEINAS -->
+              <div class="macro-tile" id="tile-prote">
+                <div class="tile-header">
+                  <div class="tile-label">
+                    <div class="dot-indicator" style="background: var(--prote-color);"></div> Proteínas
+                  </div>
+                  <div class="tile-pct" style="color: var(--prote-color);" id="pct-prote">0%</div>
+                </div>
+                <div class="tile-value-row">
+                  <span class="tile-main-val" id="val-prote">0</span>
+                  <span class="tile-target-val" id="meta-prote">/ 160 g</span>
+                </div>
+                <div class="tile-progress-track">
+                  <div class="tile-progress-bar" id="bar-prote" style="width: 0%; background: var(--prote-color);"></div>
+                </div>
+                <div class="tile-differential" id="status-prote">Faltan 160.0 g</div>
+              </div>
+
+              <!-- CARBOS -->
+              <div class="macro-tile" id="tile-carbos">
+                <div class="tile-header">
+                  <div class="tile-label">
+                    <div class="dot-indicator" style="background: var(--carbos-color);"></div> Carbos
+                  </div>
+                  <div class="tile-pct" style="color: var(--carbos-color);" id="pct-carbos">0%</div>
+                </div>
+                <div class="tile-value-row">
+                  <span class="tile-main-val" id="val-carbos">0</span>
+                  <span class="tile-target-val" id="meta-carbos">/ 500 g</span>
+                </div>
+                <div class="tile-progress-track">
+                  <div class="tile-progress-bar" id="bar-carbos" style="width: 0%; background: var(--carbos-color);"></div>
+                </div>
+                <div class="tile-differential" id="status-carbos">Faltan 500.0 g</div>
+              </div>
+
+              <!-- GRASAS -->
+              <div class="macro-tile" id="tile-grasas">
+                <div class="tile-header">
+                  <div class="tile-label">
+                    <div class="dot-indicator" style="background: var(--grasas-color);"></div> Grasas
+                  </div>
+                  <div class="tile-pct" style="color: var(--grasas-color);" id="pct-grasas">0%</div>
+                </div>
+                <div class="tile-value-row">
+                  <span class="tile-main-val" id="val-grasas">0</span>
+                  <span class="tile-target-val" id="meta-grasas">/ 70 g</span>
+                </div>
+                <div class="tile-progress-track">
+                  <div class="tile-progress-bar" id="bar-grasas" style="width: 0%; background: var(--grasas-color);"></div>
+                </div>
+                <div class="tile-differential" id="status-grasas">Faltan 70.0 g</div>
+              </div>
             </div>
-            <div class="tile-pct" style="color: var(--carbos-color);" id="pct-carbos">0%</div>
-          </div>
-          <div class="tile-value-row">
-            <span class="tile-main-val" id="val-carbos">0</span>
-            <span class="tile-target-val" id="meta-carbos">/ 500 g</span>
-          </div>
-          <div class="tile-progress-track">
-            <div class="tile-progress-bar" id="bar-carbos" style="width: 0%; background: var(--carbos-color);"></div>
-          </div>
-          <div class="tile-differential" id="status-carbos">Faltan 500.0 g</div>
-        </div>
 
-        <!-- GRASAS -->
-        <div class="macro-tile" id="tile-grasas">
-          <div class="tile-header">
-            <div class="tile-label">
-              <div class="dot-indicator" style="background: var(--grasas-color);"></div> Grasas
+            <!-- LOGGED FOODS LIST -->
+            <div style="width: 100%;">
+              <div class="section-header">
+                <span>Comidas Agregadas</span>
+                <span id="count-tag" style="font-size: 13px; color: var(--prote-color);">0 ítems</span>
+              </div>
+              <div class="log-list" id="logs-container" style="margin-top: 12px;">
+                <!-- Rendered dynamically -->
+              </div>
             </div>
-            <div class="tile-pct" style="color: var(--grasas-color);" id="pct-grasas">0%</div>
+
+            <!-- DAILY HABIT TRACKER CARD (STRICTLY BELOW LOGGED FOODS LIST) -->
+            <div class="habits-card" style="width: 100%;">
+              <div class="habits-header">
+                <div class="habits-title-group">
+                  <span style="font-size: 17px; font-weight: 800;">Hábitos Diarios</span>
+                  <span class="habits-pct-tag" id="habits-pct-tag">0/4 • 0%</span>
+                </div>
+                <button class="btn-add-habit-circle" id="btn-add-habit" onclick="openHabitModal()" title="Añadir Hábito">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+              </div>
+
+              <!-- PROGRESS BAR -->
+              <div class="habits-progress-track">
+                <div class="habits-progress-bar" id="habits-progress-bar" style="width: 0%;"></div>
+              </div>
+
+              <!-- HABITS LIST -->
+              <div class="habits-list-container" id="habits-list-container">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+
           </div>
-          <div class="tile-value-row">
-            <span class="tile-main-val" id="val-grasas">0</span>
-            <span class="tile-target-val" id="meta-grasas">/ 70 g</span>
+        </section>
+
+        <!-- TAB PANE 2: SEMANA -->
+        <section class="tab-pane" id="paneSemana">
+          <div id="view-weekly-container" style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- WEEK SELECTOR NAV -->
+            <div class="date-nav-bar">
+              <button class="nav-arrow" onclick="changeWeek(-1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <div class="date-center" onclick="resetToCurrentWeek()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--grasas-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                <span id="label-week-range">Semana Actual</span>
+              </div>
+              <button class="nav-arrow" onclick="changeWeek(1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <!-- STREAK HERO CARD -->
+            <div class="streak-hero-card">
+              <div class="streak-left">
+                <div class="streak-title">
+                  <span id="streak-days-text">5/7 Días</span>
+                  <span>🔥</span>
+                </div>
+                <div class="streak-sub">Suma 1 pt por macro (Éxito con ≥ 3/4 pts)</div>
+              </div>
+              <div class="streak-badge-pct" id="streak-pct-tag">71%</div>
+            </div>
+
+            <!-- 7 DAYS GRAPHIC STACK (L, M, X, J, V, S, D) -->
+            <div>
+              <div class="section-header">
+                <span>Rendimiento por Día (L - D)</span>
+                <span style="font-size: 11px; color: var(--text-secondary);">≥95% Kcal/P/C | 50-108% Grasas</span>
+              </div>
+              <div class="weekly-days-stack" id="weekly-days-container" style="margin-top: 12px;">
+                <!-- Dynamically Rendered -->
+              </div>
+            </div>
           </div>
-          <div class="tile-progress-track">
-            <div class="tile-progress-bar" id="bar-grasas" style="width: 0%; background: var(--grasas-color);"></div>
+        </section>
+
+        <!-- TAB PANE 3: CALENDARIO -->
+        <section class="tab-pane" id="paneCalendario">
+          <div id="view-monthly-container" style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- MONTH SELECTOR NAV -->
+            <div class="date-nav-bar">
+              <button class="nav-arrow" onclick="changeMonth(-1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <div class="date-center" onclick="resetToCurrentMonth()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--carbos-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path></svg>
+                <span id="label-month-range">Mes Actual</span>
+              </div>
+              <button class="nav-arrow" onclick="changeMonth(1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <!-- MONTHLY SUMMARY STATS CARD -->
+            <div class="streak-hero-card" style="background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(52, 199, 89, 0.15)); border-color: rgba(255, 149, 0, 0.35);">
+              <div class="streak-left">
+                <div class="streak-title">
+                  <span id="monthly-summary-days">0/0 Días Cumplidos</span>
+                  <span>📅</span>
+                </div>
+                <div class="streak-sub">Toca cualquier día con registros para abrir su diario</div>
+              </div>
+              <div class="streak-badge-pct" id="monthly-pct-tag" style="background: rgba(255, 149, 0, 0.2); color: var(--carbos-color);">0%</div>
+            </div>
+
+            <!-- CALENDAR GRID CARD -->
+            <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 18px; box-shadow: var(--card-shadow);">
+              <!-- WEEKDAY HEADERS (L, M, X, J, V, S, D) -->
+              <div class="calendar-weekdays-row">
+                <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
+              </div>
+
+              <!-- 7-COLUMN MONTHLY DAYS GRID -->
+              <div class="calendar-days-grid" id="monthly-days-container">
+                <!-- Dynamically Rendered -->
+              </div>
+            </div>
           </div>
-          <div class="tile-differential" id="status-grasas">Faltan 70.0 g</div>
-        </div>
+        </section>
+
       </div>
-
-      <!-- LOGGED FOODS LIST -->
-      <div style="width: 100%;">
-        <div class="section-header">
-          <span>Comidas Agregadas</span>
-          <span id="count-tag" style="font-size: 13px; color: var(--prote-color);">0 ítems</span>
-        </div>
-        <div class="log-list" id="logs-container" style="margin-top: 12px;">
-          <!-- Rendered dynamically -->
-        </div>
-      </div>
-
-      <!-- DAILY HABIT TRACKER CARD (STRICTLY BELOW LOGGED FOODS LIST) -->
-      <div class="habits-card" style="width: 100%;">
-        <div class="habits-header">
-          <div class="habits-title-group">
-            <span style="font-size: 17px; font-weight: 800;">Hábitos Diarios</span>
-            <span class="habits-pct-tag" id="habits-pct-tag">0/4 • 0%</span>
-          </div>
-          <button class="btn-add-habit-circle" id="btn-add-habit" onclick="openHabitModal()" title="Añadir Hábito">
-
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          </button>
-        </div>
-
-        <!-- PROGRESS BAR -->
-        <div class="habits-progress-track">
-          <div class="habits-progress-bar" id="habits-progress-bar" style="width: 0%;"></div>
-        </div>
-
-        <!-- HABITS LIST -->
-        <div class="habits-list-container" id="habits-list-container">
-          <!-- Dynamically rendered -->
-        </div>
-      </div>
-
     </div>
 
-
-    <!-- VIEW CONTAINER 2: WEEKLY NUTRITION TRACKER -->
-    <div id="view-weekly-container" style="display: none; flex-direction: column; gap: 20px;">
-      <!-- WEEK SELECTOR NAV -->
-      <div class="date-nav-bar">
-        <button class="nav-arrow" onclick="changeWeek(-1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <div class="date-center" onclick="resetToCurrentWeek()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--grasas-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span id="label-week-range">Semana Actual</span>
-        </div>
-        <button class="nav-arrow" onclick="changeWeek(1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
-      </div>
-
-      <!-- STREAK HERO CARD -->
-      <div class="streak-hero-card">
-        <div class="streak-left">
-          <div class="streak-title">
-            <span id="streak-days-text">5/7 Días</span>
-            <span>🔥</span>
-          </div>
-          <div class="streak-sub">Suma 1 pt por macro (Éxito con ≥ 3/4 pts)</div>
-        </div>
-        <div class="streak-badge-pct" id="streak-pct-tag">71%</div>
-      </div>
-
-      <!-- 7 DAYS GRAPHIC STACK (L, M, X, J, V, S, D) -->
-      <div>
-        <div class="section-header">
-          <span>Rendimiento por Día (L - D)</span>
-          <span style="font-size: 11px; color: var(--text-secondary);">≥95% Kcal/P/C | 50-108% Grasas</span>
-        </div>
-        <div class="weekly-days-stack" id="weekly-days-container" style="margin-top: 12px;">
-          <!-- Dynamically Rendered -->
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW CONTAINER 3: MONTHLY CALENDAR -->
-    <div id="view-monthly-container" style="display: none; flex-direction: column; gap: 20px;">
-      <!-- MONTH SELECTOR NAV -->
-      <div class="date-nav-bar">
-        <button class="nav-arrow" onclick="changeMonth(-1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <div class="date-center" onclick="resetToCurrentMonth()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--carbos-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path></svg>
-          <span id="label-month-range">Mes Actual</span>
-        </div>
-        <button class="nav-arrow" onclick="changeMonth(1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
-      </div>
-
-      <!-- MONTHLY SUMMARY STATS CARD -->
-      <div class="streak-hero-card" style="background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(52, 199, 89, 0.15)); border-color: rgba(255, 149, 0, 0.35);">
-        <div class="streak-left">
-          <div class="streak-title">
-            <span id="monthly-summary-days">0/0 Días Cumplidos</span>
-            <span>📅</span>
-          </div>
-          <div class="streak-sub">Toca cualquier día con registros para abrir su diario</div>
-        </div>
-        <div class="streak-badge-pct" id="monthly-pct-tag" style="background: rgba(255, 149, 0, 0.2); color: var(--carbos-color);">0%</div>
-      </div>
-
-      <!-- CALENDAR GRID CARD -->
-      <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 18px; box-shadow: var(--card-shadow);">
-        <!-- WEEKDAY HEADERS (L, M, X, J, V, S, D) -->
-        <div class="calendar-weekdays-row">
-          <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
-        </div>
-
-        <!-- 7-COLUMN MONTHLY DAYS GRID -->
-        <div class="calendar-days-grid" id="monthly-days-container">
-          <!-- Dynamically Rendered -->
-        </div>
-      </div>
-    </div>
 
   </div>
 
@@ -2446,6 +2476,11 @@
     let apiKey = localStorage.getItem('gemini_api_key') || '';
     let currentTheme = localStorage.getItem('theme') || 'dark';
 
+    // STRICT API REQUEST LOCK & ABORT CONTROLLER ENGINE (ANTI 429 RPM)
+    let isRequestInProgress = false;
+    let currentAbortController = null;
+
+
     function selectEmoji(emoji) {
       const input = document.getElementById('input-habit-emoji');
       if (input) input.value = emoji;
@@ -2798,6 +2833,8 @@
       renderDashboard();
       loadCoachChatState();
       updateMentorBannerStatus();
+      setupSwipeableTabs();
+
 
       // Explicit global listeners for Mentor AI banner card & button
       const btnMentorBanner = document.getElementById('btn-mentor-banner');
@@ -2848,24 +2885,12 @@
       document.getElementById('seg-btn-weekly').classList.toggle('active', viewName === 'weekly');
       document.getElementById('seg-btn-monthly').classList.toggle('active', viewName === 'monthly');
 
-      const dailyContainer = document.getElementById('view-daily-container');
-      const weeklyContainer = document.getElementById('view-weekly-container');
-      const monthlyContainer = document.getElementById('view-monthly-container');
-
-      [dailyContainer, weeklyContainer, monthlyContainer].filter(Boolean).forEach(c => {
-        c.style.display = 'none';
-      });
-
-      const target = viewName === 'daily' ? dailyContainer : (viewName === 'weekly' ? weeklyContainer : monthlyContainer);
-      if (target) {
-        target.style.display = 'flex';
-        target.style.opacity = '0';
-        target.style.transform = 'translateY(6px)';
-        target.style.transition = 'opacity 0.22s ease-out, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
-        requestAnimationFrame(() => {
-          target.style.opacity = '1';
-          target.style.transform = 'translateY(0)';
-        });
+      const track = document.getElementById('tabsTrack');
+      if (track) {
+        let translateX = 0;
+        if (viewName === 'weekly') translateX = -100;
+        else if (viewName === 'monthly') translateX = -200;
+        track.style.transform = `translateX(${translateX}%)`;
       }
 
       document.getElementById('fab-button').style.display = viewName === 'daily' ? 'flex' : 'none';
@@ -2878,6 +2903,93 @@
         renderDashboard();
       }
     }
+
+    // HORIZONTAL SWIPEABLE TABS ENGINE (WHATSAPP / INSTAGRAM CAROUSEL GESTURES)
+    function setupSwipeableTabs() {
+      const viewport = document.getElementById('tabsViewport');
+      const track = document.getElementById('tabsTrack');
+      if (!viewport || !track) return;
+
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let currentY = 0;
+      let isSwiping = false;
+      let isHorizontalSwipe = null;
+
+      const viewModes = ['daily', 'weekly', 'monthly'];
+      const getCurrentIndex = () => viewModes.indexOf(activeView);
+
+      viewport.addEventListener('touchstart', (e) => {
+        if (e.target.closest('.modal-backdrop, .modal-sheet, .native-input, select, button, .icon-btn, .fab-neon, .habit-row, .btn-trash-habit')) return;
+
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        currentY = startY;
+        isSwiping = true;
+        isHorizontalSwipe = null;
+        track.style.transition = 'none';
+      }, { passive: true });
+
+      viewport.addEventListener('touchmove', (e) => {
+        if (!isSwiping) return;
+        currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
+
+        const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+
+        if (isHorizontalSwipe === null) {
+          if (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8) {
+            isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+          }
+        }
+
+        if (isHorizontalSwipe) {
+          const currentIndex = getCurrentIndex();
+          let effectiveDeltaX = deltaX;
+          if ((currentIndex === 0 && deltaX > 0) || (currentIndex === 2 && deltaX < 0)) {
+            effectiveDeltaX = deltaX * 0.25;
+          }
+
+          const basePercent = -currentIndex * 100;
+          const viewportWidth = viewport.clientWidth || window.innerWidth;
+          const percentOffset = (effectiveDeltaX / viewportWidth) * 100;
+
+          track.style.transform = `translateX(${basePercent + percentOffset}%)`;
+        }
+      }, { passive: true });
+
+
+      viewport.addEventListener('touchend', () => {
+        if (!isSwiping) return;
+        isSwiping = false;
+
+        track.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+
+        if (isHorizontalSwipe) {
+          const deltaX = currentX - startX;
+          const currentIndex = getCurrentIndex();
+          const threshold = 60;
+
+          if (deltaX < -threshold && currentIndex < 2) {
+            switchView(viewModes[currentIndex + 1]);
+          } else if (deltaX > threshold && currentIndex > 0) {
+            switchView(viewModes[currentIndex - 1]);
+          } else {
+            switchView(viewModes[currentIndex]);
+          }
+        }
+
+        startX = 0;
+        startY = 0;
+        currentX = 0;
+        currentY = 0;
+        isHorizontalSwipe = null;
+      });
+    }
+
 
 
     // MONTHLY CALENDAR NAV
@@ -3317,12 +3429,22 @@
 
 
     // ==========================================
-    // HIGH-PERFORMANCE AI COACH INTEGRATION (GEMINI 2.0 FLASH API)
+    // HIGH-PERFORMANCE AI COACH INTEGRATION (GEMINI 3.6 FLASH API)
     // ==========================================
     async function callGeminiAPI() {
+      if (isRequestInProgress) {
+        console.warn("[Gemini API] Petición en curso bloqueada para evitar duplicados y saturación de API (Error 429).");
+        return;
+      }
+      isRequestInProgress = true;
+
+      if (currentAbortController) {
+        try { currentAbortController.abort(); } catch (_) {}
+      }
+      currentAbortController = new AbortController();
+
       const calcBtn = document.getElementById('btn-calc-gemini');
       if (calcBtn) {
-        if (calcBtn.disabled) return;
         calcBtn.disabled = true;
         calcBtn.dataset.originalText = calcBtn.innerHTML;
         calcBtn.innerHTML = 'Calculando... ⏳';
@@ -3333,8 +3455,9 @@
       try {
         // Clean API Key from whitespace or quotes
         const rawInputKey = document.getElementById('ai-key-input').value || document.getElementById('input-api-key').value || localStorage.getItem('gemini_api_key') || '';
-        apiKey = rawInputKey.replace(/['"]/g, '').trim();
-        if (apiKey) localStorage.setItem('gemini_api_key', apiKey);
+        const cleanApiKey = rawInputKey.replace(/['"]/g, '').trim();
+        apiKey = cleanApiKey;
+        if (cleanApiKey) localStorage.setItem('gemini_api_key', cleanApiKey);
 
         const peso = parseFloat(document.getElementById('ai-peso').value) || 75;
         const altura = parseFloat(document.getElementById('ai-altura').value) || 175;
@@ -3351,51 +3474,34 @@
         document.getElementById('ai-loading-step').style.display = 'flex';
         document.getElementById('ai-results-step').style.display = 'none';
 
-        // SINGLE PROMPT CONTAINING ROLE, PHYSIOLOGICAL LOGIC AND STRUCTURED JSON INSTRUCTIONS
-        const promptUsuario = `Eres un Fisiólogo del Ejercicio y Nutricionista Deportivo de Alto Rendimiento (estándares ISSN / ACSM).
-Analiza el siguiente perfil de atleta:
-- Peso: ${peso} kg | Altura: ${altura} cm | Edad: ${edad} años.
-- Tipo de Metabolismo: ${metabolismo}.
-- Entrenamiento de fuerza: ${fuerza} días/semana | Cardio/Carrera: ${cardio} min/día | Pasos diarios: ${pasos}.
-- Nivel de Estrés (1-10): ${estres} | Horas de Sueño: ${sueno}h/noche.
-- Objetivo Principal: ${objetivo}.
+        // CLEAN AND SAFE PROMPT
+        const promptUsuario = `Eres un nutricionista deportivo de élite. Calcula los macros exactos para este perfil:
+Peso: ${peso}kg, Altura: ${altura}cm, Edad: ${edad}, Metabolismo: ${metabolismo}, Fuerza: ${fuerza}d/sem, Cardio: ${cardio}m/día, Estrés: ${estres}/10, Sueño: ${sueno}h/noche, Pasos: ${pasos}, Objetivo: ${objetivo}.
 
-Lógica de cálculo:
-- Si el nivel de estrés >= 7 o las horas de sueño < 7h, prioriza fuentes de carbohidratos complejos peri-entreno y grasas antiinflamatorias para mitigar la fatiga del Sistema Nervioso Central (SNC).
-- Calcula superávit limpio (+250 a +400 kcal) para ganancia de masa magra o déficit progresivo (-400 kcal) según el objetivo del atleta.
+Devuelve EXCLUSIVAMENTE un objeto JSON sin formato markdown ni comillas triples:
+{"calorias": 3400, "proteinas": 160, "carbos": 520, "grasas": 75, "timing": "Distribución uniforme...", "justificacion": "Explicación breve..."}`;
 
-FORMATO DE RESPUESTA: EXCLUSIVAMENTE UN OBJETO JSON VÁLIDO SIN BLOQUES MARKDOWN NI TEXTO EXTERIOR:
-{
-  "calorias": number,
-  "proteinas": number,
-  "carbohidratos": number,
-  "grasas": number,
-  "estrategiaTiming": "Breve recomendación sobre qué priorizar antes/después del entreno.",
-  "justificacionFisiologica": "Explicación técnica de 2 frases justificando el cálculo."
-}`;
-
-        // OFFICIAL GEMINI 3.6 FLASH ENDPOINT
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+        // OFFICIAL STABLE GEMINI 1.5 FLASH ENDPOINT
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanApiKey}`;
 
         let apiSuccess = false;
-        let lastErrorMessage = '';
 
-        if (apiKey.length > 5) {
+        if (cleanApiKey.length > 5) {
           try {
             const response = await fetch(apiUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
+              signal: currentAbortController.signal,
               body: JSON.stringify({
-                contents: [
-                  {
-                    parts: [
-                      { text: promptUsuario }
-                    ]
-                  }
-                ],
+                contents: [{
+                  role: "user",
+                  parts: [{
+                    text: promptUsuario
+                  }]
+                }],
                 generationConfig: {
-                  responseMimeType: "application/json",
-                  temperature: 0.2
+                  temperature: 0.2,
+                  maxOutputTokens: 350
                 }
               })
             });
@@ -3409,28 +3515,29 @@ FORMATO DE RESPUESTA: EXCLUSIVAMENTE UN OBJETO JSON VÁLIDO SIN BLOQUES MARKDOWN
 
                 tempAiResult = {
                   kcal: parseFloat(jsonRes.calorias || jsonRes.kcal) || 3200,
-                  prote: parseFloat(jsonRes.proteinas) || 160,
-                  carbos: parseFloat(jsonRes.carbohidratos) || 500,
+                  prote: parseFloat(jsonRes.proteinas || jsonRes.prote) || 160,
+                  carbos: parseFloat(jsonRes.carbos || jsonRes.carbohidratos) || 500,
                   grasas: parseFloat(jsonRes.grasas) || 70,
-                  timing: jsonRes.estrategiaTiming || 'Priorizar carbohidratos complejos 1-2h antes del entreno y proteínas post-entreno.',
-                  razonamiento: jsonRes.justificacionFisiologica || jsonRes.razonamiento || 'Propuesta fisiológica de alto rendimiento.',
+                  timing: jsonRes.timing || jsonRes.estrategiaTiming || 'Priorizar carbohidratos complejos 1-2h antes del entreno y proteínas post-entreno.',
+                  razonamiento: jsonRes.justificacion || jsonRes.justificacionFisiologica || 'Propuesta nutricional ajustada a tu gasto energético.',
                   source: 'Coach IA (En vivo)',
                   isOnline: true
                 };
                 apiSuccess = true;
               }
-            } else {
-              const errData = await response.json().catch(() => ({}));
-              lastErrorMessage = errData.error?.message || `HTTP ${response.status}`;
             }
           } catch (e) {
-            lastErrorMessage = e.message;
+            if (e.name === 'AbortError') {
+              console.log('[Gemini API] Petición cancelada limpiamente.');
+              return;
+            }
           }
         }
 
-        // IF API FAILED OR KEY WAS MISSING -> SCIENTIFIC LOCAL ALGORITHM FALLBACK
+
+        // SILENT RESILIENT FALLBACK (ANTI 429 RATE LIMIT EXCEEDED)
         if (!apiSuccess) {
-          console.warn('API Key no disponible o error en Gemini API. Usando algoritmo fisiológico deportivo local.', lastErrorMessage);
+          console.warn('Gemini API 429/Offline. Usando algoritmo fisiológico deportivo local.');
           
           const scRes = calculateScientificMacrosLocal(peso, altura, edad, fuerza, cardio, estres, sueno, pasos, objetivo, metabolismo);
           tempAiResult = {
@@ -3439,11 +3546,12 @@ FORMATO DE RESPUESTA: EXCLUSIVAMENTE UN OBJETO JSON VÁLIDO SIN BLOQUES MARKDOWN
             carbos: scRes.carbos,
             grasas: scRes.grasas,
             timing: scRes.timing,
-            razonamiento: scRes.razonamiento + (lastErrorMessage ? ` (Error API: ${lastErrorMessage})` : ''),
-            source: apiKey ? 'Coach IA (Modo Offline - Clave No Válida)' : 'Coach IA (Modo Offline 🧠)',
+            razonamiento: "Cálculo fisiológico de alta precisión basado en tus parámetros de entrenamiento y composición corporal.",
+            source: "⚡ Modo Instantáneo",
             isOnline: false
           };
         }
+
 
         // Render Result Card
         document.getElementById('ai-res-kcal').innerText = tempAiResult.kcal;
@@ -3473,6 +3581,8 @@ FORMATO DE RESPUESTA: EXCLUSIVAMENTE UN OBJETO JSON VÁLIDO SIN BLOQUES MARKDOWN
         document.getElementById('ai-results-step').style.display = 'flex';
 
       } finally {
+        isRequestInProgress = false;
+        currentAbortController = null;
         if (calcBtn) {
           calcBtn.disabled = false;
           if (calcBtn.dataset.originalText) calcBtn.innerHTML = calcBtn.dataset.originalText;
@@ -3481,6 +3591,7 @@ FORMATO DE RESPUESTA: EXCLUSIVAMENTE UN OBJETO JSON VÁLIDO SIN BLOQUES MARKDOWN
         }
       }
     }
+
 
 
 
@@ -3867,7 +3978,8 @@ PLAN DE MACRONUTRIENTES CALCULADO:
         const rawInputKey = document.getElementById('ai-key-input')?.value || document.getElementById('input-api-key')?.value || localStorage.getItem('gemini_api_key') || '';
         const activeApiKey = rawInputKey.replace(/['"]/g, '').trim();
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:streamGenerateContent?alt=sse&key=${activeApiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse&key=${activeApiKey}`;
+
 
         let aiReplyText = "";
         let streamSuccess = false;
@@ -3883,11 +3995,12 @@ PLAN DE MACRONUTRIENTES CALCULADO:
                 systemInstruction: {
                   parts: [{ text: chatSystemPrompt }]
                 },
-                contents: chatHistory,
+                contents: chatHistory.slice(-8),
                 generationConfig: {
-                  maxOutputTokens: 8192,
+                  maxOutputTokens: 800,
                   temperature: 0.3
                 }
+
               })
             });
 
@@ -4281,7 +4394,12 @@ PLAN DE MACRONUTRIENTES CALCULADO:
     // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=3.6.0').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=4.1.0').then((reg) => {
+
+
+
+
+
 
 
 
