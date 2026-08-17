@@ -67,6 +67,13 @@
     }
 
 
+    html, body {
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -84,11 +91,25 @@
       min-height: 100vh;
       padding-bottom: 100px;
       transition: background-color 0.3s ease, color 0.3s ease;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    body.modal-open {
+      overflow: hidden !important;
+      touch-action: none;
+    }
+
+    .seg-btn, .btn-action-cta, .modal-sheet, .chat-chip, .icon-btn, .fab-neon, .mentor-banner-card, .ai-banner-card, .btn-mentor-sparkle, .btn-ai-sparkle, .btn-close-sheet, .sheet-close-btn, .brand-badge, .date-nav-bar {
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
     }
 
     .app-header, .macro-tile, .hero-rings-card, .date-nav-bar, .modal-sheet, .day-card, .log-item-card, .search-box-input, .native-input, .seg-btn, .icon-btn, .streak-hero-card, .ai-banner-card {
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
+
 
 
     .app-viewport {
@@ -1178,14 +1199,19 @@
       height: 100vh;
       background: var(--backdrop-bg);
       backdrop-filter: blur(12px);
-      display: none;
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
       justify-content: center;
       align-items: flex-end;
       z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .modal-backdrop.active {
-      display: flex;
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .modal-sheet {
@@ -1201,15 +1227,19 @@
       flex-direction: column;
       gap: 16px;
       overflow-y: auto;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
       border-top: 1px solid var(--card-border);
-      animation: sheetUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      will-change: transform, opacity;
     }
 
-
-    @keyframes sheetUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
+    .modal-backdrop.active .modal-sheet {
+      transform: translateY(0);
+      opacity: 1;
     }
+
 
     .sheet-handle {
       width: 36px;
@@ -2685,9 +2715,26 @@
       document.getElementById('seg-btn-weekly').classList.toggle('active', viewName === 'weekly');
       document.getElementById('seg-btn-monthly').classList.toggle('active', viewName === 'monthly');
 
-      document.getElementById('view-daily-container').style.display = viewName === 'daily' ? 'flex' : 'none';
-      document.getElementById('view-weekly-container').style.display = viewName === 'weekly' ? 'flex' : 'none';
-      document.getElementById('view-monthly-container').style.display = viewName === 'monthly' ? 'flex' : 'none';
+      const dailyContainer = document.getElementById('view-daily-container');
+      const weeklyContainer = document.getElementById('view-weekly-container');
+      const monthlyContainer = document.getElementById('view-monthly-container');
+
+      [dailyContainer, weeklyContainer, monthlyContainer].filter(Boolean).forEach(c => {
+        c.style.display = 'none';
+      });
+
+      const target = viewName === 'daily' ? dailyContainer : (viewName === 'weekly' ? weeklyContainer : monthlyContainer);
+      if (target) {
+        target.style.display = 'flex';
+        target.style.opacity = '0';
+        target.style.transform = 'translateY(6px)';
+        target.style.transition = 'opacity 0.22s ease-out, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
+        requestAnimationFrame(() => {
+          target.style.opacity = '1';
+          target.style.transform = 'translateY(0)';
+        });
+      }
+
       document.getElementById('fab-button').style.display = viewName === 'daily' ? 'flex' : 'none';
 
       if (viewName === 'weekly') {
@@ -2698,6 +2745,7 @@
         renderDashboard();
       }
     }
+
 
     // MONTHLY CALENDAR NAV
     function changeMonth(offset) {
@@ -3985,24 +4033,36 @@ PLAN DE MACRONUTRIENTES CALCULADO:
       alert(`¡"${name}" guardado exitosamente!`);
     }
 
-    // MODAL UTILS
+    // MODAL UTILS WITH BODY OVERFLOW LOCKING
     function openModal(id) {
       if (id === 'modal-gemini-ai') {
         document.getElementById('ai-form-step').style.display = 'block';
         document.getElementById('ai-loading-step').style.display = 'none';
         document.getElementById('ai-results-step').style.display = 'none';
       }
-      document.getElementById(id).classList.add('active');
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+      }
     }
 
     function closeModal(id) {
-      document.getElementById(id).classList.remove('active');
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.remove('active');
+      }
+      const anyActive = document.querySelector('.modal-backdrop.active');
+      if (!anyActive) {
+        document.body.classList.remove('modal-open');
+      }
     }
 
     // SERVICE WORKER REGISTRATION WITH AUTOMATIC REFRESH ON WEB UPDATES
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=3.1.0').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=3.2.0').then((reg) => {
+
 
 
 
